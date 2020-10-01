@@ -1,15 +1,7 @@
-use chrono::NaiveDateTime;
+// use chrono::NaiveDateTime;
 use serde::{Serialize, Deserialize};
-use super::schema::posts;
 use super::schema::players;
 
-#[derive(Queryable, Serialize, Deserialize)]
-pub struct Post {
-    pub id: i32,
-    pub author: String,
-    pub body: String,
-    pub published_at: NaiveDateTime,
-}
 
 #[derive(Queryable, Serialize, Deserialize)]
 pub struct Player {
@@ -19,19 +11,42 @@ pub struct Player {
     pub is_mj: i32,
 }
 
-#[derive(Insertable)]
-#[table_name="players"]
-pub struct NewPlayer<'a> {
-    pub id: &'a str,
-    pub pseudo: &'a str,
-    pub password:  &'a str,
-    pub is_mj: i32,
+#[derive(Queryable, Serialize, Deserialize)]
+pub struct Caracter {
+    pub id: String,
+    pub player_id: String,
+    pub stats: String
+}
+
+
+#[derive(Queryable, Serialize, Deserialize)]
+pub struct PlayerStats<> {
+    pub name: String,
+    pub race: String,
+    pub class: String,
+    pub level: u8,
+    pub reputation: String,
+    pub particularity: String,
+    pub alignment: String,
+    pub weapon: u8,
+    pub distance_weapon: u8,
+    pub bare_hand: u8,
+    pub armor: u8,
+    pub strengh: u8,
+    pub dexterity: u8,
+    pub endurance: u8,
+    pub charism: u8,
+    pub perception: u8,
+    pub luck: u8,
+    pub willpower: u8,
+    pub education: u8,
 }
 
 #[derive(Insertable)]
-#[table_name="posts"]
-pub struct NewPost<'a> {
-    pub author: &'a str,
-    pub body: &'a str,
-    pub published_at: NaiveDateTime,
+#[table_name="players"]
+pub struct NewPlayer<'a> {
+    pub id: String,
+    pub pseudo: &'a String,
+    pub password: String,
+    pub is_mj: i32,
 }

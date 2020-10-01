@@ -2,9 +2,8 @@ use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 use dotenv::dotenv;
 use std::env;
-use crate::repository::models::{Player, NewPlayer};
+use crate::repository::models::{Player, NewPlayer, Caracter};
 use crate::route::models::NewUserInput;
-// use hex_literal::hex;
 
 
 pub fn create_connection() -> SqliteConnection {
@@ -29,7 +28,7 @@ pub fn get_user_password(username :String) -> Option<Player> {
         return results;
 }
 
-pub fn save_user(player :&NewUserInput)-> usize {
+pub fn save_user(player :&NewUserInput)-> String {
     use crate::repository::schema::players;
     extern crate bcrypt;
     use rand::{thread_rng, Rng};
@@ -38,34 +37,39 @@ pub fn save_user(player :&NewUserInput)-> usize {
 
     let connection = create_connection();
 
-    let hashed = hash(player.password.as_str(), 4);
+    let hashed = hash(player.password.as_str(), 4).unwrap();
 
     let rand_string: String = thread_rng()
         .sample_iter(&Alphanumeric)
         .take(30)
         .collect();
 
-    match hashed {
-        Ok(e) => {
-            let new_player = NewPlayer{
-                id: rand_string.as_str(),
-                pseudo: player.username.as_str(),
-                password: e.as_str(),
-                is_mj:0
-            };
-        
-            diesel::insert_into(players::table)
-                .values(&new_player)
-                .execute(&connection)
-                .expect("Error saving new player")
+    let new_player = NewPlayer{
+        id: rand_string,
+        pseudo: &player.username,
+        password: hashed,
+        is_mj:0
+    };
 
-        },
-        Err(error) => {
-            println!("error creating hashed password {:?}", error);
-            return 0;
-        }
+    diesel::insert_into(players::table)
+        .values(&new_player)
+        .execute(&connection)
+        .expect("Error saving new player");
 
-    }
+        new_player.id
 
-    
+}
+
+pub fn get_player_stats(playerid :String) ->  Option<Caracter> {
+    use crate::repository::schema::caracter::dsl::*;
+
+    let connection = create_connection();
+
+    let results = caracter.filter(player_id.eq(playerid))
+    .first::<Caracter>(&connection)
+    .optional()
+    .unwrap();
+
+    return results;
+
 }

@@ -118,3 +118,7 @@
   text-decoration: none;
   cursor: pointer;
 }
+
+.test::-webkit-input-placeholder {
+  color: #b2cde0
+}

@@ -1,93 +1,3 @@
-// https://github.com/browserify/browserify#usage
-// $sudo npm install -g browserify
-// $browserify index.js > bundle.js
-
-const emoji = require("node-emoji");
-const hasEmoji = require("has-emoji");
-const socket = new WebSocket("ws://127.0.0.1:7777/ws");
-
-let userName = '';
-
-function dateFormat(datetime){
-    const months_arr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-    const date = new Date(datetime.secs_since_epoch*1000);
-    const year = date.getFullYear();
-    const month = months_arr[date.getMonth()];
-    const day = date.getDate();
-    const hours = date.getHours();
-    const minutes = "0" + date.getMinutes();
-    const seconds = "0" + date.getSeconds();
-
-    return day+'-'+month+'-'+year+' '+hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-}
-
-function createAdminMessage(content){
-    const messages = document.getElementById("messages");
-    const strHtml ='<div class="alert alert-primary" role="alert">\n' +content+'</div>';
-
-    //class="alert-link">an example link</a>. Give it a click if you like.
-
-    let temp = document.createElement('div');
-    temp.innerHTML = strHtml;
-    temp = temp.firstChild;
-
-    messages.appendChild(temp);
-}
-
-
-function createHistoryMessage(content, userName, date) {
-    const messages = document.getElementById("messages");
-
-    const humanRedableDate = dateFormat(date);
-
-    strHtml = '<div id="writtenmsg" class="incoming_msg"><div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="'+userName+'"> </div> <div class="received_msg"><p class="name">'+userName+'</p><div class="received_withd_msg">'+content+'<span class="time_date">  '+humanRedableDate+'</span></div></div></div>';
-    let temp = document.createElement('div');
-    temp.innerHTML = strHtml;
-    temp = temp.firstChild;
-
-    messages.appendChild(temp);
-
-}
-
-function createMessage(content, direction, userName, date){
-
-    const humanRedableDate =  dateFormat(date);
-    const messages = document.getElementById("messages");
-
-    let strHtml = "";
-    if(direction === "outgoing"){
-
-        strHtml = '<div id="writtenmsg" class="outgoing_msg"><div class="sent_msg"><p>'+content+'</p><span class="time_date"> '+humanRedableDate+'</span></div></div>'
-    }else{
-        strHtml = '<div id="writtenmsg" class="incoming_msg"><div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="'+userName+'"> </div> <div class="received_msg"><p class="name">'+userName+'</p><div class="received_withd_msg">'+content+'<span class="time_date">  '+humanRedableDate+'</span></div></div></div>';
-    }
-
-    let temp = document.createElement('div');
-    temp.innerHTML = strHtml;
-    temp = temp.firstChild;
-
-    messages.appendChild(temp);
-
-    const scrolled = false;
-    if(!scrolled){
-        let element = document.getElementById("messages");
-        element.scrollTop = element.scrollHeight;
-    }
-}
-
-function removeMessages() {
-    const messages = document.getElementById("messages");
-    while (messages.firstChild) {
-        messages.removeChild(messages.firstChild);
-    }
-}
-
-let open = false;
-
-let userId = "";
-let userInputs = [];
-
 var HttpClient = function() {
     this.get = function(aUrl, aCallback) {
         let anHttpRequest = new XMLHttpRequest();
@@ -101,136 +11,508 @@ var HttpClient = function() {
     }
 };
 
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
 
-socket.addEventListener('open', function () {
+let client = new HttpClient();
+let user_id = getCookie("user_id");
 
-    let client = new HttpClient();
-    client.get('http://localhost:8000/posts', function(response) {
+// if(user_id !== "") {
+//     client.get('http://localhost:8000/player-stats/'+user_id, function(response) {
+    
+//     })
+// }
 
-        if (response !== "") {
-            createAdminMessage("Last 5 messages:");
-            JSON.parse(response).forEach(function (item) {
-                createHistoryMessage(item.body, item.author, item.published_at);
-            });
-            createAdminMessage("New Messages:")
-        }
+document.getElementById('raceSelect').addEventListener('change', function(e) {
+    let totot = document.getElementById('tip');
+    let txt  = "";
 
-    });
+    if(this.value == 1){
+        txt = "<strong>Race attributs:</strong> +15 force -5 education -10 charisme";
+    }else if (this.value == 2){
+        txt = "<strong>Race attributs:</strong> +10 volonté +5 charisme -10 force";
+    }else if (this.value == 3){
+        txt = "<strong>Race attributs:</strong> +10 dextérité -10 constitution";
+    }else if (this.value == 4){
+        txt = "<strong>Race attributs:</strong> +5 volonté +5 éducation -5 constitution -5 force";
+    }else if (this.value == 5){
+        txt = "<strong>Race attributs:</strong> +5 constitution +5 force -10 dextérité -5 charisme";
+    }else if (this.value == 6){
+        txt = "<strong>Race attributs:</strong> +5 dextérité +5 perception -5 charisme, -5 éducation -5 constitution";
+    }
 
+    totot.innerHTML = txt;
 });
 
-const exit = document.getElementById("exit");
-exit.onclick = function () {
-    socket.close();
-};
 
-const form = document.getElementById("form");
-
-form.onsubmit = function (event) {
-    event.preventDefault();
-    const input = document.getElementById("msg");
-
-    if (input.value === "") {
-        return;
+document.getElementById('classSelect').addEventListener('change', function(e) {
+    var totot = document.getElementById('top');
+    let txt  = "";
+    if(this.value == 1){
+        txt = "<strong>Class attributs:</strong> +10 force +10 constitution -20 volonté, peut maitriser toutes les armes";
+    }else if (this.value == 2){
+        txt = "<strong>Class attributs:</strong> +20 volonté -20 en force +10 en éducation (3 sorts au choix)";
+    }else if (this.value == 3){
+        txt = "<strong>Class attributs:</strong> +20 en dextérité -15 en force et constitution ( spécialiste des attaques sournoises, à des aptitudes d’attaques dans le dos)";
+    }else if (this.value == 4){
+        txt = "<strong>Class attributs:</strong> +10 dextérité -10 en constitution +5 en éducation +5 perception (Utilise des arcs, est un pisteur et possède un familier possédant le quart de ses aptitudes)";
+    }else if (this.value == 5){
+        txt = "<strong>Class attributs:</strong> +5 en force +5 dextérité +5 constitution +5 éducation -15 charisme (Bercé dans les mantras, le moine peut soigner ses alliés (1d10) c’est aussi un expert du combat à mains nues. Ne porte pas d’armes).";
+    }else if (this.value == 6){
+        txt = "<strong>Class attributs:</strong> +10 force, +5 volonté -5 charisme -5 éducation (Classe de nature, peut dompter les animaux. Possède une capacité : Forme animal. 0 définir au dés. Peut se changer une fois par jour)";
+    }
+    else if (this.value == 7){
+        txt = "<strong>Class attributs:</strong> +10 constitution, +5 volonté, -10 dextérité, -5 force (apposition des mains, heal de 1d10).";
+    }
+    else if (this.value == 8){
+        txt = "<strong>Class attributs:</strong> -15 force, +15 education, -10 volonté, +15 charisme, -5 constitution (Spécialiste des herbes et cataplasmes, peu crafter des remèdes, poisons etc …)";
     }
 
-    if (input.value === "!clear") {
-        removeMessages();
-        input.value = "";
-        return;
-    }
-
-    if (input.value === "!exit") {
-        socket.close();
-        return;
-    }
-
-    let message = {
-        message: input.value,
-    };
-
-    if (userName) {
-        message.from = userName;
-    }else{
-        message.from = userId;
-    }
-
-    socket.send(JSON.stringify(message));
-    input.value = "";
-    setTimeout(() => window.scrollTo({ top: window.innerHeight, behavior: "auto" }), 10);
-};
+    totot.innerHTML = txt;
+});
 
 
-socket.onmessage = function (event) {
+document.getElementById('check').addEventListener('click', function(e){
 
-    if (userInputs[userInputs.length - 1] === "!warn") {
-        alert("You sent warning to the other users");
-    }
+    e.preventDefault();
 
-    if (event.data.includes("!clearall")) {
-        removeMessages();
-        return;
-    }
+    let raceID = document.getElementById("raceSelect").options[document.getElementById("raceSelect").selectedIndex].value;
+    let classID = document.getElementById("classSelect").options[document.getElementById("classSelect").selectedIndex].value;
 
-    if (event.data.includes("!exitall")) {
-        socket.close();
-        return;
-    }
+    let force  = document.getElementById("Force")
+    let dexterity = document.getElementById("Dexterite")
+    let luck = document.getElementById("Chance")
+    let willpower = document.getElementById("Volonte")
+    let endurance = document.getElementById("Constitution")
+    let charism = document.getElementById("Charisme")
+    let perception = document.getElementById("Perception")
+    let education = document.getElementById("Education")
 
-    if (event.data.includes("!x-opacity")) {
-        const messages = document.getElementById("messages");
-        if (messages.className === "x-opacity") { messages.className = ""; } else { messages.className = "x-opacity" }
-        return;
-    }
+    force.value = 0;
+    dexterity.value = 0;
+    luck.value = 0;
+    willpower.value = 0;
+    endurance.value = 0;
+    charism.value = 0;
+    perception.value = 0;
+    education.value = 0;
 
-    if (!open) {
+    if(raceID == 1){
 
-        let messageFromnser = JSON.parse(event.data);
-        let separate = messageFromnser.message.split(" ");
-        userId = separate[0];
-        let totalNumber = separate[separate.length - 1];
-
-        if (totalNumber > 5 ) {
-            createAdminMessage(`${totalNumber} is maximum user allowed. Wait for others exit the chat.`);
-            socket.close();
-            return;
-        }
-        createAdminMessage(`Your id is ${userId} and "You" will be used in this page instead | https://www.webfx.com/tools/emoji-cheat-sheet`);
-        document.getElementById('chat_date').innerHTML = dateFormat(messageFromnser.room_date);
-        open = true;
-
-    } else {
-        let fromServer = event.data;
-        const msgFromServer = JSON.parse(fromServer);
-
-        const authorOfMessage = msgFromServer.from;
-
-        if (fromServer.includes(`!exclude ${userId}`)) {
-            socket.close();
-            return;
+        if(force.value == 0 || force.value == null ){
+            force.value = 15
+        }else if(force.value == 15){
+            force.value = force.value
         }
 
-        let direction = "incomming";
-
-        if (authorOfMessage === userId || authorOfMessage === userName) {
-            direction = "outgoing";
+        if(education.value == 0 || education.value == null){
+            education.value = -5
+        }else if(education.value == -5){
+            education.value = education.value
         }
 
-        const includeEmoji = hasEmoji(emoji.emojify(msgFromServer.message));
-        const afterEmoji = includeEmoji ? emoji.emojify(msgFromServer.message) : msgFromServer.message;
-        // I ❤️ Rust, I :heart: Rust
+        if(charism.value == 0 || charism.value == null){
+            charism.value = -10
+        }else if(charism.value == -10){
+            charism.value = charism.value
+        }
+       
+    }else if (raceID == 2){
 
-        if(authorOfMessage === 'Admin'){
-            createAdminMessage(afterEmoji)
+        if(force.value == 0){
+            force.value = -10
+        }else if(force.value == -10){
+            force.value = force.value
+        }
+
+        if(willpower.value == 0){
+            willpower.value = 10
+        }else if(willpower.value == 10){
+            willpower.value = willpower.value
+        }
+
+        if(charism.value == 0){
+            charism.value = 5
+        }else if(education.value == 5){
+            charism.value = charism.value
+        }
+
+    }else if (raceID == 3){
+
+        if(dexterity.value == 0){
+            dexterity.value = 10
+        }else if(dexterity.value == +0){
+            dexterity.value = dexterity.value
+        }
+
+        if(endurance.value == 0){
+            endurance.value = -10
+        }else if(endurance.value == -10){
+            endurance.value = endurance.value
+        }
+
+    }else if (raceID == 4){
+
+        if(willpower.value == 0){
+            willpower.value = 5
+        }else if(willpower.value == 5){
+            willpower.value = willpower.value
+        }
+
+        if(endurance.value == 0){
+            endurance.value = -5
+        }else if(endurance.value == -5){
+            endurance.value = endurance.value
+        }
+
+        if(education.value == 0){
+            education.value = 5
+        }else if(education.value == 5){
+            education.value = education.value
+        }
+
+        if(force.value == 0){
+            force.value = -5
+        }else if(force.value == -5){
+            force.value = force.value
+        }
+
+    }else if (raceID == 5){
+
+        if(dexterity.value == 0){
+            dexterity.value = -10
+        }else if(dexterity.value == -10){
+            dexterity.value = dexterity.value
+        }
+
+        if(endurance.value == 0){
+            endurance.value = 5
+        }else if(endurance.value == 5){
+            endurance.value = endurance.value
+        }
+
+        if(charism.value == 0){
+            charism.value = 5
+        }else if(charism.value == 5){
+            charism.value = charism.value
+        }
+
+        if(force.value == 0){
+            force.value = -5
+        }else if(force.value == -5){
+            force.value = force.value
+        }
+
+    }else if (raceID == 6){
+
+        if(dexterity.value == 0){
+            dexterity.value = 5
+        }else if(dexterity.value == 5){
+            dexterity.value = dexterity.value
+        }
+
+        if(endurance.value == 0){
+            endurance.value = -5
+        }else if(endurance.value == -5){
+            endurance.value = endurance.value
+        }
+
+        if(charism.value == 0){
+            charism.value = -5
+        }else if(charism.value == -5){
+            charism.value = charism.value
+        }
+
+        if(perception.value == 0){
+            perception.value = 5
+        }else if(perception.value == 5){
+            perception.value = perception.value
+        }
+
+        if(education.value == 0){
+            education.value = -5
+        }else if(education.value == -5){
+            education.value = education.value
+        }
+    }
+
+    if(classID == 1){
+
+        if(force.value == 0 || force.value == null){
+            force.value = 10
+        }else if(force.value == 10){
+            force.value = force.value
         }else{
-            createMessage(afterEmoji, direction, authorOfMessage, msgFromServer.date);
+            force.value =  parseInt(force.value) + 10;
+        }
 
+        if(endurance.value == 0 || endurance.value == null){
+            endurance.value = 10
+        }else if(endurance.value == 10){
+            endurance.value = endurance.value
+        }else{
+            endurance.value = parseInt(endurance.value) + 10;
+        }
+
+        if(willpower.value == 0 || willpower.value == null){
+            willpower.value = -20
+        }else if(willpower.value == -20){
+            willpower.value = willpower.value
+        }else{
+            willpower.value = parseInt(willpower.value) - 20;
+        }
+
+    }else if (classID == 2){
+
+        if(willpower.value == 0 || willpower.value == null){
+            willpower.value = 20
+        }else if(willpower.value == 20){
+            willpower.value = willpower.value
+        }else{
+            willpower.value = parseInt(willpower.value) + 20;
+        }
+
+        if(force.value == 0 || force.value == null){
+            force.value = -20
+        }else if(force.value == -20){
+            force.value = force.value
+        }else{
+            force.value =  parseInt(force.value) -20;
+        }
+
+        if(education.value == 0 || education.value == null){
+            education.value = 10
+        }else if(education.value == 10){
+            education.value = education.value
+        }else{
+            education.value = parseInt(education.value) + 10;
+        }
+
+    }else if (classID == 3){
+
+        if(dexterity.value == 0 || dexterity.value == null){
+            dexterity.value = 20
+        }else if(dexterity.value == 20){
+            dexterity.value = dexterity.value
+        }else{
+            dexterity.value = parseInt(dexterity.value) + 20;
+        }
+
+        if(force.value == 0 || force.value == null){
+            force.value = -15
+        }else if(force.value == -15){
+            force.value = force.value
+        }else{
+            force.value = parseInt(force.value) - 15;
+        }
+
+        if(endurance.value == 0 || endurance.value == null){
+            endurance.value = -15
+        }else if(endurance.value == -15){
+            endurance.value = endurance.value
+        }else{
+            endurance.value = parseInt(endurance.value) -15;
+        }
+
+    }else if (classID == 4){
+
+        if(dexterity.value == 0 || dexterity.value == null){
+            dexterity.value = +10
+        }else if(dexterity.value == +10){
+            dexterity.value = dexterity.value
+        }else{
+            dexterity.value = parseInt(dexterity.value) +10;
+        }
+
+        if(endurance.value == 0 || endurance.value == null){
+            endurance.value = -10
+        }else if(endurance.value == -10){
+            endurance.value = endurance.value
+        }else{
+            endurance.value = parseInt(endurance.value) -10;
+        }
+
+        if(education.value == 0 || education.value == null){
+            education.value = 5
+        }else if(education.value == 5){
+            education.value = education.value
+        }else{
+            education.value = parseInt(education.value) +5;
+        }
+
+        if(perception.value == 0 || perception.value == null){
+            perception.value = 5
+        }else if(perception.value == 5){
+            perception.value = perception.value
+        }else{
+            perception.value = parseInt(perception.value) +5;
+        }
+
+    }else if (classID == 5){
+
+        if(force.value == 0 || force.value == null){
+            force.value = 5
+        }else if(force.value == 5){
+            force.value = force.value
+        }else{
+            force.value = parseInt(force.value) +5;
+        }
+
+        if(dexterity.value == 0 || dexterity.value == null){
+            dexterity.value = 5
+        }else if(dexterity.value == 5){
+            dexterity.value = dexterity.value
+        }else{
+            dexterity.value = parseInt(dexterity.value) +5;
+        }
+
+        if(endurance.value == 0 || endurance.value == null){
+            endurance.value = 5
+        }else if(endurance.value == 5){
+            endurance.value = endurance.value
+        }else{
+            endurance.value = parseInt(endurance.value) +5;
+        }
+
+        if(education.value == 0 || education.value == null){
+            education.value = 5
+        }else if(education.value == 5){
+            education.value = education.value
+        }else{
+            education.value = parseInt(education.value) +5;
+        }
+
+        if(charism.value == 0 || charism.value == null){
+            charism.value = -15
+        }else if(charism.value == -15){
+            charism.value = charism.value
+        }else{
+            charism.value = parseInt(charism.value) -15;
+        }
+
+    }else if (classID == 6){
+
+        if(force.value == 0 || force.value == null){
+            force.value = 10
+        }else if(force.value == 10){
+            force.value = force.value
+        }else{
+            force.value = parseInt(force.value) +10;
+        }
+
+        if(willpower.value == 0 || willpower.value == null){
+            willpower.value = 5
+        }else if(willpower.value == 5){
+            willpower.value = willpower.value
+        }else{
+            willpower.value = parseInt(willpower.value) +5;
+        }
+
+        if(charism.value == 0 || charism.value == null){
+            charism.value = -5
+        }else if(charism.value == -5){
+            charism.value = charism.value
+        }else{
+            charism.value = parseInt(charism.value) -5;
+        }
+
+        if(education.value == 0 || education.value == null){
+            education.value = -5
+        }else if(education.value == -5){
+            education.value = education.value
+        }else{
+            education.value = parseInt(education.value) -5;
         }
 
     }
-};
+    else if (classID == 7){
+        if(endurance.value == 0 || endurance.value == null){
+            endurance.value = 10
+        }else if(endurance.value == 10){
+            endurance.value = endurance.value
+        }else{
+            endurance.value = parseInt(endurance.value) +10;
+        }
 
-socket.onclose = function (event) {
-    const closeMessage = event.data === undefined ? "Server, You or another user closed the connection." : "WebSocket is closed now.";
-    createAdminMessage(closeMessage);
-};
+        if(willpower.value == 0 || willpower.value == null){
+            willpower.value = 5
+        }else if(willpower.value == 5){
+            willpower.value = willpower.value
+        }else{
+            willpower.value = parseInt(willpower.value) +5;
+        }
+
+        if(dexterity.value == 0 || dexterity.value == null){
+            dexterity.value = -10
+        }else if(dexterity.value == -10){
+            dexterity.value = dexterity.value
+        }else{
+            dexterity.value = parseInt(dexterity.value) -10;
+        }
+
+        if(force.value == 0 || force.value == null){
+            force.value = -5
+        }else if(force.value == -5){
+            force.value = force.value
+        }else{
+            force.value = parseInt(force.value) -5;
+        }
+    }
+    else if (classID == 8){
+
+        if(force.value == 0 || force.value == null){
+            force.value = -15
+        }else if(force.value == -15){
+            force.value = force.value
+        }else{
+            force.value = parseInt(force.value) -15;
+        }
+
+        if(education.value == 0 || education.value == null){
+            education.value = 15
+        }else if(education.value == 15){
+            education.value = education.value
+        }else{
+            education.value = parseInt(education.value) +15;
+        }
+
+        if(willpower.value == 0 || willpower.value == null){
+            willpower.value = -10
+        }else if(willpower.value == -10){
+            willpower.value = willpower.value
+        }else{
+            willpower.value = parseInt(willpower.value) -10;
+        }
+
+        if(charism.value == 0 || charism.value == null){
+            charism.value = 15
+        }else if(charism.value == 15){
+            charism.value = charism.value
+        }else{
+            charism.value = parseInt(charism.value) +15;
+        }
+
+        if(endurance.value == 0 || endurance.value == null){
+            endurance.value = -5
+        }else if(endurance.value == -5){
+            endurance.value = endurance.value
+        }else{
+            endurance.value = parseInt(endurance.value) -5;
+        }
+    }
+
+
+});
