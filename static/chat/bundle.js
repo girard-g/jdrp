@@ -93,6 +93,7 @@ module.exports = function() {
 },{}],2:[function(require,module,exports){
 var caracterStats = require('./caracters_stats.js');
 
+// document.getElementById("totalPoint").innerHTML = 200;
 
 var HttpClient = function() {
     this.get = function(aUrl, aCallback) {
@@ -610,6 +611,17 @@ document.getElementById('check').addEventListener('click', function(e){
         }
     }
 
+    // let totals = 
+    // parseInt(force.value) +
+    // parseInt(dexterity.value) +
+    // parseInt(luck.value) +
+    // parseInt(willpower.value) +
+    // parseInt(endurance.value) +
+    // parseInt(charism.value) +
+    // parseInt(perception.value) +
+    // parseInt(education.value);
+
+    // document.getElementById("totalPoint").innerHTML -= totals;
 
 });
 
