@@ -41,7 +41,9 @@ fn rocket() -> rocket::Rocket {
         get::logout,
         get::player_dashboard,
         get::create,
-        get::check_creation
+        get::check_creation,
+        get::player_stats,
+        get::test
         // get::posts,
     ];
 

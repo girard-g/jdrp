@@ -1,4 +1,12 @@
 table! {
+    caracter (id) {
+        id -> Text,
+        player_id -> Text,
+        stats -> Text,
+    }
+}
+
+table! {
     players (id) {
         id -> Text,
         pseudo -> Text,
@@ -17,6 +25,7 @@ table! {
 }
 
 allow_tables_to_appear_in_same_query!(
+    caracter,
     players,
     posts,
 );
