@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Rust Chat App </title>
+  <link rel=icon href="https://www.steadylearner.com/static/images/code/Rust_b.png" />
+
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/chat/index.css" />
+  <link rel="stylesheet" href="/static/css/custom.css" />
+</head>
+
+<body>
+
+
+  <div class="container-fluid">
+    <form>
+      <div class="row">
+        <div class="col-auto">
+          <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Races</label>
+          <select class="custom-select mr-sm-2" id="raceSelect">
+            <option selected>Choose...</option>
+            <option value="1">Troll</option>
+            <option value="2">Elfe</option>
+            <option value="3">Humain</option>
+            <option value="4">Demi Elfe</option>
+            <option value="5">Nain</option>
+            <option value="6">Saurial</option>
+          </select>
+        </div>
+
+        <div class="col-auto">
+          <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Classes</label>
+          <select class="custom-select mr-sm-2" id="classSelect">
+            <option selected>Choose...</option>
+            <option value="1">Guerrier</option>
+            <option value="2">Mage</option>
+            <option value="3">Voleur</option>
+            <option value="4">Archer</option>
+            <option value="5">Moine</option>
+            <option value="6">Druide</option>
+            <option value="7">Paladin</option>
+            <option value="8">Alchimiste</option>
+          </select>
+        </div>
+
+        <div class="col-auto">
+          <button class="btn btn-outline-primary" id="check">Calcule</button>
+        </div>
+
+        <div class="col align-middle">
+          <small id="tip" class="form-text text-muted d-inline"></small>
+          <small id="top" class="form-text text-muted d-inline"></small>
+        </div>
+      </div>
+      <br>
+      <p class="lead">Il y a <span id="totalPoint">200</span> points à répartir dans les 7 caractéristiques. 60 points maximun dans une catégorie, 10
+        points minimum.</p>
+
+      <hr>
+      <div class="row"  onchange=findTotal()>
+        <div class="col">
+          <label for="password">Force</label>
+          <input type="number" class="form-control qty" max="60" name="Force" id="Force" placeholder="0">
+
+          <label for="password">Dexterité</label>
+          <input type="number" class="form-control qty" max="60" name="Dexterite" id="Dexterite" placeholder="0">
+
+          <label for="password">Chance</label>
+          <input type="number" class="form-control qty" max="60" name="Chance" id="Chance" placeholder="0">
+
+          <label for="password">Volonté</label>
+          <input type="number" class="form-control qty" max="60" name="Volonte" id="Volonte" placeholder="0">
+
+        </div>
+        <div class="col">
+          <label for="password">Constitution</label>
+          <input type="number" class="form-control qty" max="60" name="Constitution" id="Constitution" placeholder="0">
+
+          <label for="password">Charisme</label>
+          <input type="number" class="form-control qty" max="60" name="Charisme" id="Charisme" placeholder="0">
+
+          <label for="password">Perception</label>
+          <input type="number" class="form-control qty" max="60" name="Perception" id="Perception" placeholder="0">
+
+          <label for="password">Education</label>
+          <input type="number" class="form-control qty" max="60" name="Education" id="Education" placeholder="0">
+        </div>
+
+      </div>
+
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+
+  <script src="/static/chat/bundle.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    function findTotal(){
+
+      let maxpoint = 200;
+      let elems = document.getElementsByClassName('qty'), i = elems.length, total = 0;
+      while (i--) {
+        if(elems[i].value > 60){
+          elems[i].value = 60
+        }
+
+        total += elems[i].value | 0;
+
+        if(total >= maxpoint){
+          elems[i].value = 0
+        }
+        
+      }
+
+      let len = maxpoint - total.toFixed(0)
+
+      if(len < 0){len = 0} 
+
+      document.getElementById("totalPoint").innerHTML = len;
+      console.log(total);
+    }
+  </script>
+</body>
+
+</html>
