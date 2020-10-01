@@ -20,6 +20,7 @@ extern crate serde_json;
 
 // use std::thread;
 
+mod resources;
 mod repository;
 // use crate::repository::mainlib::{create_connection, get_five_last_posts};
 
