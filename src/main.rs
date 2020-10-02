@@ -20,6 +20,7 @@ extern crate serde_json;
 
 // use std::thread;
 
+mod resources;
 mod repository;
 // use crate::repository::mainlib::{create_connection, get_five_last_posts};
 
@@ -43,7 +44,8 @@ fn rocket() -> rocket::Rocket {
         get::create,
         get::check_creation,
         get::player_stats,
-        get::test
+        get::test,
+        get::check_caracter_creation
         // get::posts,
     ];
 

@@ -16,33 +16,33 @@
 
 
   <div class="container-fluid">
-    <form>
+    <form action="" method="POST" id="caracter_form">
       <div class="row">
         <div class="col-auto">
           <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Races</label>
-          <select class="custom-select mr-sm-2" id="raceSelect">
+          <select class="custom-select mr-sm-2" id="raceSelect" name="race">
             <option selected>Choose...</option>
-            <option value="1">Troll</option>
-            <option value="2">Elfe</option>
-            <option value="3">Humain</option>
-            <option value="4">Demi Elfe</option>
-            <option value="5">Nain</option>
-            <option value="6">Saurial</option>
+            <option value="troll">Troll</option>
+            <option value="elfe">Elfe</option>
+            <option value="humain">Humain</option>
+            <option value="demi-elf">Demi Elfe</option>
+            <option value="nain">Nain</option>
+            <option value="saurial">Saurial</option>
           </select>
         </div>
 
         <div class="col-auto">
           <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Classes</label>
-          <select class="custom-select mr-sm-2" id="classSelect">
+          <select class="custom-select mr-sm-2" id="classSelect" name="class">
             <option selected>Choose...</option>
-            <option value="1">Guerrier</option>
-            <option value="2">Mage</option>
-            <option value="3">Voleur</option>
-            <option value="4">Archer</option>
-            <option value="5">Moine</option>
-            <option value="6">Druide</option>
-            <option value="7">Paladin</option>
-            <option value="8">Alchimiste</option>
+            <option value="guerrier">Guerrier</option>
+            <option value="mage">Mage</option>
+            <option value="voleur">Voleur</option>
+            <option value="archer">Archer</option>
+            <option value="moine">Moine</option>
+            <option value="druid">Druide</option>
+            <option value="paladin">Paladin</option>
+            <option value="alchimiste">Alchimiste</option>
           </select>
         </div>
 
@@ -62,37 +62,87 @@
       <hr>
       <div class="row" >
         <div class="col">
-          <label for="Force">Force</label>
-          <input type="number" class="form-control qty" min="0" max="60" name="Force" id="Force" value="0" placeholder="0" />
+          <label for="force">Force</label>
+          <input type="number" class="form-control qty" max="60" step="1" name="strengh" id="force" placeholder="0">
 
-          <label for="Dexterite">Dexterité</label>
-          <input type="number" class="form-control qty" min="0" max="60" name="Dexterite" id="Dexterite" value="0" placeholder="0" />
+          <label for="dexterite">Dexterité</label>
+          <input type="number" class="form-control qty" max="60" step="1" name="dexterity" id="dexterite" placeholder="0">
 
-          <label for="Chance">Chance</label>
-          <input type="number" class="form-control qty" min="0" max="60" name="Chance" id="Chance" value="0" placeholder="0" />
+          <label for="chance">Chance</label>
+          <input type="number" class="form-control qty" max="60" step="1" name="luck" id="chance" placeholder="0">
 
-          <label for="Volonte">Volonté</label>
-          <input type="number" class="form-control qty" min="0" max="60" name="Volonte" id="Volonte" value="0" placeholder="0" />
+          <label for="volonte">Volonté</label>
+          <input type="number" class="form-control qty" max="60" step="1" name="willpower" id="volonte" placeholder="0">
 
         </div>
         <div class="col">
-          <label for="password">Constitution</label>
-          <input type="number" class="form-control qty" min="0" max="60" name="Constitution" id="Constitution" value="0" placeholder="0" />
+          <label for="constitution">Constitution</label>
+          <input type="number" class="form-control qty" max="60" step="1" name="endurance" id="constitution" placeholder="0">
 
-          <label for="password">Charisme</label>
-          <input type="number" class="form-control qty" min="0" max="60" name="Charisme" id="Charisme" value="0" placeholder="0" />
+          <label for="charisme">Charisme</label>
+          <input type="number" class="form-control qty" max="60" step="1" name="charism" id="charisme" placeholder="0">
 
-          <label for="password">Perception</label>
-          <input type="number" class="form-control qty" min="0" max="60" name="Perception" id="Perception" value="0" placeholder="0" />
+          <label for="perception">Perception</label>
+          <input type="number" class="form-control qty" max="60" step="1" name="perception" id="perception" placeholder="0">
 
-          <label for="password">Education</label>
-          <input type="number" class="form-control qty" min="0" max="60" name="Education" id="Education" value="0" placeholder="0" />
+          <label for="education">Education</label>
+          <input type="number" class="form-control qty" max="60" step="1" name="education" id="education" placeholder="0">
         </div>
 
       </div>
 
+      <hr>
+
+      <div class="row">
+        <div class="col">
+          <label for="name">Nom</label>
+          <input type="text" class="form-control" name="name" id="nom">
+
+          <label for="age">Age</label>
+          <input type="number" class="form-control" name="age" step="1" id="age">
+
+          <label for="level">Level</label>
+          <input type="number" class="form-control" name="level" step="1" id="level">
+
+        </div>
+
+        <div class="col">
+          <label for="reputation">Reputation</label>
+          <input type="text" class="form-control" name="reputation" id="reputation">
+
+          <label for="particularity">Particularity</label>
+          <input type="text" class="form-control" name="particularity" id="particularity">
+
+          <label for="alignment">Alignment</label>
+          <input type="text" class="form-control" name="alignment" id="alignment">
+
+        </div>
+      </div>
+
+      <hr>
+      
+      <div class="row">
+        <div class="col">
+          <label for="weapon">Arme</label>
+          <input type="number" class="form-control" name="weapon" id="weapon" step="1" min="0" placeholder="0">
+
+          <label for="distance_weapon">Arme à distance</label>
+          <input type="number" class="form-control" name="distance_weapon" step="1" id="distance_weapon" min="0" placeholder="0">
+
+        </div>
+
+        <div class="col">
+          <label for="bare_hand">Main nue</label>
+          <input type="number" class="form-control" name="bare_hand" step="1" id="bare_hand" min="0" placeholder="0">
+
+          <label for="armor">Armure</label>
+          <input type="number" class="form-control" name="armor" step="1" id="armor" max="0"  min="-5" placeholder="0">
+
+        </div>
+      </div>
+
       <div class="col-auto">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button class="btn btn-primary" id="submit_caracter-creation">Submit</button>
       </div>
     </form>
   </div>
@@ -141,31 +191,6 @@
       }
 
       document.getElementById("totalPoint").innerText = (maxPts - totalNb).toString(10);
-    }
-
-    function findTotal(){
-
-      let maxpoint = 200;
-      let elems = document.getElementsByClassName('qty'), i = elems.length, total = 0;
-      while (i--) {
-        if(elems[i].value > 60){
-          elems[i].value = 60
-        }
-
-        total += elems[i].value | 0;
-
-        if(total >= maxpoint){
-          elems[i].value = 0
-        }
-        
-      }
-
-      let len = maxpoint - total.toFixed(0)
-
-      if(len < 0){len = 0} 
-
-      document.getElementById("totalPoint").innerHTML = len;
-      console.log(total);
     }
   </script>
 </body>
