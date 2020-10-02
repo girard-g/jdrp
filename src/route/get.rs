@@ -2,7 +2,7 @@ use std::io;
 use rocket::response::NamedFile;
 use rocket::response::content::Json;
 use rocket::request::Form;
-use crate::route::models::{NewUserInput, UserInput};
+use crate::route::models::{NewUserInput, UserInput, CaracterStats};
 use rocket::response::Redirect;
 use rocket::http::{Cookies, Cookie};
 
@@ -53,7 +53,7 @@ pub fn submit_task(user_input: Form<UserInput>, cookies: Cookies) -> Redirect  {
 }
 
 #[post("/check-creation", data = "<user_input>")]
-pub fn check_creation(user_input: Form<NewUserInput>, cookies: Cookies) -> Redirect  {
+pub fn check_creation(user_input: Form<NewUserInput>, mut cookies: Cookies) -> Redirect  {
     use crate::repository::mainlib::save_user;
 
     match user_input.password == user_input.checkpassword {
@@ -61,12 +61,42 @@ pub fn check_creation(user_input: Form<NewUserInput>, cookies: Cookies) -> Redir
             let id = save_user(&user_input);
 
             //TODO: Make a form for creating his caracter
+            cookies.add_private(Cookie::new("user_id", id));
+            Redirect::to(uri!(test))
 
-            return loginng(id, cookies);
+            // return loginng(id, cookies);
 
         }
         _ => Redirect::to(uri!(create))
     }
+
+}
+
+
+#[post("/check-caracter-creation/<uid>", data = "<user_input>")]
+pub fn check_caracter_creation(uid: String, user_input: Form<CaracterStats>, mut cookies: Cookies) -> Redirect  {
+    use crate::repository::mainlib::save_player_stats;
+    use crate::resources::models::CaracterStats;
+
+    let logged_in_user = cookies.get_private("user_id");
+
+    match logged_in_user {
+        Some(user) => {
+            let logged_in_uid = user.value().parse::<String>().unwrap();
+            if logged_in_uid == uid {
+               
+                println!("{:#?}", user_input);
+                Redirect::to(uri!(player_dashboard: uid))
+
+            } else {
+                Redirect::to(uri!(index))
+            } 
+        },
+        None =>  Redirect::to(uri!(index))
+    }
+
+
+
 
 }
 

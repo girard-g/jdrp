@@ -44,7 +44,8 @@ fn rocket() -> rocket::Rocket {
         get::create,
         get::check_creation,
         get::player_stats,
-        get::test
+        get::test,
+        get::check_caracter_creation
         // get::posts,
     ];
 
