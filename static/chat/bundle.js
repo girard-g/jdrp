@@ -105,6 +105,17 @@ var HttpClient = function() {
 
         anHttpRequest.open( "GET", aUrl, true );
         anHttpRequest.send( null );
+    },
+    this.post = function(aUrl, body, aCallback) {
+        let anHttpRequest = new XMLHttpRequest();
+        anHttpRequest.onreadystatechange = function() {
+            if (anHttpRequest.readyState === 4 && anHttpRequest.status === 200)
+                aCallback(anHttpRequest.responseText);
+        };
+
+        anHttpRequest.open( "POST", aUrl, true );
+        anHttpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        anHttpRequest.send( body );
     }
 };
 
@@ -127,7 +138,7 @@ function getCookie(cname) {
 let client = new HttpClient();
 let user_id = getCookie("user_id");
 
-document.getElementById('caracter_form').action = "/check-caracter-creation/DXOAo4AcirEx85XzEMWj8Iy32e65dq";
+// document.getElementById('caracter_form').action = "/check-caracter-creation/DXOAo4AcirEx85XzEMWj8Iy32e65dq";
 // if(user_id !== "") {
 //     client.get('http://localhost:8000/player-stats/'+user_id, function(response) {
     
@@ -612,6 +623,37 @@ document.getElementById('check').addEventListener('click', function(e){
         }
     }
 
+});
+
+
+
+document.getElementById("submit_caracter-creation").addEventListener("click", function(e){
+    e.preventDefault();
+
+    let inputs, index, form, arr = {};
+    let intval = ["level", "age", "weapon", "distance_weapon", "bare_hand", "armor", "strengh", "dexterity", "endurance", "charism", "perception", "luck", "willpower", "education"];
+
+    form = document.getElementById('caracter_form'); // or form = document.formName
+    inputs = form.getElementsByTagName('input');
+    for (index = 0; index < inputs.length; ++index) {
+        if(intval.includes(inputs[index].name)){
+            arr[inputs[index].name] = parseInt(inputs[index].value);
+        }else{
+            arr[inputs[index].name] = inputs[index].value;
+        }
+    }
+
+    let jsoned = {
+        "stats":JSON.stringify(arr)
+    };
+
+    // if(user_id !== "") {
+    client.post('/check-caracter-creation/DXOAo4AcirEx85XzEMWj8Iy32e65dq', jsoned, function(response) {
+    
+    })
+// }
+
+    console.log(jsoned);
 });
 
 },{"./caracters_stats.js":1}]},{},[2]);

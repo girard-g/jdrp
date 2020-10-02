@@ -56,11 +56,11 @@
         </div>
       </div>
       <br>
-      <p class="lead">Il y a <span id="totalPoint">200</span> points à répartir dans les 7 caractéristiques. 60 points maximun dans une catégorie, 10
+      <p class="lead">Il y a <span id="totalPoint">200</span> points à répartir dans les 8 caractéristiques. 60 points maximun dans une catégorie, 10
         points minimum.</p>
 
       <hr>
-      <div class="row"  onchange=findTotal()>
+      <div class="row" >
         <div class="col">
           <label for="force">Force</label>
           <input type="number" class="form-control qty" max="60" step="1" name="strengh" id="force" placeholder="0">
@@ -142,7 +142,7 @@
       </div>
 
       <div class="col-auto">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button class="btn btn-primary" id="submit_caracter-creation">Submit</button>
       </div>
     </form>
   </div>
@@ -160,29 +160,37 @@
   <script src="/static/chat/bundle.js" type="text/javascript"></script>
 
   <script type="text/javascript">
-    function findTotal(){
 
-      let maxpoint = 200;
-      let elems = document.getElementsByClassName('qty'), i = elems.length, total = 0;
-      while (i--) {
-        if(elems[i].value > 60){
-          elems[i].value = 60
-        }
+    const maxPts = 200;
+    const elems = document.getElementsByClassName('qty');
+    for(const el of elems) {
+      el.addEventListener("change", limitTotal);
+    }
 
-        total += elems[i].value | 0;
+    function limitTotal(ev) {
+      const nbPtsEv = parseInt(ev.target.value, 10);
+      let totalNb = 0;
 
-        if(total >= maxpoint){
-          elems[i].value = 0
-        }
-        
+      for(const el of elems) {
+        console.log(el.value);
+        totalNb += parseInt(el.value | 0, 10);
       }
 
-      let len = maxpoint - total.toFixed(0)
+      const ptsToDistrib = maxPts - totalNb;
+      if (ptsToDistrib < 0) {
+        if (ptsToDistrib + nbPtsEv > 0) {
+          ev.target.value = ptsToDistrib + nbPtsEv;
+          totalNb = maxPts;
+        } else {
+          //resetAll
+          for(const el of elems) {
+            el.value = 0;
+          }
+          totalNb = 0;
+        }
+      }
 
-      if(len < 0){len = 0} 
-
-      document.getElementById("totalPoint").innerHTML = len;
-      console.log(total);
+      document.getElementById("totalPoint").innerText = (maxPts - totalNb).toString(10);
     }
   </script>
 </body>

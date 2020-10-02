@@ -15,26 +15,7 @@ pub struct NewUserInput<> {
 
 #[derive(FromForm, Clone, Debug)]
 pub struct CaracterStats<> {
-    pub name: String,
-    pub race: String,
-    pub class: String,
-    pub level: String,
-    pub age: String,
-    pub reputation: String,
-    pub particularity: String,
-    pub alignment: String,
-    pub weapon: String,
-    pub distance_weapon: String,
-    pub bare_hand: String,
-    pub armor: String,
-    pub strengh: String,
-    pub dexterity: String,
-    pub endurance: String,
-    pub charism: String,
-    pub perception: String,
-    pub luck: String,
-    pub willpower: String,
-    pub education: String,
+    pub stats: String,
 }
 
 // #[derive(FromForm, Clone, Debug)]
