@@ -56,17 +56,19 @@
         </div>
       </div>
       <br>
-      <p class="lead">Il y a <span id="totalPoint">200</span> points à répartir dans les 8 caractéristiques. 60 points maximun dans une catégorie, 10
+      <p class="lead">Il y a <span id="totalPoint">200</span> points à répartir dans les 8 caractéristiques. 60 points
+        maximun dans une catégorie, 10
         points minimum.</p>
 
       <hr>
-      <div class="row" >
+      <div class="row">
         <div class="col">
           <label for="force">Force</label>
           <input type="number" class="form-control qty" max="60" step="1" name="strengh" id="force" placeholder="0">
 
           <label for="dexterite">Dexterité</label>
-          <input type="number" class="form-control qty" max="60" step="1" name="dexterity" id="dexterite" placeholder="0">
+          <input type="number" class="form-control qty" max="60" step="1" name="dexterity" id="dexterite"
+            placeholder="0">
 
           <label for="chance">Chance</label>
           <input type="number" class="form-control qty" max="60" step="1" name="luck" id="chance" placeholder="0">
@@ -77,16 +79,19 @@
         </div>
         <div class="col">
           <label for="constitution">Constitution</label>
-          <input type="number" class="form-control qty" max="60" step="1" name="endurance" id="constitution" placeholder="0">
+          <input type="number" class="form-control qty" max="60" step="1" name="endurance" id="constitution"
+            placeholder="0">
 
           <label for="charisme">Charisme</label>
           <input type="number" class="form-control qty" max="60" step="1" name="charism" id="charisme" placeholder="0">
 
           <label for="perception">Perception</label>
-          <input type="number" class="form-control qty" max="60" step="1" name="perception" id="perception" placeholder="0">
+          <input type="number" class="form-control qty" max="60" step="1" name="perception" id="perception"
+            placeholder="0">
 
           <label for="education">Education</label>
-          <input type="number" class="form-control qty" max="60" step="1" name="education" id="education" placeholder="0">
+          <input type="number" class="form-control qty" max="60" step="1" name="education" id="education"
+            placeholder="0">
         </div>
 
       </div>
@@ -120,14 +125,15 @@
       </div>
 
       <hr>
-      
+
       <div class="row">
         <div class="col">
           <label for="weapon">Arme</label>
           <input type="number" class="form-control" name="weapon" id="weapon" step="1" min="0" placeholder="0">
 
           <label for="distance_weapon">Arme à distance</label>
-          <input type="number" class="form-control" name="distance_weapon" step="1" id="distance_weapon" min="0" placeholder="0">
+          <input type="number" class="form-control" name="distance_weapon" step="1" id="distance_weapon" min="0"
+            placeholder="0">
 
         </div>
 
@@ -136,7 +142,7 @@
           <input type="number" class="form-control" name="bare_hand" step="1" id="bare_hand" min="0" placeholder="0">
 
           <label for="armor">Armure</label>
-          <input type="number" class="form-control" name="armor" step="1" id="armor" max="0"  min="-5" placeholder="0">
+          <input type="number" class="form-control" name="armor" step="1" id="armor" max="0" min="-5" placeholder="0">
 
         </div>
       </div>
@@ -157,41 +163,340 @@
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
     crossorigin="anonymous"></script>
 
-  <script src="/static/chat/bundle.js" type="text/javascript"></script>
+  <script src="./bundle.js" type="text/javascript"></script>
 
   <script type="text/javascript">
 
-    const maxPts = 200;
+    // HTML EVENT
     const elems = document.getElementsByClassName('qty');
-    for(const el of elems) {
-      el.addEventListener("change", limitTotal);
+    for (const el of elems) {
+      el.addEventListener("change", inputStatsChangeEvent);
     }
 
-    function limitTotal(ev) {
-      const nbPtsEv = parseInt(ev.target.value, 10);
-      let totalNb = 0;
+    document.getElementById('raceSelect').addEventListener('change', function (e) {
+      const raceTxt = this.value;
+      const statsRaceSelect = stats.race[raceTxt];
 
-      for(const el of elems) {
-        console.log(el.value);
-        totalNb += parseInt(el.value | 0, 10);
+
+      for (const prop in raceStats) {
+        raceStats[prop] = 0;
       }
 
-      const ptsToDistrib = maxPts - totalNb;
-      if (ptsToDistrib < 0) {
-        if (ptsToDistrib + nbPtsEv > 0) {
-          ev.target.value = ptsToDistrib + nbPtsEv;
-          totalNb = maxPts;
-        } else {
-          //resetAll
-          for(const el of elems) {
-            el.value = 0;
+      for (const prop in statsRaceSelect) {
+        raceStats[prop] = statsRaceSelect[prop];
+      }
+
+      for (const el of elems) {
+        const statsName = el.name;
+        const computeNatural = getNaturalStats(statsName);
+        el.setAttribute('min', computeNatural.toString(10));
+        // el.value = computeNatural.toString(10);
+      }
+
+      recomputeAllStats();
+      displayPtsToDistrib();
+    });
+
+    document.getElementById('classSelect').addEventListener('change', function (e) {
+      const classTxt = this.value;
+      const statsClassSelected = stats.class[classTxt];
+
+      for (const prop in classStats) {
+        classStats[prop] = 0;
+      }
+
+      for (const prop in statsClassSelected) {
+        classStats[prop] = statsClassSelected[prop];
+      }
+
+      for (const el of elems) {
+        const statsName = el.name;
+        const computeNatural = getNaturalStats(statsName);
+
+        el.setAttribute('min', computeNatural.toString(10));
+        // el.value = computeNatural.toString(10);
+      }
+
+      recomputeAllStats();
+      displayPtsToDistrib();
+    });
+
+    function displayPtsToDistrib() {
+      document.getElementById("totalPoint").innerText = (getNbPtsToDistrib()).toString(10);
+    }
+
+    function inputStatsChangeEvent(ev) {
+      const ptsTotal = getTotalPtsDistrib();
+      elCompute(ev.target, ptsTotal);
+
+      displayPtsToDistrib();
+    }
+
+    function elCompute(inputHTML, ptsTotal) {
+
+      const statsName = inputHTML.name;
+      let nbPtsInputHTML = parseInt(inputHTML.value, 10);
+      if (isNaN(nbPtsInputHTML) === true) {
+        nbPtsInputHTML = 0;
+      }
+
+      //J'ai le chiffre rentre je regarde
+      //Si il est compris entre naturalStats et le max (60)
+      //  Si oui le capé
+      //En deduire le nombre de ptsDistribué et empeche de depasser maxPts
+      //  Si c'est le cas l'empecher
+
+      const naturalStats = getNaturalStats(statsName);
+      if (nbPtsInputHTML < naturalStats) {
+        nbPtsInputHTML = naturalStats;
+      }
+      if (nbPtsInputHTML > 60) {
+        nbPtsInputHTML = 60;
+      }
+      console.log(statsName +' Natural = '+ naturalStats);
+      console.log(statsName +' Input = '+ nbPtsInputHTML);
+
+      let distribPts = getPtsDistribFromStat(statsName, nbPtsInputHTML);
+      const oldStatsPts = distribStats[statsName];
+      const diffDistribPts = distribPts - oldStatsPts;
+      
+      if (ptsTotal + diffDistribPts > maxPts) {
+        distribPts -= (ptsTotal + diffDistribPts) - maxPts;
+        console.log(' Distrib = '+ distribPts);
+      }
+
+
+      if (distribPts < 0) {
+        distribPts = 0;
+      }
+      distribStats[statsName] = distribPts;
+
+      inputHTML.value = getTotalsPtsForStats(statsName);
+    }
+
+    function recomputeAllStats() {
+      const ptsTotal = getTotalPtsDistrib();
+
+      for (const el of elems) {
+        elCompute(el, ptsTotal);
+      }
+    }
+
+
+    // CORE INTERNAL
+
+    const raceStats = {
+      strengh: 0,
+      dexterity: 0,
+      luck: 0,
+      willpower: 0,
+      endurance: 0,
+      charism: 0,
+      perception: 0,
+      education: 0
+    };
+    const classStats = {
+      strengh: 0,
+      dexterity: 0,
+      luck: 0,
+      willpower: 0,
+      endurance: 0,
+      charism: 0,
+      perception: 0,
+      education: 0
+    };
+    const distribStats = {
+      strengh: 0,
+      dexterity: 0,
+      luck: 0,
+      willpower: 0,
+      endurance: 0,
+      charism: 0,
+      perception: 0,
+      education: 0
+    };
+    const maxPts = 200;
+
+    const stats = {
+      race: {
+        "troll": {
+          "strengh": 15,
+          "education": -5,
+          "charism": -10,
+        },
+        "elf": {
+          "willpower": 10,
+          "charism": 5,
+          "strengh": -10,
+        },
+        "humain": {
+          "dexterity": 10,
+          "endurance": -10,
+        },
+        "demiElf": {
+          "willpower": 5,
+          "education": 5,
+          "endurance": -5,
+          "strengh": -5,
+        },
+        "nain": {
+          "endurance": 5,
+          "strengh": 5,
+          "dexterity": -10,
+          "charism": -5,
+        },
+        "saurial": {
+          "dexterity": 5,
+          "perception": 5,
+          "charism": -5,
+          "education": -5,
+          "endurance": -5,
+        },
+      },
+      class: {
+        "guerrier": {
+          "strengh": 10,
+          "endurance": 10,
+          "willpower": -20,
+        },
+        "mage": {
+          "willpower": 20,
+          "strengh": -20,
+          "education": 10,
+        },
+        "voleur": {
+          "dexterity": 20,
+          "strengh": -15,
+          "endurance": -15,
+        },
+        "archer": {
+          "dexterity": 10,
+          "endurance": -10,
+          "education": 5,
+          "perception": 5,
+        },
+        "monk": {
+          "strengh": 5,
+          "dexterity": 5,
+          "endurance": 5,
+          "education": 5,
+          "charism": -15,
+        },
+        "drood": {
+          "strengh": 10,
+          "willpower": 5,
+          "charism": -5,
+          "education": -5,
+        },
+        "paladin": {
+          "endurance": 10,
+          "willpower": 5,
+          "dexterity": -10,
+          "strengh": -5,
+        },
+        "alchimist": {
+          "strengh": 15,
+          "education": 15,
+          "willpower": -10,
+          "charism": 15,
+          "endurance": -5,
+        },
+      }
+    }
+
+    function resetStatsDistrib() {
+      for (prop in distribStats) {
+        distribStats[prop] = 0;
+      }
+    }
+
+    function getNbPtsToDistrib() {
+      return maxPts - getTotalPtsDistrib();
+    }
+
+    function getTotalPtsDistrib() {
+      let ptsTotal = 0;
+      for (const prop in distribStats) {
+        ptsTotal += distribStats[prop];
+      }
+
+      console.log(ptsTotal);
+
+      return ptsTotal;
+    }
+
+
+    function getPtsDistribFromStat(nameStatProperty, nbPts) {
+      const naturalStats = getNaturalStats(nameStatProperty);
+
+      return computePtsDistrib(naturalStats, nbPts)
+    }
+
+    function computePtsDistrib(naturalStats, nbPts) {
+      return nbPts - naturalStats;
+    } 
+
+    function getTotalsPtsForStats(nameStatsProperty) {
+      return distribStats[nameStatsProperty] + getNaturalStats(nameStatsProperty);
+    }
+
+    function getNaturalStats(nameStatProperty) {
+      return raceStats[nameStatProperty] + classStats[nameStatProperty];
+    }
+
+    function checkRulesAllStats() {
+      let errorStats = [];
+
+      for (const prop in distribStats) {
+        const totalPtsStats = getTotalsPtsForStats(prop);
+        if (isStatsPropertyOk(totalPtsStats) === false) {
+          errorStats.push({
+            stats: prop,
+            pts: totalPtsStats
           }
-          totalNb = 0;
+          );
         }
       }
 
-      document.getElementById("totalPoint").innerText = (maxPts - totalNb).toString(10);
+      return errorStats;
     }
+
+    function isStatsPropertyOk(pts) {
+      if (pts >= 10 && pts <= 60) {
+        return true;
+      }
+
+      return false;
+    }
+
+
+
+    // function limitTotal(ev) {
+    //   const nbPtsEv = parseInt(ev.target.value, 10);
+    //   let totalNb = 0;
+
+    //   for(const el of elems) {
+    //     console.log(el.value);
+    //     totalNb += parseInt(el.value | 0, 10);
+    //   }
+
+    //   const ptsToDistrib = maxPts - totalNb;
+    //   if (ptsToDistrib < 0) {
+    //     if (ptsToDistrib + nbPtsEv > 0) {
+    //       ev.target.value = ptsToDistrib + nbPtsEv;
+    //       totalNb = maxPts;
+    //     } else {
+    //       //resetAll
+    //       for(const el of elems) {
+    //         el.value = 0;
+    //       }
+    //       totalNb = 0;
+    //     }
+    //   }
+
+    //   document.getElementById("totalPoint").innerText = (maxPts - totalNb).toString(10);
+    // }
+
   </script>
 </body>
 
