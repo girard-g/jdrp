@@ -56,17 +56,19 @@
         </div>
       </div>
       <br>
-      <p class="lead">Il y a <span id="totalPoint">200</span> points à répartir dans les 8 caractéristiques. 60 points maximun dans une catégorie, 10
+      <p class="lead">Il y a <span id="totalPoint">200</span> points à répartir dans les 8 caractéristiques. 60 points
+        maximun dans une catégorie, 10
         points minimum.</p>
 
       <hr>
-      <div class="row" >
+      <div class="row">
         <div class="col">
           <label for="force">Force</label>
           <input type="number" class="form-control qty" max="60" step="1" name="strengh" id="force" placeholder="0">
 
           <label for="dexterite">Dexterité</label>
-          <input type="number" class="form-control qty" max="60" step="1" name="dexterity" id="dexterite" placeholder="0">
+          <input type="number" class="form-control qty" max="60" step="1" name="dexterity" id="dexterite"
+            placeholder="0">
 
           <label for="chance">Chance</label>
           <input type="number" class="form-control qty" max="60" step="1" name="luck" id="chance" placeholder="0">
@@ -77,16 +79,19 @@
         </div>
         <div class="col">
           <label for="constitution">Constitution</label>
-          <input type="number" class="form-control qty" max="60" step="1" name="endurance" id="constitution" placeholder="0">
+          <input type="number" class="form-control qty" max="60" step="1" name="endurance" id="constitution"
+            placeholder="0">
 
           <label for="charisme">Charisme</label>
           <input type="number" class="form-control qty" max="60" step="1" name="charism" id="charisme" placeholder="0">
 
           <label for="perception">Perception</label>
-          <input type="number" class="form-control qty" max="60" step="1" name="perception" id="perception" placeholder="0">
+          <input type="number" class="form-control qty" max="60" step="1" name="perception" id="perception"
+            placeholder="0">
 
           <label for="education">Education</label>
-          <input type="number" class="form-control qty" max="60" step="1" name="education" id="education" placeholder="0">
+          <input type="number" class="form-control qty" max="60" step="1" name="education" id="education"
+            placeholder="0">
         </div>
 
       </div>
@@ -120,14 +125,15 @@
       </div>
 
       <hr>
-      
+
       <div class="row">
         <div class="col">
           <label for="weapon">Arme</label>
           <input type="number" class="form-control" name="weapon" id="weapon" step="1" min="0" placeholder="0">
 
           <label for="distance_weapon">Arme à distance</label>
-          <input type="number" class="form-control" name="distance_weapon" step="1" id="distance_weapon" min="0" placeholder="0">
+          <input type="number" class="form-control" name="distance_weapon" step="1" id="distance_weapon" min="0"
+            placeholder="0">
 
         </div>
 
@@ -136,7 +142,7 @@
           <input type="number" class="form-control" name="bare_hand" step="1" id="bare_hand" min="0" placeholder="0">
 
           <label for="armor">Armure</label>
-          <input type="number" class="form-control" name="armor" step="1" id="armor" max="0"  min="-5" placeholder="0">
+          <input type="number" class="form-control" name="armor" step="1" id="armor" max="0" min="-5" placeholder="0">
 
         </div>
       </div>
@@ -163,7 +169,7 @@
 
     const maxPts = 200;
     const elems = document.getElementsByClassName('qty');
-    for(const el of elems) {
+    for (const el of elems) {
       el.addEventListener("change", limitTotal);
     }
 
@@ -171,7 +177,7 @@
       const nbPtsEv = parseInt(ev.target.value, 10);
       let totalNb = 0;
 
-      for(const el of elems) {
+      for (const el of elems) {
         console.log(el.value);
         totalNb += parseInt(el.value | 0, 10);
       }
@@ -183,7 +189,7 @@
           totalNb = maxPts;
         } else {
           //resetAll
-          for(const el of elems) {
+          for (const el of elems) {
             el.value = 0;
           }
           totalNb = 0;

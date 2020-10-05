@@ -1,15 +1,14 @@
 #![feature(
-proc_macro_hygiene,
-decl_macro,
-register_tool,
-register_attr,
-rustc_private,
-type_ascription
+    proc_macro_hygiene,
+    decl_macro,
+    register_tool,
+    register_attr,
+    rustc_private,
+    type_ascription
 )]
 
 #[macro_use]
 extern crate ws;
-
 
 extern crate dotenv;
 #[macro_use]
@@ -20,8 +19,8 @@ extern crate serde_json;
 
 // use std::thread;
 
-mod resources;
 mod repository;
+mod resources;
 // use crate::repository::mainlib::{create_connection, get_five_last_posts};
 
 mod route;
@@ -37,16 +36,14 @@ fn rocket() -> rocket::Rocket {
     let rocket_routes = routes![
         static_files::file,
         get::index,
-        // get::chat,
         get::submit_task,
         get::logout,
         get::player_dashboard,
         get::create,
         get::check_creation,
         get::player_stats,
-        get::test,
-        get::check_caracter_creation
-        // get::posts,
+        get::create_character,
+        get::check_caracter_creation,
     ];
 
     rocket::ignite().mount("/", rocket_routes)
