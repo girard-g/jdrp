@@ -19,7 +19,7 @@
     <form action="" method="POST" id="caracter_form">
       <div class="row">
         <div class="col-auto">
-          <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Races</label>
+          <label class="mr-sm-2 sr-only" for="raceSelect">Races</label>
           <select class="custom-select mr-sm-2" id="raceSelect" name="race">
             <option selected>Choose...</option>
             <option value="troll">Troll</option>
@@ -32,7 +32,7 @@
         </div>
 
         <div class="col-auto">
-          <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Classes</label>
+          <label class="mr-sm-2 sr-only" for="classSelect">Classes</label>
           <select class="custom-select mr-sm-2" id="classSelect" name="class">
             <option selected>Choose...</option>
             <option value="guerrier">Guerrier</option>
@@ -100,7 +100,7 @@
 
       <div class="row">
         <div class="col">
-          <label for="name">Nom</label>
+          <label for="nom">Nom</label>
           <input type="text" class="form-control" name="name" id="nom">
 
           <label for="age">Age</label>
@@ -462,7 +462,7 @@
     }
 
     function isStatsPropertyOk(pts) {
-      if (pts >= 10 && pts <= 60) {
+      if (pts >= 10 && pts <= 70) {
         return true;
       }
 
