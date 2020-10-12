@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct CaracterStats<> {
     pub name: String,
     pub race: String,
@@ -13,7 +13,7 @@ pub struct CaracterStats<> {
     pub weapon: u8,
     pub distance_weapon: u8,
     pub bare_hand: u8,
-    pub armor: u8,
+    pub armor: i8,
     pub strengh: u8,
     pub dexterity: u8,
     pub endurance: u8,
