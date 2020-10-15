@@ -22,12 +22,13 @@
           <label class="mr-sm-2 sr-only" for="raceSelect">Races</label>
           <select class="custom-select mr-sm-2" id="raceSelect" name="race">
             <option selected>Choose...</option>
-            <option value="troll">Troll</option>
+            <option value="demiOrc">Demi Orc</option>
             <option value="elfe">Elfe</option>
             <option value="humain">Humain</option>
             <option value="demi-elf">Demi Elfe</option>
             <option value="nain">Nain</option>
             <option value="saurial">Saurial</option>
+            <option value="cambion">Cambion</option>
           </select>
         </div>
 
@@ -37,12 +38,12 @@
             <option selected>Choose...</option>
             <option value="guerrier">Guerrier</option>
             <option value="mage">Mage</option>
-            <option value="voleur">Voleur</option>
-            <option value="archer">Archer</option>
+            <option value="roublard">Roublard</option>
+            <option value="rodeur">Rodeur</option>
             <option value="moine">Moine</option>
             <option value="druid">Druide</option>
             <option value="paladin">Paladin</option>
-            <option value="alchimiste">Alchimiste</option>
+            <option value="clerc">Clerc</option>
           </select>
         </div>
 
@@ -319,88 +320,109 @@
 
     const stats = {
       race: {
-        "troll": {
-          "strengh": 15,
-          "education": -5,
-          "charism": -10,
-        },
-        "elf": {
-          "willpower": 10,
-          "charism": 5,
-          "strengh": -10,
-        },
-        "humain": {
-          "dexterity": 10,
-          "endurance": -10,
-        },
-        "demiElf": {
-          "willpower": 5,
-          "education": 5,
-          "endurance": -5,
-          "strengh": -5,
-        },
-        "nain": {
-          "endurance": 5,
-          "strengh": 5,
-          "dexterity": -10,
-          "charism": -5,
-        },
-        "saurial": {
-          "dexterity": 5,
-          "perception": 5,
-          "charism": -5,
-          "education": -5,
-          "endurance": -5,
-        },
+        "demiOrc": {
+                "force": 15,
+                "endurance": 10,
+                "charism": -10,
+                "education": -5,
+            },
+            "elf": {
+                "force": -10,
+                "dexterity": 5,
+                "willpower": 10,
+                "charism": 5,
+            },
+            "humain": {
+                "dexterity": 10,
+                "luck": 5,
+                "endurance": -10,
+                "charism": 5,
+            },
+            "demiElf": {
+                "force": -5,
+                "dexterity": 5,
+                "willpower": 5,
+                "endurance": -5,
+                "charism": 5,
+                "education": 5,
+            },
+            "nain": {
+                "force": 10,
+                "dexterity": -10,
+                "willpower": 5,
+                "endurance": 5,
+                "charism": -5,
+                "perception": 5,
+            },
+            "saurial": {
+                "dexterity": 5,
+                "luck": 5,
+                "endurance": -5,
+                "charism": -5,
+                "perception": 10,
+            },
+            "cambion": {
+                "force": 5,
+                "dexterity": 5,
+                "luck": 5,
+                "willpower": 10,
+                "charism": -10,
+                "education": -5,
+            },
       },
       class: {
         "guerrier": {
-          "strengh": 10,
-          "endurance": 10,
-          "willpower": -20,
-        },
-        "mage": {
-          "willpower": 20,
-          "strengh": -20,
-          "education": 10,
-        },
-        "voleur": {
-          "dexterity": 20,
-          "strengh": -15,
-          "endurance": -15,
-        },
-        "archer": {
-          "dexterity": 10,
-          "endurance": -10,
-          "education": 5,
-          "perception": 5,
-        },
-        "monk": {
-          "strengh": 5,
-          "dexterity": 5,
-          "endurance": 5,
-          "education": 5,
-          "charism": -15,
-        },
-        "drood": {
-          "strengh": 10,
-          "willpower": 5,
-          "charism": -5,
-          "education": -5,
-        },
-        "paladin": {
-          "endurance": 10,
-          "willpower": 5,
-          "dexterity": -10,
-          "strengh": -5,
-        },
-        "alchimist": {
-          "strengh": 15,
-          "education": 15,
-          "willpower": -10,
-          "charism": 15,
-          "endurance": -5,
-        },
+                "force": 10,
+                "dexterity": 5,
+                "willpower": -15,
+                "endurance": 10,
+            },
+            "mage": {
+                "force": -20,
+                "willpower": 20,
+                "education": 10,
+            },
+            "roublard": {
+                "force": -15,
+                "dexterity": 15,
+                "luck": 5,
+                "willpower": 5,
+                "endurance": -10,
+                "perception": 10,
+            },
+            "rodeur": {
+                "dexterity": 10,
+                "luck": 5,
+                "endurance": -10,
+                "perception": 5,
+            },
+            "monk": {
+                "force": 5,
+                "dexterity": 5,
+                "endurance": 5,
+                "charism": -10,
+                "education": 5,
+            },
+            "drood": {
+                "force": 5,
+                "dexterity": -10,
+                "willpower": 5,
+                "endurance": 10,
+            },
+            "paladin": {
+                "force": 10,
+                "dexterity": -5,
+                "willpower": 5,
+                "endurance": 5,
+                "perception": -5,
+            },
+            "clerc": {
+                "force": 5,
+                "dexterity": -5,
+                "willpower": 10,
+                "endurance": -10,
+                "education": 10,
+            },
       }
     }
 

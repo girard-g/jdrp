@@ -62,8 +62,8 @@ document.getElementById('raceSelect').addEventListener('change', function (e) {
     let totot = document.getElementById('tip');
     let txt = "";
 
-    if (this.value == "troll") {
-        txt = "<strong>Race attributs:</strong> " + toto.race.troll.strengh + " force  " + toto.race.troll.education + " education " + toto.race.troll.charism + " charisme";
+    if (this.value == "demiOrc") {
+        txt = "<strong>Race attributs:</strong> " + toto.race.demiOrc.strengh + " force  " + toto.race.demiOrc.education + " education " + toto.race.demiOrc.charism + " charisme";
     } else if (this.value == "elf") {
         txt = "<strong>Race attributs:</strong> " + toto.race.elf.willpower + " volonté  " + toto.race.elf.charism + " charisme  " + toto.race.elf.force + " force";
     } else if (this.value == "humain") {
@@ -74,8 +74,10 @@ document.getElementById('raceSelect').addEventListener('change', function (e) {
         txt = "<strong>Race attributs:</strong> " + toto.race.nain.endurance + " constitution  " + toto.race.nain.force + " force  " + toto.race.nain.dexterity + " dextérité  " + toto.race.nain.charism + " charisme";
     } else if (this.value == "saurial") {
         txt = "<strong>Race attributs:</strong> " + toto.race.saurial.dexterity + " dextérité " + toto.race.saurial.perception + " perception " + toto.race.saurial.charism + " charisme, " + toto.race.saurial.education + " éducation " + toto.race.saurial.endurance + " constitution";
+    }else if (this.value == "cambion") {
+        txt = "<strong>Race attributs:</strong> " + toto.race.cambion.force + " force " + toto.race.cambion.dexterity + " dextérité " + toto.race.cambion.luck + " chance, " + toto.race.cambion.willpower + " volonté " + toto.race.cambion.charism + " charisme" + toto.race.cambion.education + " education";
     }
-
+   
     totot.innerHTML = txt;
 });
 
@@ -87,9 +89,9 @@ document.getElementById('classSelect').addEventListener('change', function (e) {
         txt = "<strong>Class attributs:</strong> " + toto.class.guerrier.force + " force " + toto.class.guerrier.endurance + " constitution " + toto.class.guerrier.willpower + " volonté, peut maitriser toutes les armes";
     } else if (this.value == "mage") {
         txt = "<strong>Class attributs:</strong> " + toto.class.mage.willpower + " volonté " + toto.class.mage.force + " en force " + toto.class.mage.education + " en éducation (3 sorts au choix)";
-    } else if (this.value == "voleur") {
+    } else if (this.value == "roublard") {
         txt = "<strong>Class attributs:</strong> " + toto.class.voleur.dexterity + " en dextérité " + toto.class.voleur.force + " en force " + toto.class.voleur.endurance + " constitution ( spécialiste des attaques sournoises, à des aptitudes d’attaques dans le dos)";
-    } else if (this.value == "archer") {
+    } else if (this.value == "rodeur") {
         txt = "<strong>Class attributs:</strong> " + toto.class.archer.dexterity + " dextérité " + toto.class.archer.endurance + " en constitution " + toto.class.archer.education + " en éducation " + toto.class.archer.perception + " perception (Utilise des arcs, est un pisteur et possède un familier possédant le quart de ses aptitudes)";
     } else if (this.value == "moine") {
         txt = "<strong>Class attributs:</strong> " + toto.class.monk.force + " en force " + toto.class.monk.dexterity + " dextérité " + toto.class.monk.endurance + " constitution " + toto.class.monk.education + " éducation " + toto.class.monk.charism + " charisme (Bercé dans les mantras, le moine peut soigner ses alliés (1d10) c’est aussi un expert du combat à mains nues. Ne porte pas d’armes).";
@@ -97,7 +99,7 @@ document.getElementById('classSelect').addEventListener('change', function (e) {
         txt = "<strong>Class attributs:</strong> " + toto.class.drood.force + " force, " + toto.class.drood.force + " volonté " + toto.class.drood.charism + " charisme " + toto.class.drood.education + " éducation (Classe de nature, peut dompter les animaux. Possède une capacité : Forme animal. 0 définir au dés. Peut se changer une fois par jour)";
     } else if (this.value == "paladin") {
         txt = "<strong>Class attributs:</strong> " + toto.class.paladin.endurance + " constitution, " + toto.class.paladin.willpower + " volonté, " + toto.class.paladin.dexterity + " dextérité, " + toto.class.paladin.force + " force (apposition des mains, heal de 1d10).";
-    } else if (this.value == "alchimiste") {
+    } else if (this.value == "clerc") {
         txt = "<strong>Class attributs:</strong> " + toto.class.alchimist.force + " force, " + toto.class.alchimist.education + " education, " + toto.class.alchimist.willpower + " volonté, " + toto.class.alchimist.charism + " charisme, " + toto.class.alchimist.endurance + " constitution (Spécialiste des herbes et cataplasmes, peu crafter des remèdes, poisons etc …)";
     }
 
@@ -130,23 +132,23 @@ document.getElementById('check').addEventListener('click', function (e) {
     perception.value = 0;
     education.value = 0;
 
-    if (raceID == "troll") {
+    if (raceID == "demiOrc") {
 
         if (force.value == 0 || force.value == null) {
-            force.value = toto.race.troll.strengh
-        } else if (force.value == toto.race.troll.strengh) {
+            force.value = toto.race.demiOrc.strengh
+        } else if (force.value == toto.race.demiOrc.strengh) {
             force.value = force.value
         }
 
         if (education.value == 0 || education.value == null) {
-            education.value = toto.race.troll.education
-        } else if (education.value == toto.race.troll.education) {
+            education.value = toto.race.demiOrc.education
+        } else if (education.value == toto.race.demiOrc.education) {
             education.value = education.value
         }
 
         if (charism.value == 0 || charism.value == null) {
-            charism.value = toto.race.troll.charism
-        } else if (charism.value == toto.race.troll.charism) {
+            charism.value = toto.race.demiOrc.charism
+        } else if (charism.value == toto.race.demiOrc.charism) {
             charism.value = charism.value
         }
 
@@ -321,7 +323,7 @@ document.getElementById('check').addEventListener('click', function (e) {
             education.value = parseInt(education.value) + toto.class.mage.education;
         }
 
-    } else if (classID == "voleur") {
+    } else if (classID == "roublard") {
 
         if (dexterity.value == 0 || dexterity.value == null) {
             dexterity.value = toto.class.voleur.dexterity
@@ -347,7 +349,7 @@ document.getElementById('check').addEventListener('click', function (e) {
             endurance.value = parseInt(endurance.value) + toto.class.voleur.endurance;
         }
 
-    } else if (classID == "archer") {
+    } else if (classID == "rodeur") {
 
         if (dexterity.value == 0 || dexterity.value == null) {
             dexterity.value = toto.class.archer.dexterity
@@ -491,7 +493,7 @@ document.getElementById('check').addEventListener('click', function (e) {
             force.value = parseInt(force.value) + toto.class.paladin.force;
         }
     }
-    else if (classID == "alchimiste") {
+    else if (classID == "clerc") {
 
         if (force.value == 0 || force.value == null) {
             force.value = toto.class.alchimist.force
