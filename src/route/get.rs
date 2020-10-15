@@ -1,18 +1,19 @@
 use std::io;
 use rocket::response::NamedFile;
-use rocket::response::content::Json;
+use rocket_contrib::json::Json;
 use rocket::request::Form;
 use crate::route::models::{NewUserInput, UserInput};
 use rocket::response::Redirect;
 use rocket::http::{Cookies, Cookie};
+use crate::resources::models::CaracterStats;
 
 #[get("/")]
 pub fn index() -> io::Result<NamedFile> {
     NamedFile::open("static/chat/login.html")
 }
 
-#[get("/test")]
-pub fn test() -> io::Result<NamedFile> {
+#[get("/create-character/<uid>")]
+pub fn create_character(uid: String) -> io::Result<NamedFile> {
     NamedFile::open("static/chat/caracter_creation.html")
 }
 
@@ -53,19 +54,50 @@ pub fn submit_task(user_input: Form<UserInput>, cookies: Cookies) -> Redirect  {
 }
 
 #[post("/check-creation", data = "<user_input>")]
-pub fn check_creation(user_input: Form<NewUserInput>, cookies: Cookies) -> Redirect  {
+pub fn check_creation(user_input: Form<NewUserInput>, mut cookies: Cookies) -> Redirect  {
     use crate::repository::mainlib::save_user;
 
     match user_input.password == user_input.checkpassword {
         true => {
             let id = save_user(&user_input);
-
+            let s2 = id.clone();
             //TODO: Make a form for creating his caracter
+            cookies.add_private(Cookie::new("user_id", id));
+            Redirect::to(uri!(create_character: s2))
 
-            return loginng(id, cookies);
+            // return loginng(id, cookies);
 
         }
-        _ => Redirect::to(uri!(create))
+        _ => Redirect::to(uri!(index))
+    }
+
+}
+
+
+#[post("/check-caracter-creation/<uid>", format = "application/json", data = "<user_input>")]
+pub fn check_caracter_creation(uid: String, user_input: Json<CaracterStats>, mut cookies: Cookies) -> Json<String>  {
+    use crate::repository::mainlib::save_player_stats;
+    // use crate::resources::models::CaracterStats;
+
+    let logged_in_user = cookies.get_private("user_id");
+
+    match logged_in_user {
+        Some(user) => {
+            let logged_in_uid = user.value().parse::<String>().unwrap();
+            println!("{:#?}", logged_in_uid);
+            println!("{:#?}", uid);
+            if logged_in_uid == uid {
+               
+                // let decoded: CaracterStats = serde_json::from_str(&user_input);
+                println!("Player Saved {:#?}", user_input);
+                save_player_stats(uid, user_input.into_inner());
+                Json(String::from("TRUE"))
+
+            } else {
+                Json(String::from("FALSE"))
+            } 
+        },
+        None =>  Json(String::from("FALSE"))
     }
 
 }
@@ -100,7 +132,7 @@ pub fn player_dashboard(uid: String, mut cookies: Cookies) -> io::Result<NamedFi
 }
 
 
-#[post("/users/player-stats/<uid>")]
+#[get("/users/player-stats/<uid>")]
 pub fn player_stats(uid: String, mut cookies: Cookies) -> Json<String>  {
     use crate::repository::mainlib::get_player_stats;
 

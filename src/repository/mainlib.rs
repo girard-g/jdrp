@@ -2,8 +2,10 @@ use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 use dotenv::dotenv;
 use std::env;
-use crate::repository::models::{Player, NewPlayer, Caracter};
+use crate::repository::models::{Player, NewPlayer, Caracter, NewCaracter};
 use crate::route::models::NewUserInput;
+use crate::resources::models::{CaracterStats};
+use serde::{Deserialize, Serialize};
 
 
 pub fn create_connection() -> SqliteConnection {
@@ -57,6 +59,36 @@ pub fn save_user(player :&NewUserInput)-> String {
         .expect("Error saving new player");
 
         new_player.id
+
+}
+
+pub fn save_player_stats(playerid :String, caracter_stats: CaracterStats) -> () 
+{
+    use crate::repository::schema::caracter;
+    use rand::{thread_rng, Rng};
+    use rand::distributions::Alphanumeric;
+
+    let connection = create_connection();
+
+
+    let rand_string: String = thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(30)
+        .collect();
+
+        let json_caracter_stats = serde_json::to_string(&caracter_stats).unwrap();
+
+    let new_caracter = NewCaracter{
+        id: rand_string,
+        player_id: playerid,
+        stats: json_caracter_stats
+    };
+
+    diesel::insert_into(caracter::table)
+        .values(&new_caracter)
+        .execute(&connection)
+        .expect("Error saving new player");
+
 
 }
 
