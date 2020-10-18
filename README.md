@@ -1,4 +1,4 @@
-![Rust](https://github.com/Evergreenn/RustChatApp/workflows/Rust/badge.svg)
+![Rust](https://github.com/Evergreenn/jdrp/workflows/Rust/badge.svg)
 
 # JDRP App
 
