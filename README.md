@@ -1,4 +1,4 @@
-![Rust](https://github.com/Evergreenn/RustChatApp/workflows/Rust/badge.svg)
+![Rust](https://github.com/Evergreenn/jdrp/workflows/Rust/badge.svg)
 
 # JDRP App
 
@@ -22,9 +22,34 @@ $ cargo run
 
 Visit http://localhost:8000
 
-<!-- ## Todo
-- [ ] add rooms
-- [ ] sent proper formatted objects over the websocket for getting all displayed information
-- [ ] create proper admin messages
-- [ ] check gif apis
-- [ ] remove the 5 users limitation -->
+## Todo v1.0
+### Frontend
+- [ ] Define front template
+- [ ] Implement frontend framework
+- [ ] Migrate vanila code
+- [ ] Rework vanila design (connection, character creation, main page)
+- [ ] Update all existing informations to main documents ones (characters stats, characters descriptions, ...)
+- [ ] Create character panel
+- [ ] Create inventory (with all actions related)
+- [ ] Create round based fight interface (round process, update after each actions0
+- [ ] Create loot interface
+- [ ] Create tooltip interface
+- [ ] Create GM interface
+### Backend
+- [ ] Create logging system 
+- [ ] Implement ItemGenerator project 
+- [ ] Implement ItemGenerator project for each character based object
+- [ ] Implement ItemGenerator project for villages, towns and marchands
+- [ ] Create websocket interface
+- [ ] Create inventory check and process
+- [ ] Create fight event calculation
+- [ ] Create websocket binding for GM
+### Graphics
+- [ ] Characters portrait
+- [ ] Graphics elements
+- [ ] Create logo
+### Game Design
+- [ ] Create game economy
+- [ ] Create ennemies core mecanics 
+- [ ] Balance race - class stats
+- [ ] Balance spells, items ilvl and damage progression
