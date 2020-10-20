@@ -1,4 +1,4 @@
-use syslog::{self, Facility, Error};
+use syslog::{Facility, Error};
 use log::LevelFilter;
 
 pub fn init() -> Result<(), Error> {

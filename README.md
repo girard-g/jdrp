@@ -12,13 +12,13 @@ This is a basic web d&d game app where backend communication is made through web
 - [rocket](https://rocket.rs/) web framework
 - [diesel](http://diesel.rs/) ORM
 - [frontend](#) static html/css/js
-- [logger](https://github.com/Geal/rust-syslog) syslog
+- [logger](https://github.com/Geal/rust-syslog) syslog, proccess name `jdrp`
 
 ## Install
 
 ```sh
 $ echo 'DATABASE_URL=database/index.db' > .env # Setup database for SQLite
-$ cargo run # set ROCKET_CLI_COLOR=off if you don't emojis or colors in your syslogs
+$ cargo run # set ROCKET_CLI_COLOR=off if you don't want emojis or colors in your syslogs
 ```
 
 Visit http://localhost:8000
