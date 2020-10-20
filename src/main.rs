@@ -17,12 +17,17 @@ extern crate rocket;
 extern crate diesel;
 extern crate serde_json;
 
+extern crate syslog;
+#[macro_use]
+extern crate log;
+
 // use std::thread;
 
 mod repository;
 mod resources;
 // use crate::repository::mainlib::{create_connection, get_five_last_posts};
 
+mod logger;
 mod route;
 
 use crate::route::{get, static_files};
@@ -56,6 +61,10 @@ fn main() {
     //         ws_rs::websocket();
     //     })
     //     .unwrap();
+
+    logger::syslog::init().expect("Could not init logger. Ensure that your syslog process is running.");
+
+    info!("Logger streaming through syslog");
 
     rocket().launch();
 }
