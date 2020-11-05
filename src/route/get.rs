@@ -6,6 +6,8 @@ use crate::route::models::{NewUserInput, UserInput};
 use rocket::response::Redirect;
 use rocket::http::{Cookies, Cookie};
 use crate::resources::models::CaracterStats;
+use crate::item_generator::resources::Object;
+
 
 #[get("/")]
 pub fn index() -> io::Result<NamedFile> {
@@ -164,13 +166,18 @@ pub fn logout(mut cookies: Cookies) -> () {
     cookies.remove_private(Cookie::named("user_id"));
 }
 
-// #[get("/chat")]
-// pub fn chat() -> io::Result<NamedFile> {
-//     NamedFile::open("static/chat/index.html")
-// }
 
-// #[get("/posts")]
-// pub fn posts() -> Json<String> {
-//     let posts = get_five_last_posts();
-//     return Json(serde_json::to_string(&posts).unwrap());
-// }
+
+#[get("/testobjectgeneration")]
+pub fn testobjectgeneration() -> io::Result<NamedFile> {
+    NamedFile::open("static/chat/item.html")
+}
+
+#[get("/testobjectgenerationlol")]
+pub fn testobjectgenerationlol() -> Json<Object> {
+    use crate::item_generator::generator::generate_weapon;
+
+    let weapon = generate_weapon();
+   
+    Json(weapon)
+}

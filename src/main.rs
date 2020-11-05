@@ -17,20 +17,27 @@ extern crate rocket;
 extern crate diesel;
 extern crate serde_json;
 
+extern crate strum; // 0.10.0
+#[macro_use]
+extern crate strum_macros; // 0.10.0
+
 // use std::thread;
 
 mod repository;
 mod resources;
+mod item_generator;
 // use crate::repository::mainlib::{create_connection, get_five_last_posts};
 
 mod route;
 
 use crate::route::{get, static_files};
+use rocket_contrib::serve::StaticFiles;
 
 mod chat;
 
 // use crate::chat::ws_rs;
 extern crate chrono;
+
 
 fn rocket() -> rocket::Rocket {
     let rocket_routes = routes![
@@ -44,9 +51,14 @@ fn rocket() -> rocket::Rocket {
         get::player_stats,
         get::create_character,
         get::check_caracter_creation,
+        get::testobjectgeneration,
+        get::testobjectgenerationlol,
+
     ];
 
-    rocket::ignite().mount("/", rocket_routes)
+    rocket::ignite()
+    .mount("/", rocket_routes)
+    .mount("/images", StaticFiles::from("/home/guillaume/Projects/Jdrp/static/images"))
 }
 
 fn main() {
