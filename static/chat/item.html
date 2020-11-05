@@ -73,15 +73,22 @@
             let obj = JSON.parse(response)
 
             let elem = document.createElement("img");
-            elem.style.width = "30%";
+            elem.width = "200";
             elem.id = "weapon"+i;
             elem.src = obj.asset;
             document.getElementById("item"+i).appendChild(elem);
+            // console.log(obj);
 
-            let str = "<H4>"+obj.name+"</H4><hr style ='border: 1px solid white;'><p>type: "+obj.item_type+"</p><p>rarity: "+obj.rarity+"</p><p>min damage: "+obj.equipement.weapon.min_damage+"</p><p>max damage: "+obj.equipement.weapon.max_damage+"</p>";
+            let str = "<H4>"+obj.name+"</H4><hr style ='border: 1px solid white;'><p>type: "+obj.item_type+"</p><p>rarity: "+obj.rarity+"</p>";
+
+            if (obj.item_type == "Weapon"){
+              str += "<p>slot: "+obj.equipement.slot+"</p><p>min damage: "+obj.equipement.weapon.min_damage+"</p><p>max damage: "+obj.equipement.weapon.max_damage+"</p>";
             
-            if(obj.equipement.weapon.ailment[0] != "None"){
+              if(obj.equipement.weapon.ailment[0] != "None"){
                 str += "<p>ailement: "+obj.equipement.weapon.ailment[0]+"</p><p>ailement chances: "+obj.equipement.weapon.ailment[1]+"%</p>";
+              }
+            }else {
+              str += "<p>special: +"+obj.special.heal+" HP</p>";
             }
 
             const instance = tippy(document.getElementById("item"+i), {
@@ -93,8 +100,6 @@
                 content: str,
             
             });
-
-
         })
     }
 

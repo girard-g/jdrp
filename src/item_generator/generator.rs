@@ -210,55 +210,55 @@ impl Weapon {
                 let vector = directory_search("./static/images/weapons/swords1h/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
-                string
+                (string, Slot::RightHand)
             },
             TypeEquip::Axe =>{
                 let vector = directory_search("./static/images/weapons/axes1h/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
-                string
+                (string, Slot::RightHand)
             },
             TypeEquip::Bow =>{
                 let vector = directory_search("./static/images/weapons/bows/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
-                string
+                (string, Slot::RightHand)
             },
             TypeEquip::Dagger =>{
                 let vector = directory_search("./static/images/weapons/daggers/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
-                string
+                (string, Slot::RightHand)
             },
             TypeEquip::Mace =>{
                 let vector = directory_search("./static/images/weapons/maces/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
-                string
+                (string, Slot::RightHand)
             },
             TypeEquip::TwoHandsAxe =>{
                 let vector = directory_search("./static/images/weapons/axes2h/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
-                string
+                (string, Slot::TwoHand)
             },
             TypeEquip::TwoHandSword =>{
                 let vector = directory_search("./static/images/weapons/swords2h/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
-                string
+                (string, Slot::TwoHand)
             },
             TypeEquip::Spear =>{
                 let vector = directory_search("./static/images/weapons/spears/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
-                string
+                (string, Slot::TwoHand)
             },
             TypeEquip::Staff =>{
                 let vector = directory_search("./static/images/weapons/staff/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
-                string
+                (string, Slot::TwoHand)
             },
         };
 
@@ -269,10 +269,10 @@ impl Weapon {
             ilevel: ilvltuple.0,
             item_type:  ItemType::Weapon,
             rarity: ilvltuple.3,
-            asset: ass_ets.to_string(),
+            asset: ass_ets.0.to_string(),
             equipement: Some(
                 Equipment{
-                    slot: Slot::RightHand,
+                    slot: ass_ets.1,
                     type_equip:placeholders,
                     equipped: false,
                     weapon:Some(
@@ -306,7 +306,7 @@ fn directory_search(str_to_search: &str) -> Vec<String>
     let mut vec1 = vec!();
 
     for path in glob(str_to_search).unwrap().filter_map(Result::ok) {
-        println!("{}", path.display());
+        // println!("{}", path.display());
         vec1.push(path.display().to_string());
     }
 
@@ -320,11 +320,22 @@ impl Object{
 
         let mut rng = rand::thread_rng();
 
+        let assets: String = match name.as_str() {
+            "health potion" => {
+               let to_return =  String::from("./static/images/items/ActionLoot_(6).png");
+               to_return
+            },
+            _ => { 
+                let to_return =   String::from("./static/images/items/ActionLoot_(6).png");
+                to_return
+            }
+        };
+
         Object {
             id: rng.gen::<u32>(),
             name: name,
             ilevel: 1,
-            asset: ASSET_PATH.to_string(),
+            asset: assets,
             item_type: ItemType::Consumable,
             rarity: rarity,
             equipement: None,
@@ -336,4 +347,8 @@ impl Object{
 
 pub fn generate_weapon() -> Object {
     Weapon::generate()
+}
+
+pub fn generate_item(name: String, rarity: String, special: u16) -> Object {
+    Object::generate(name: String, rarity: String, special: u16)
 }
