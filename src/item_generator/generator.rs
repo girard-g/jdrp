@@ -8,8 +8,6 @@ use rand::{
 use crate::item_generator::resources::{Weapon, Object, TypeEquip, ItemType, Equipment, Slot, Special};
 use crate::item_generator::ailment::{WpnAilment, PoisonAliment,StunAliment};
 use rand::seq::SliceRandom;
-
-// use error_chain::error_chain;
 use glob::{glob};
 
 const PLAYER_LEVEL:u8 = 2;
@@ -209,55 +207,55 @@ impl Weapon {
         let ass_ets = match placeholders {
             TypeEquip::Sword => {
                 // "images/weapons/swords1h/ActionLoot_(1).png"
-                let vector = directory_search("/home/guillaume/Projects/Jdrp/static/images/weapons/swords1h/ActionLoot_([0-9])*.png");
+                let vector = directory_search("./static/images/weapons/swords1h/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
                 string
             },
             TypeEquip::Axe =>{
-                let vector = directory_search("/home/guillaume/Projects/Jdrp/static/images/weapons/axes1h/ActionLoot_([0-9])*.png");
+                let vector = directory_search("./static/images/weapons/axes1h/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
                 string
             },
             TypeEquip::Bow =>{
-                let vector = directory_search("/home/guillaume/Projects/Jdrp/static/images/weapons/bows/ActionLoot_([0-9])*.png");
+                let vector = directory_search("./static/images/weapons/bows/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
                 string
             },
             TypeEquip::Dagger =>{
-                let vector = directory_search("/home/guillaume/Projects/Jdrp/static/images/weapons/daggers/ActionLoot_([0-9])*.png");
+                let vector = directory_search("./static/images/weapons/daggers/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
                 string
             },
             TypeEquip::Mace =>{
-                let vector = directory_search("/home/guillaume/Projects/Jdrp/static/images/weapons/maces/ActionLoot_([0-9])*.png");
+                let vector = directory_search("./static/images/weapons/maces/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
                 string
             },
             TypeEquip::TwoHandsAxe =>{
-                let vector = directory_search("/home/guillaume/Projects/Jdrp/static/images/weapons/axes2h/ActionLoot_([0-9])*.png");
+                let vector = directory_search("./static/images/weapons/axes2h/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
                 string
             },
             TypeEquip::TwoHandSword =>{
-                let vector = directory_search("/home/guillaume/Projects/Jdrp/static/images/weapons/swords2h/ActionLoot_([0-9])*.png");
+                let vector = directory_search("./static/images/weapons/swords2h/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
                 string
             },
             TypeEquip::Spear =>{
-                let vector = directory_search("/home/guillaume/Projects/Jdrp/static/images/weapons/spears/ActionLoot_([0-9])*.png");
+                let vector = directory_search("./static/images/weapons/spears/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
                 string
             },
             TypeEquip::Staff =>{
-                let vector = directory_search("/home/guillaume/Projects/Jdrp/static/images/weapons/staff/ActionLoot_([0-9])*.png");
+                let vector = directory_search("./static/images/weapons/staff/ActionLoot_([0-9])*.png");
                 let toto = vector.choose(&mut rand::thread_rng()).unwrap();
                 let string = toto.to_string();
                 string
@@ -308,7 +306,7 @@ fn directory_search(str_to_search: &str) -> Vec<String>
     let mut vec1 = vec!();
 
     for path in glob(str_to_search).unwrap().filter_map(Result::ok) {
-        // println!("{}", path.display());
+        println!("{}", path.display());
         vec1.push(path.display().to_string());
     }
 

@@ -75,7 +75,7 @@
             let elem = document.createElement("img");
             elem.style.width = "30%";
             elem.id = "weapon"+i;
-            elem.src = obj.asset.substr(37); //immonde
+            elem.src = obj.asset;
             document.getElementById("item"+i).appendChild(elem);
 
             let str = "<H4>"+obj.name+"</H4><hr style ='border: 1px solid white;'><p>type: "+obj.item_type+"</p><p>rarity: "+obj.rarity+"</p><p>min damage: "+obj.equipement.weapon.min_damage+"</p><p>max damage: "+obj.equipement.weapon.max_damage+"</p>";
