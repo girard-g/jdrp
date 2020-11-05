@@ -176,8 +176,10 @@ pub fn testobjectgeneration() -> io::Result<NamedFile> {
 #[get("/testobjectgenerationlol")]
 pub fn testobjectgenerationlol() -> Json<Object> {
     use crate::item_generator::generator::generate_weapon;
+    // use crate::item_generator::generator::generate_item;
+    
 
     let weapon = generate_weapon();
-   
+    // let item = generate_item(String::from("health potion"), String::from("common"), 25);
     Json(weapon)
 }
