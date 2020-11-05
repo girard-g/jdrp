@@ -19,7 +19,7 @@ pub struct Caracter {
     pub stats: String
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, Debug)]
 #[table_name="caracter"]
 pub struct NewCaracter {
     pub id: String,
@@ -27,7 +27,7 @@ pub struct NewCaracter {
     pub stats: String
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, Debug)]
 #[table_name="players"]
 pub struct NewPlayer<'a> {
     pub id: String,

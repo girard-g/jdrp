@@ -17,6 +17,9 @@ extern crate rocket;
 extern crate diesel;
 extern crate serde_json;
 
+extern crate syslog;
+#[macro_use]
+extern crate log;
 extern crate strum; // 0.10.0
 #[macro_use]
 extern crate strum_macros; // 0.10.0
@@ -28,6 +31,7 @@ mod resources;
 mod item_generator;
 // use crate::repository::mainlib::{create_connection, get_five_last_posts};
 
+mod logger;
 mod route;
 
 use crate::route::{get, static_files};
@@ -68,6 +72,10 @@ fn main() {
     //         ws_rs::websocket();
     //     })
     //     .unwrap();
+
+    logger::syslog::init().expect("Could not init logger. Ensure that your syslog process is running.");
+
+    info!("Logger streaming through syslog");
 
     rocket().launch();
 }
