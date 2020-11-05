@@ -23,6 +23,7 @@ pub struct Object {
 pub enum Slot {
     RightHand,
     LeftHand,
+    TwoHand,
     Chest
 }
 
