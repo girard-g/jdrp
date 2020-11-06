@@ -38,7 +38,7 @@ Visit http://localhost:8000
 - [ ] Create GM interface
 ### Backend
 - [x] Create logging system 
-- [ ] Implement ItemGenerator project 
+- [x] Implement ItemGenerator project 
 - [ ] Implement ItemGenerator project for each character based object
 - [ ] Implement ItemGenerator project for villages, towns and marchands
 - [ ] Create websocket interface
@@ -47,10 +47,10 @@ Visit http://localhost:8000
 - [ ] Create websocket binding for GM
 ### Graphics
 - [ ] Characters portrait
-- [ ] Graphics elements
+- [x] Graphics elements
 - [ ] Create logo
 ### Game Design
-- [ ] Create game economy
+- [x] Create game economy
 - [ ] Create ennemies core mecanics 
 - [ ] Balance race - class stats
 - [ ] Balance spells, items ilvl and damage progression
