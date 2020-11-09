@@ -67,6 +67,15 @@
     };
     let client = new HttpClient();
 
+    function decamelize(str, separator){
+      separator = typeof separator === 'undefined' ? '_' : separator;
+
+      return str
+            .replace(/([a-z\d])([A-Z])/g, '$1' + separator + '$2')
+            .replace(/([A-Z]+)([A-Z][a-z\d]+)/g, '$1' + separator + '$2')
+            .toLowerCase();
+    }
+
     for (let i = 1; i < 4; i++) {
         client.get('/testobjectgenerationlol', function (response) {
 
@@ -77,17 +86,32 @@
             elem.id = "weapon"+i;
             elem.src = obj.asset;
             document.getElementById("item"+i).appendChild(elem);
-            // console.log(obj);
+            console.log(obj);
 
             let str = "<H4>"+obj.name+"</H4><hr style ='border: 1px solid white;'><p>type: "+obj.item_type+"</p><p>rarity: "+obj.rarity+"</p>";
 
             if (obj.item_type == "Weapon"){
-              str += "<p>slot: "+obj.equipement.slot+"</p><p>min damage: "+obj.equipement.weapon.min_damage+"</p><p>max damage: "+obj.equipement.weapon.max_damage+"</p>";
+              str += "<p>weapon type: "+obj.equipement.weapon.weapon_type+"</p><p>slot: "+obj.equipement.slot+"</p><p>min damage: "+obj.equipement.weapon.min_damage+"</p><p>max damage: "+obj.equipement.weapon.max_damage+"</p>";
             
               if(obj.equipement.weapon.ailment[0] != "None"){
                 str += "<p>ailement: "+obj.equipement.weapon.ailment[0]+"</p><p>ailement chances: "+obj.equipement.weapon.ailment[1]+"%</p>";
               }
-            }else {
+            }else if(obj.item_type == "Armor"){
+              str += "<p>armor: "+obj.equipement.armor.armor+"</p><p>armor type: "+obj.equipement.armor.armor_type+"</p><p>class armor: "+obj.equipement.armor.class+"</p><p>resistances: "+obj.equipement.armor.resistances+"</p>";
+              if(obj.equipement.armor.ailment != "None"){
+                str += "<p>ailement: "+obj.equipement.armor.ailment+"</p>";
+              }
+            }else if(obj.item_type == "Jewel"){
+              str += "<p>jewel type: "+obj.equipement.jewel.jewel_type+"</p>\
+                      <p>spell usage: "+obj.equipement.jewel.usage+"</p>\
+                      <p>spell: "+decamelize(obj.equipement.jewel.spell.name, " ")+"</p>\
+                      <p>spell description: "+obj.equipement.jewel.spell.description+"</p>\
+                      <p>spell damage: "+obj.equipement.jewel.spell.damage+"</p>\
+                      <p>spell type: "+obj.equipement.jewel.spell.incante+"</p>";
+              // if(obj.equipement.armor.ailment != "None"){
+              //   str += "<p>ailement: "+obj.equipement.armor.ailment+"</p>";
+              // }
+            }else{
               str += "<p>special: +"+obj.special.heal+" HP</p>";
             }
 

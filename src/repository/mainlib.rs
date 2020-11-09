@@ -5,8 +5,6 @@ use std::env;
 use crate::repository::models::{Player, NewPlayer, Caracter, NewCaracter};
 use crate::route::models::NewUserInput;
 use crate::resources::models::{CaracterStats};
-use serde::{Deserialize, Serialize};
-
 
 pub fn create_connection() -> SqliteConnection {
     dotenv().ok();

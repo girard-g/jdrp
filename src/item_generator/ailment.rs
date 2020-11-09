@@ -4,7 +4,7 @@ use rand::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, AsStaticStr, Clone, Copy, Deserialize, Serialize)]
+#[derive(Debug, AsStaticStr, Deserialize, Serialize)]
 pub enum WpnAilment {
     None,
     Poison,
@@ -13,6 +13,20 @@ pub enum WpnAilment {
     Death,
     Sleep
 }
+
+impl std::fmt::Display for WpnAilment {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match *self {
+            WpnAilment::None => write!(f, " empty "),
+            WpnAilment::Poison => write!(f, " poison "),
+            WpnAilment::Stun => write!(f, " stun "),
+            WpnAilment::Freeze => write!(f, " freeze "),
+            WpnAilment::Death => write!(f, " death "),
+            WpnAilment::Sleep => write!(f, " sleep "),
+        }
+    }
+}
+
 
 impl Distribution<WpnAilment> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> WpnAilment {
