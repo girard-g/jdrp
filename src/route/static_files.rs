@@ -5,3 +5,8 @@ use rocket::response::NamedFile;
 pub fn file(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("static/").join(file)).ok()
 }
+
+#[get("/images/<image..>")]
+pub fn images(image: PathBuf) -> Option<NamedFile> {
+    NamedFile::open(Path::new("images/").join(image)).ok()
+}

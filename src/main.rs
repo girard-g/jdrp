@@ -34,8 +34,8 @@ mod item_generator;
 mod logger;
 mod route;
 
-use crate::route::{get, static_files};
-use rocket_contrib::serve::StaticFiles;
+use crate::route::{get, api, static_files};
+// use rocket_contrib::serve::StaticFiles;
 
 mod chat;
 
@@ -46,23 +46,26 @@ extern crate chrono;
 fn rocket() -> rocket::Rocket {
     let rocket_routes = routes![
         static_files::file,
+        static_files::images,
         get::index,
-        get::submit_task,
-        get::logout,
-        get::player_dashboard,
-        get::create,
-        get::check_creation,
-        get::player_stats,
-        get::create_character,
-        get::check_caracter_creation,
-        get::testobjectgeneration,
-        get::testobjectgenerationlol,
+        api::testobjectgenerationlol,
+        get::dummy,
+        // get::submit_task,
+        // get::logout,
+        // get::player_dashboard,
+        // get::create,
+        // get::check_creation,
+        // get::player_stats,
+        // get::create_character,
+        // get::check_caracter_creation,
+        // get::testobjectgeneration,
+        
 
     ];
 
     rocket::ignite()
     .mount("/", rocket_routes)
-    .mount("/images", StaticFiles::from("/home/guillaume/Projects/Jdrp/static/images"))
+    // .mount("/images", StaticFiles::from("/home/guillaume/Projects/Jdrp/static/images"))
 }
 
 fn main() {

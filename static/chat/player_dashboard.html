@@ -2,209 +2,131 @@
 <html lang="en">
 
 <head>
-  <title>Rust Chat App </title>
-  <link rel=icon href="https://www.steadylearner.com/static/images/code/Rust_b.png" />
-
-
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <link rel="stylesheet" href="/static/chat/index.css" />
-  <link rel="stylesheet" href="/static/css/custom.css" />
+  <title>JDRP</title>
+  <link rel=icon href="/static/images/fav.png" />
+  <link rel="stylesheet" href="/static/chat/css/bootstrap.css" />
 </head>
 
 <body>
 
   <div class="container-fluid">
-    <div class="row">
-      <div id="base-player-stats" class="col">
-        <table class="table table-borderless" id="table-base-player-stats">
-          <thead>
-            <tr>
-              <th scope="col"colspan="2">Base Stats</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Nom</th>
-              <td id="name"></td>
-            </tr>
-            <tr>
-              <th scope="row">Race</th>
-              <td id="race"></td>
-            </tr>
-            <tr>
-              <th scope="row">Class</th>
-              <td id="class"></td>
-            </tr>
-            <tr>
-              <th scope="row">Level</th>
-              <td id="level"></td>
-            </tr>
-            <tr>
-              <th scope="row">Reputation</th>
-              <td id="reputation"></td>
-            </tr>
-            <tr>
-              <th scope="row">Particularité</th>
-              <td id="particularity"></td>
-            </tr>
-            <tr>
-              <th scope="row">Alignement</th>
-              <td id="alignment"></td>
-            </tr>
-          </tbody>
-        </table>
-
+    <div id="base-player-stats" class="col">
+      <div v-if="loading">Chargement...</div>
+      <div v-else>
+        <dl class="row">
+          <dt class="col-sm-3">Nom</dt>
+          <dd class="col-sm-9">{{ name }}</dd>
+          <dt class="col-sm-3">Race</dt>
+          <dd class="col-sm-9">{{ race }}</dd>
+          <dt class="col-sm-3">Class</dt>
+          <dd class="col-sm-9">{{ carcter_class }}</dd>
+          <dt class="col-sm-3">Level</dt>
+          <dd class="col-sm-9">{{ level }}</dd>
+          <dt class="col-sm-3">Reputation</dt>
+          <dd class="col-sm-9">{{ reputation }}</dd>
+          <dt class="col-sm-3">Particularité</dt>
+          <dd class="col-sm-9">{{ particularity }}</dd>
+          <dt class="col-sm-3">Alignement</dt>
+          <dd class="col-sm-9">{{ alignment }}</dd>
+        </dl>
+        <dl class="row">
+          <dt class="col-sm-3">Force</dt>
+          <dd class="col-sm-9">{{ strengh }}</dd>
+          <dt class="col-sm-3">Dexterité</dt>
+          <dd class="col-sm-9">{{ dexterity }}</dd>
+          <dt class="col-sm-3">Chance</dt>
+          <dd class="col-sm-9">{{ luck }}</dd>
+          <dt class="col-sm-3">Volonté</dt>
+          <dd class="col-sm-9">{{ willpower }}</dd>
+          <dt class="col-sm-3">Constitution</dt>
+          <dd class="col-sm-9">{{ endurance }}</dd>
+          <dt class="col-sm-3">Charisme</dt>
+          <dd class="col-sm-9">{{ charism }}</dd>
+          <dt class="col-sm-3">Perception</dt>
+          <dd class="col-sm-9">{{ perception }}</dd>
+          <dt class="col-sm-3">Education</dt>
+          <dd class="col-sm-9">{{ education }}</dd>
+        </dl>
+        <dl class="row">
+          <dt class="col-sm-3">Arme</dt>
+          <dd class="col-sm-9">{{ weapon }}</dd>
+          <dt class="col-sm-3">Arme à distance</dt>
+          <dd class="col-sm-9">{{ distance_weapon }}</dd>
+          <dt class="col-sm-3">Main nue</dt>
+          <dd class="col-sm-9">{{ bare_hand }}</dd>
+          <dt class="col-sm-3">Armure</dt>
+          <dd class="col-sm-9">{{ armor }}</dd>
+        </dl>
       </div>
-      <div id="player-stats" class="col">
-        <table class="table table-borderless" id="table-player-stats">
-          <thead>
-            <tr>
-              <th scope="col"colspan="2">Stats du personnage</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Force</th>
-              <td id="strengh"></td>
-            </tr>
-            <tr>
-              <th scope="row">Dexterité</th>
-              <td id="dexterity"></td>
-            </tr>
-            <tr>
-              <th scope="row">Chance</th>
-              <td id="luck"></td>
-            </tr>
-            <tr>
-              <th scope="row">Volonté</th>
-              <td id="willpower"></td>
-            </tr>
-            <tr>
-              <th scope="row">Constitution</th>
-              <td id="endurance"></td>
-            </tr>
-            <tr>
-              <th scope="row">Charisme</th>
-              <td id="charism"></td>
-            </tr>
-            <tr>
-              <th scope="row">Perception</th>
-              <td id="perception"></td>
-            </tr>
-            <tr>
-              <th scope="row">Education</th>
-              <td id="education"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div>
-  <div class="container-fluid">
-    <div class="row">
-      <div id="combat-player-stats" class="col">
-        <table class="table table-borderless" id="table-player-stats">
-          <thead>
-            <tr>
-              <th scope="col"colspan="2">Stats de combat</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Arme</th>
-              <td id="weapon"></td>
-            </tr>
-            <tr>
-              <th scope="row">Arme à distance</th>
-              <td id="distance_weapon"></td>
-            </tr>
-            <tr>
-              <th scope="row">Main nue</th>
-              <td id="bare_hand"></td>
-            </tr>
-            <tr>
-              <th scope="row">Armure</th>
-              <td id="armor"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="inventory" class="col"></div>
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-    crossorigin="anonymous"></script>
-
-  <!-- <script src="/static/chat/bundle.js" type="text/javascript"></script> -->
+  <script src="/static/chat/script/jquery.js"></script>
+  <script src="/static/chat/script/popper.js"></script>
+  <script src="/static/chat/script/bootstrap.js"></script>
+  <script src="/static/chat/script/vue.js"></script>
+  <script src="/static/chat/script/axios.js"></script>
 
   <script type="text/javascript">
-    // const USERID = "DXOAo4AcirEx85XzEMWj8Iy32e65dq";
+
     let a = window.location.href.split("/");
     const USERID = a[a.length -1];
 
-    var HttpClient = function () {
-      this.get = function (aUrl, aCallback) {
-        let anHttpRequest = new XMLHttpRequest();
-        anHttpRequest.onreadystatechange = function () {
-          if (anHttpRequest.readyState === 4 && anHttpRequest.status === 200)
-            aCallback(anHttpRequest.responseText);
-        };
-
-        anHttpRequest.open("GET", aUrl, true);
-        anHttpRequest.send(null);
-      },
-        this.post = function (aUrl, body, header, aCallback) {
-          let anHttpRequest = new XMLHttpRequest();
-          anHttpRequest.onreadystatechange = function () {
-            if (anHttpRequest.readyState === 4 && anHttpRequest.status === 200)
-              aCallback(anHttpRequest.responseText);
-          };
-
-          anHttpRequest.open("POST", aUrl, true);
-          anHttpRequest.setRequestHeader('Content-type', header);
-          anHttpRequest.send(body);
+      new Vue({
+      el: '#base-player-stats',
+      data () {
+        return {
+          name: null,
+          race:null,
+          carcter_class:null,
+          level:null,
+          reputation:null,
+          particularity:null,
+          alignment:null,
+          strengh:null,
+          dexterity:null,
+          luck:null,
+          willpower:null,
+          endurance:null,
+          charism:null,
+          perception:null,
+          education:null,
+          weapon:null,
+          distance_weapon:null,
+          bare_hand:null,
+          armor:null,
+          loading: true,
         }
-    };
-
-    let client = new HttpClient();
-
-    client.get('/users/player-stats/' + USERID, function (response) {
-      let character_stat = JSON.parse(response);
-      character_stat = JSON.parse(character_stat);
-
-      document.getElementById("name").innerHTML = character_stat.name;
-      document.getElementById("race").innerHTML = character_stat.race;
-      document.getElementById("class").innerHTML = character_stat.class;
-      document.getElementById("level").innerHTML = character_stat.level;
-      document.getElementById("reputation").innerHTML = character_stat.reputation;
-      document.getElementById("particularity").innerHTML = character_stat.particularity;
-      document.getElementById("alignment").innerHTML = character_stat.alignment;
-
-      document.getElementById("strengh").innerHTML = character_stat.strengh;
-      document.getElementById("dexterity").innerHTML = character_stat.dexterity;
-      document.getElementById("luck").innerHTML = character_stat.luck;
-      document.getElementById("willpower").innerHTML = character_stat.willpower;
-      document.getElementById("endurance").innerHTML = character_stat.endurance;
-      document.getElementById("charism").innerHTML = character_stat.charism;
-      document.getElementById("perception").innerHTML = character_stat.perception;
-      document.getElementById("education").innerHTML = character_stat.education;
-
-      document.getElementById("weapon").innerHTML = character_stat.weapon;
-      document.getElementById("distance_weapon").innerHTML = character_stat.distance_weapon;
-      document.getElementById("bare_hand").innerHTML = character_stat.bare_hand;
-      document.getElementById("armor").innerHTML = character_stat.armor;
-
-    });
+      },
+      mounted () {
+        axios
+          .get('/users/player-stats/' + USERID)
+          .then(
+            response => (
+              this.name = response.data.name,
+              this.race = response.data.race,
+              this.carcter_class = response.data.class,
+              this.level = response.data.level,
+              this.reputation = response.data.reputation,
+              this.particularity = response.data.particularity,
+              this.alignment = response.data.alignment,
+              this.strengh = response.data.strengh,
+              this.dexterity = response.data.dexterity,
+              this.luck = response.data.luck,
+              this.willpower = response.data.willpower,
+              this.endurance = response.data.endurance,
+              this.charism = response.data.charism,
+              this.perception = response.data.perception,
+              this.education = response.data.education,
+              this.weapon = response.data.weapon,
+              this.distance_weapon = response.data.distance_weapon,
+              this.bare_hand = response.data.bare_hand,
+              this.armor = response.data.armor
+              ))
+          .catch(error => console.log(error))
+          .finally(() => this.loading = false)
+      }
+    })
   </script>
 </body>
 

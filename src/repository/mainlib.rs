@@ -100,7 +100,7 @@ pub fn save_player_stats(playerid :String, caracter_stats: CaracterStats) -> ()
 
 }
 
-pub fn get_player_stats(playerid :String) ->  Option<Caracter> {
+pub fn get_player_stats(playerid :String) -> Option<Caracter> {
     use crate::repository::schema::caracter::dsl::*;
 
     let connection = create_connection();
