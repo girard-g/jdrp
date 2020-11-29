@@ -24,7 +24,6 @@ pub struct Object {
     pub rarity: String,
     pub equipement: Option<Equipment>,
     pub caracteristics_augmentation: Option<(String, u8)>,
-    pub special: Option<Special>
 }
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
@@ -226,7 +225,6 @@ pub struct Equipment {
     pub jewel: Option<Jewel>,
 }
 
-
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Weapon {
     pub min_damage: u16,
@@ -234,12 +232,6 @@ pub struct Weapon {
     pub weapon_type: WeaponType,
     pub element: Option<WpnElement>,
     pub ailment: Option<(WpnAilment, u8)>,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct Special {
-    pub heal: u16,
-    // pub test: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]

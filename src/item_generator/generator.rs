@@ -5,10 +5,10 @@ use rand::{
     Rng,
     distributions::{WeightedIndex, Distribution},
 };
-use crate::item_generator::resources::{Loot, Weapon, Armor, Object, WeaponType, ArmorType, ArmorClass, ItemType, Equipment, Slot, Special, Jewel, JewelType};
+use crate::item_generator::resources::{Loot, Weapon, Armor, Object, WeaponType, ArmorType, ArmorClass, ItemType, Equipment, Slot, Jewel, JewelType};
 use crate::item_generator::ailment::{WpnAilment, PoisonAliment,StunAliment};
 use crate::item_generator::spell::{Spell, LowLevelSpells, Incante, SpellDamage};
-use crate::item_generator::monster::{Monster, MonsterType, DeathCallback};
+use crate::item_generator::monster::{Monster, MonsterType, DeathCallback, BaseTypeMonster, MonsterStats};
 use crate::item_generator::item::{Consumable, ConsumableType, UseCallback};
 // use crate::item_generator::element::{WpnElement};
 use rand::seq::SliceRandom;
@@ -396,7 +396,6 @@ impl Weapon {
                     }
                 ),
                 caracteristics_augmentation: None,
-                special: None
             }),
             consumable: None
         }
@@ -556,7 +555,6 @@ impl Armor {
                         }
                     ),
                     caracteristics_augmentation: None,
-                    special: None
                 }
             ),
             consumable: None
@@ -566,7 +564,7 @@ impl Armor {
 
 
 impl Object{
-    fn generate(name: String, rarity: String, special: u16) -> Loot {
+    fn generate() -> Loot {
 
         let mut rng = rand::thread_rng();
 
@@ -579,14 +577,14 @@ impl Object{
                 (string, String::from("Potion de vie"), ConsumableType::HealthPotion, UseCallback::HealthPotion)
             },
             ConsumableType::Bandages =>{
-                let vector = directory_search("./static/images/items/ActionLoot_(9)*.png");
+                let vector = directory_search("./static/images/items/ActionLoot_(9).png");
                 let string = vector[0].to_string();
                 (string,  String::from("Bandage"), ConsumableType::Bandages, UseCallback::Bandages)
             },
             ConsumableType::Antidot =>{
-                let vector = directory_search("./static/images/items/ActionLoot_(8)*.png");
+                let vector = directory_search("./static/images/items/ActionLoot_(8).png");
                 let string = vector[0].to_string();
-                (string,  String::from("Antidot"), ConsumableType::Antidot, UseCallback::Antidot)
+                (string,  String::from("Antidote"), ConsumableType::Antidot, UseCallback::Antidot)
             },
         };
         
@@ -599,7 +597,7 @@ impl Object{
                     ilevel: 1,
                     item_type: ass_ets.2,
                     asset: ass_ets.0,
-                    rarity: rarity,
+                    rarity: String::from("Common"),
                     description: ass_ets.2.to_string(),
                     on_use: ass_ets.3
                 }
@@ -640,15 +638,15 @@ impl Jewel{
             s
         } else if ilvltuple.1 == String::from("magic") {
             let mut s = String::from("magic");
-                s.push_str(&placeholders.to_string());
+            s.push_str(&placeholders.to_string());
             s
         } else if ilvltuple.1 == String::from("rare") {
             let mut s = String::from("rare");
-                s.push_str(&placeholders.to_string());
+            s.push_str(&placeholders.to_string());
             s
         } else if ilvltuple.1 == String::from("epic") {
             let mut s = String::from("epic");
-                s.push_str(&placeholders.to_string());
+            s.push_str(&placeholders.to_string());
             s
         }else{
             let mut s = String::from("legendary");
@@ -687,7 +685,6 @@ impl Jewel{
                         }
                     ),
                     caracteristics_augmentation: None,
-                    special: None
                 }
             ),
             consumable: None
@@ -780,6 +777,39 @@ fn rarity_monster() -> (u8, String)
 
 }
 
+
+pub fn calculate_monster_stats(base: BaseTypeMonster) -> MonsterStats
+{
+    let mut rng = rand::thread_rng();
+
+    let initiative = rng.gen_range(10, 70);
+    let endurance = rng.gen_range(10, 70);
+    let willpower = rng.gen_range(20, 70);
+    let dexterity = rng.gen_range(20, 70);
+    let strenght = rng.gen_range(20, 70);
+
+    let monster_stats = match base {
+        BaseTypeMonster::Strengh => {
+            (willpower -20, dexterity -10, strenght +20)
+        },
+        BaseTypeMonster::Dexterity => {
+            (willpower -10,dexterity +20,strenght -20)
+        },
+        BaseTypeMonster::Willpower => {
+            (willpower +20, dexterity -10,strenght -20)
+        }
+    };
+
+    MonsterStats {
+        strenght: monster_stats.2,
+        dexterity: monster_stats.1,
+        willpower: monster_stats.0,
+        endurance: endurance,
+        initiative: initiative
+    }
+
+}
+
 impl Monster {
     fn generate(monster_type: String) -> Monster {
         let mut rng = rand::thread_rng();
@@ -818,7 +848,6 @@ impl Monster {
         let mut monster_resistances = calculate_resistances(ivlvmonster);
         let monster_ailment: WpnAilment = rand::random();
 
-
         if monster_ailment == WpnAilment::None {
             monster_resistances = 0;
         }
@@ -828,97 +857,118 @@ impl Monster {
         let assets = match  monster_enum {
             MonsterType::Banshee => {
                 let ret = directory_search("./static/images/monsters/Tex_banshee.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Willpower);
+                (ret, stats)
             },
             MonsterType::Barbarian => {
                 let ret = directory_search("./static/images/monsters/Tex_barbarian.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Strengh);
+                (ret, stats)
             },
             MonsterType::Daemon => {
                 let ret = directory_search("./static/images/monsters/Tex_deamon.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Strengh);
+                (ret, stats)
             },
             MonsterType::Ghost => {
                 let ret = directory_search("./static/images/monsters/Tex_ghost.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Dexterity);
+                (ret, stats)
             },
             MonsterType::Ghoul => {
                 let ret = directory_search("./static/images/monsters/Tex_ghoul.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Willpower);
+                (ret, stats)
             },
             MonsterType::Goblin => {
                 let ret = directory_search("./static/images/monsters/Tex_goblin.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Dexterity);
+                (ret, stats)
             },
             MonsterType::Gravedigger => {
                 let ret = directory_search("./static/images/monsters/Tex_gravedigger.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Strengh);
+                (ret, stats)
             },
             MonsterType::Knight => {
                 let ret = directory_search("./static/images/monsters/Tex_knight.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Strengh);
+                (ret, stats)
             },
             MonsterType::Lich => {
                 let ret = directory_search("./static/images/monsters/Tex_lich.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Willpower);
+                (ret, stats)
             },
             MonsterType::Necromancer => {
                 let ret = directory_search("./static/images/monsters/Tex_necromancer.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Willpower);
+                (ret, stats)
             },
             MonsterType::Rat => {
                 let ret = directory_search("./static/images/monsters/Tex_rat.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Dexterity);
+                (ret, stats)
             },
             MonsterType::Rogue => {
                 let ret = directory_search("./static/images/monsters/Tex_rogue.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Dexterity);
+                (ret, stats)
             },
             MonsterType::Skeleton => {
                 let ret = directory_search("./static/images/monsters/Tex_skeleton.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Strengh);
+                (ret, stats)
             },
             MonsterType::Spider => {
                 let ret = directory_search("./static/images/monsters/Tex_spider.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Dexterity);
+                (ret, stats)
             },
             MonsterType::Succubus => {
                 let ret = directory_search("./static/images/monsters/Tex_succubus.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Willpower);
+                (ret, stats)
             },
             MonsterType::Toad => {
                 let ret = directory_search("./static/images/monsters/Tex_toad.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Strengh);
+                (ret, stats)
             },
             MonsterType::Wasp => {
                 let ret = directory_search("./static/images/monsters/Tex_wasp.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Dexterity);
+                (ret, stats)
             },
             MonsterType::Werewolf => {
                 let ret = directory_search("./static/images/monsters/Tex_werewolf.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Willpower);
+                (ret, stats)
             },
             MonsterType::Witch => {
                 let ret = directory_search("./static/images/monsters/Tex_witch.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Willpower);
+                (ret, stats)
             },
             MonsterType::Wizard => {
                 let ret = directory_search("./static/images/monsters/Tex_wizard.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Willpower);
+                (ret, stats)
             },
             MonsterType::Zombie => {
                 let ret = directory_search("./static/images/monsters/Tex_zombie.png");
-                ret
+                let stats = calculate_monster_stats(BaseTypeMonster::Strengh);
+                (ret, stats)
             }
-
         };
 
         //TODO: impl skills + hide callback impl a construct for setting it
         Monster {
             id: id,
             pv:monster_pv,
-            asset: assets[0].to_string(),
+            asset: assets.0[0].to_string(),
             base_armor: monster_armor as i32,
+            stats: assets.1,
             min_damage:tuple_damage.0,
             max_damage:tuple_damage.1,
             resistances: monster_resistances,
@@ -941,7 +991,7 @@ pub fn generate_loot() -> Loot {
             Armor::generate()
         }
         ItemType::Consumable=>{
-            Object::generate(String::from("health potion"), String::from("common"), 25)
+            Object::generate()
         }
         ItemType::Jewel=>{
             Jewel::generate(String::from("common"))
