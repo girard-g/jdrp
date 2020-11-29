@@ -7,8 +7,8 @@
     type_ascription
 )]
 
-#[macro_use]
-extern crate ws;
+// #[macro_use]
+// extern crate ws;
 
 extern crate dotenv;
 #[macro_use]
@@ -42,6 +42,8 @@ mod chat;
 // use crate::chat::ws_rs;
 extern crate chrono;
 
+use rocket::fairing::AdHoc;
+use rocket::http::hyper::header::{AccessControlAllowOrigin};
 
 fn rocket() -> rocket::Rocket {
     let rocket_routes = routes![
@@ -49,6 +51,7 @@ fn rocket() -> rocket::Rocket {
         static_files::images,
         get::index,
         api::testobjectgenerationlol,
+        api::testmonstergeneration,
         get::dummy,
         // get::submit_task,
         // get::logout,
@@ -62,9 +65,11 @@ fn rocket() -> rocket::Rocket {
         
 
     ];
-
     rocket::ignite()
     .mount("/", rocket_routes)
+    .attach(AdHoc::on_response("Add Header", |_, resp| {
+        resp.adjoin_header(AccessControlAllowOrigin::Any);
+    }))
     // .mount("/images", StaticFiles::from("/home/guillaume/Projects/Jdrp/static/images"))
 }
 

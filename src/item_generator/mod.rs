@@ -4,3 +4,4 @@ pub mod element;
 pub mod resources;
 pub mod generator;
 pub mod spell;
+pub mod monster;

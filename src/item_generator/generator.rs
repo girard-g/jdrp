@@ -5,12 +5,16 @@ use rand::{
     Rng,
     distributions::{WeightedIndex, Distribution},
 };
-use crate::item_generator::resources::{Weapon, Armor, Object, WeaponType, ArmorType, ArmorClass, ItemType, Equipment, Slot, Special, Jewel, JewelType};
+use crate::item_generator::resources::{Loot, Weapon, Armor, Object, WeaponType, ArmorType, ArmorClass, ItemType, Equipment, Slot, Special, Jewel, JewelType};
 use crate::item_generator::ailment::{WpnAilment, PoisonAliment,StunAliment};
 use crate::item_generator::spell::{Spell, LowLevelSpells, Incante, SpellDamage};
+use crate::item_generator::monster::{Monster, MonsterType, DeathCallback};
+use crate::item_generator::item::{Consumable, ConsumableType, UseCallback};
 // use crate::item_generator::element::{WpnElement};
 use rand::seq::SliceRandom;
 use glob::{glob};
+use std::str::FromStr;
+
 
 const PLAYER_LEVEL:u8 = 20;
 
@@ -239,7 +243,7 @@ fn jewel_stats(l: &LowLevelSpells) ->  (String, Incante){
 }
 
 impl Weapon {
-    fn generate() -> Object {
+    fn generate() -> Loot {
         let mut rng = rand::thread_rng();
         
         let id = rng.gen::<u32>();
@@ -366,40 +370,44 @@ impl Weapon {
             
         };
 
-        Object {
-            id: id,
-            name: globaltuple.0,
-            ilevel: ilvltuple.0,
-            item_type:  ItemType::Weapon,
-            rarity: ilvltuple.1,
-            asset: ass_ets.0.to_string(),
-            equipement: Some(
-                Equipment{
-                    slot: ass_ets.1,
-                    equipped: false,
-                    weapon:Some(
-                        Weapon{
-                            min_damage: damagetuple.0,
-                            max_damage: damagetuple.1,
-                            weapon_type: placeholders,
-                            element: None,
-                            ailment: Some(globaltuple.1.unwrap()),
-                        }
-                    ),
-                    jewel:None,
-                    armor:None,
-                }
-            ),
-            caracteristics_augmentation: None,
-            special: None
+        Loot{
+            object: Some(Object {
+                id: id,
+                name: globaltuple.0,
+                ilevel: ilvltuple.0,
+                item_type:  ItemType::Weapon,
+                rarity: ilvltuple.1,
+                asset: ass_ets.0.to_string(),
+                equipement: Some(
+                    Equipment{
+                        slot: ass_ets.1,
+                        equipped: false,
+                        weapon:Some(
+                            Weapon{
+                                min_damage: damagetuple.0,
+                                max_damage: damagetuple.1,
+                                weapon_type: placeholders,
+                                element: None,
+                                ailment: Some(globaltuple.1.unwrap()),
+                            }
+                        ),
+                        jewel:None,
+                        armor:None,
+                    }
+                ),
+                caracteristics_augmentation: None,
+                special: None
+            }),
+            consumable: None
         }
+        
     }
 
 }
 
 
 impl Armor {
-    fn generate() -> Object {
+    fn generate() -> Loot {
         let mut rng = rand::thread_rng();
 
         let id = rng.gen::<u32>();
@@ -521,70 +529,88 @@ impl Armor {
         let armor_class: ArmorClass = rand::random();
         info!("object: {:?}", ass_ets);
 
-        Object {
-            id: id,
-            name: globaltuple.0,
-            ilevel: ilvltuple.0,
-            item_type: ItemType::Armor,
-            rarity: ilvltuple.1,
-            asset: ass_ets.0.to_string(),
-            equipement: Some(
-                Equipment{
-                    slot: ass_ets.1,
-                    equipped: false,
-                    weapon:None,
-                    armor:Some(
-                        Armor{
-                            armor: armor,
-                            armor_type: placeholders,
-                            class: armor_class,
-                            resistances: globaltuple.2,
-                            ailment: Some(globaltuple.1.unwrap()),
+        Loot{
+            object: Some(
+                Object {
+                    id: id,
+                    name: globaltuple.0,
+                    ilevel: ilvltuple.0,
+                    item_type: ItemType::Armor,
+                    rarity: ilvltuple.1,
+                    asset: ass_ets.0.to_string(),
+                    equipement: Some(
+                        Equipment{
+                            slot: ass_ets.1,
+                            equipped: false,
+                            weapon:None,
+                            armor:Some(
+                                Armor{
+                                    armor: armor,
+                                    armor_type: placeholders,
+                                    class: armor_class,
+                                    resistances: globaltuple.2,
+                                    ailment: Some(globaltuple.1.unwrap()),
+                                }
+                            ),
+                            jewel:None,
                         }
                     ),
-                    jewel:None,
+                    caracteristics_augmentation: None,
+                    special: None
                 }
             ),
-            caracteristics_augmentation: None,
-            special: None
+            consumable: None
         }
     }
 }
 
 
 impl Object{
-    fn generate(name: String, rarity: String, special: u16) -> Object {
+    fn generate(name: String, rarity: String, special: u16) -> Loot {
 
         let mut rng = rand::thread_rng();
 
-        //TODO:faire uyn enum pour traiter les consommables
-        let assets: String = match name.as_str() {
-            "health potion" => {
-               let to_return = String::from("./static/images/items/ActionLoot_(6).png");
-               to_return
-            },
-            _ => { 
-                let to_return = String::from("./static/images/items/ActionLoot_(6).png");
-                to_return
-            }
-        };
+        let placeholders: ConsumableType = rand::random();
 
-        Object {
-            id: rng.gen::<u32>(),
-            name: name,
-            ilevel: 1,
-            asset: assets,
-            item_type: ItemType::Consumable,
-            rarity: rarity,
-            equipement: None,
-            caracteristics_augmentation: None,
-            special: Some(Special{heal:special})
+        let ass_ets = match placeholders {
+            ConsumableType::HealthPotion =>{
+                let vector = directory_search("./static/images/items/ActionLoot_(6).png");
+                let string = vector[0].to_string();
+                (string, String::from("Potion de vie"), ConsumableType::HealthPotion, UseCallback::HealthPotion)
+            },
+            ConsumableType::Bandages =>{
+                let vector = directory_search("./static/images/items/ActionLoot_(9)*.png");
+                let string = vector[0].to_string();
+                (string,  String::from("Bandage"), ConsumableType::Bandages, UseCallback::Bandages)
+            },
+            ConsumableType::Antidot =>{
+                let vector = directory_search("./static/images/items/ActionLoot_(8)*.png");
+                let string = vector[0].to_string();
+                (string,  String::from("Antidot"), ConsumableType::Antidot, UseCallback::Antidot)
+            },
+        };
+        
+        Loot{
+            object: None,
+            consumable: Some(
+                Consumable{
+                    id: rng.gen::<u32>(),
+                    name: ass_ets.1,
+                    ilevel: 1,
+                    item_type: ass_ets.2,
+                    asset: ass_ets.0,
+                    rarity: rarity,
+                    description: ass_ets.2.to_string(),
+                    on_use: ass_ets.3
+                }
+
+            )
         }
     }
 }
 
 impl Jewel{
-    fn generate(rarity: String) -> Object {
+    fn generate(rarity: String) -> Loot {
 
         let mut rng = rand::thread_rng();
         let placeholders: JewelType = rand::random();
@@ -630,43 +656,280 @@ impl Jewel{
             s
         };
 
-        Object {
-            id: rng.gen::<u32>(),
-            name: name,
-            ilevel: 1,
-            asset: ass_ets.0.to_string(),
-            item_type: ItemType::Jewel,
-            rarity: rarity,
-            equipement: Some(
-                Equipment{
-                    slot: ass_ets.1,
-                    equipped: false,
-                    weapon:None,
-                    armor:None,
-                    jewel:Some(
-                        Jewel{ 
-                            jewel_type: ass_ets.2,
-                            spell: Spell {
-                                name: low_lvl_spell,
-                                incante: stats_tuple.1,
-                                damage: stats_tuple.0,
-                                description: low_lvl_spell_string
-                            },
-                            usage: 2,
-                            ailment: None,
+        Loot{
+            object: Some(
+                Object {
+                    id: rng.gen::<u32>(),
+                    name: name,
+                    ilevel: 1,
+                    asset: ass_ets.0.to_string(),
+                    item_type: ItemType::Jewel,
+                    rarity: rarity,
+                    equipement: Some(
+                        Equipment{
+                            slot: ass_ets.1,
+                            equipped: false,
+                            weapon:None,
+                            armor:None,
+                            jewel:Some(
+                                Jewel{ 
+                                    jewel_type: ass_ets.2,
+                                    spell: Spell {
+                                        name: low_lvl_spell,
+                                        incante: stats_tuple.1,
+                                        damage: stats_tuple.0,
+                                        description: low_lvl_spell_string
+                                    },
+                                    usage: 2,
+                                    ailment: None,
+                                }
+                            ),
                         }
                     ),
+                    caracteristics_augmentation: None,
+                    special: None
                 }
             ),
-            caracteristics_augmentation: None,
-            special: None
+            consumable: None
         }
 
     }
 }
 
+fn rarity_monster() -> (u8, String)
+{
+    fn chances(table: &[Transition], level: u8) -> f32 {
+        table
+            .iter()
+            .rev()
+            .find(|transition| level >= transition.level)
+            .map_or(0.0, |transition| transition.value)
+    }
 
-pub fn generate_loot() -> Object {
+    let common_chance = chances(
+        &[
+            Transition {level: 1, value: 90.0,},
+            Transition {level: 10, value: 70.0,},
+            Transition {level: 20, value: 55.0,},
+        ],
+        PLAYER_LEVEL
+    );
+    let magic_chance = chances(
+        &[
+            Transition {level: 1, value: 5.0,},
+            Transition {level: 10, value: 15.0,},
+            Transition {level: 20, value: 20.0,},
+        ],
+        PLAYER_LEVEL
+    );
+    let rare_chance = chances(
+        &[
+            Transition {level: 1, value: 2.0,},
+            Transition {level: 10, value: 4.0,},
+            Transition {level: 20, value: 5.0,},
+        ],
+        PLAYER_LEVEL
+    );
+    let epic_chance = chances(
+        &[
+            Transition {level: 1, value: 1.0,},
+            Transition {level: 10, value: 1.25,},
+            Transition {level: 20, value: 2.0,},
+        ],
+        PLAYER_LEVEL
+    );
+    let legendary_chance = chances(
+        &[
+            Transition {level: 1, value: 0.01,},
+            Transition {level: 10, value: 0.1,},
+            Transition {level: 20, value: 0.2,},
+        ],
+        PLAYER_LEVEL
+    );
+
+    let choices = ["common", "magic", "rare", "epic", "legendary"];
+
+    let weights = [common_chance, magic_chance, rare_chance, epic_chance, legendary_chance];
+    let rariry_choice = WeightedIndex::new(&weights).unwrap();
+
+    let ilvl = match choices[rariry_choice.sample(&mut rand::thread_rng())] {
+        "common" => {
+            let mut rng = rand::thread_rng();
+            (rng.gen_range(0, 50), String::from("common"))
+        },
+        "magic" => {
+            let mut rng = rand::thread_rng();
+            (rng.gen_range(51, 90), String::from("magic"))
+        },
+        "rare" => {
+            let mut rng = rand::thread_rng();
+            (rng.gen_range(91, 140),  String::from("rare"))
+        },
+        "epic" => {
+            let mut rng = rand::thread_rng();
+            (rng.gen_range(141, 190),  String::from("epic"))
+        },
+        "legendary" => {
+            let mut rng = rand::thread_rng();
+            (rng.gen_range(191, 255),  String::from("legendary"))
+        }
+        _ => unreachable!(),
+    };
+
+    ilvl
+
+}
+
+impl Monster {
+    fn generate(monster_type: String) -> Monster {
+        let mut rng = rand::thread_rng();
+
+        let id = rng.gen::<u32>();
+        // TODO impl rarity to monsters
+
+        let tuple_rng: (u8, u8) = match PLAYER_LEVEL {
+            0..=2 => {
+                let ivlvmonster: u8 = rng.gen_range(0, PLAYER_LEVEL +2);
+                let coef_playerlvl: u8 = rng.gen_range(0 , PLAYER_LEVEL +3);
+                (ivlvmonster, coef_playerlvl)
+            },
+            3 => {
+                let ivlvmonster: u8 = rng.gen_range(PLAYER_LEVEL -2, PLAYER_LEVEL +2);
+                let coef_playerlvl: u8 = rng.gen_range(0 , PLAYER_LEVEL +3);
+                (ivlvmonster, coef_playerlvl)
+            }
+            _ =>{
+                let ivlvmonster: u8 = rng.gen_range(PLAYER_LEVEL -2, PLAYER_LEVEL +2);
+                let coef_playerlvl: u8 = rng.gen_range(PLAYER_LEVEL -3 , PLAYER_LEVEL +3);
+                (ivlvmonster, coef_playerlvl)
+            }
+        };
+
+        let ivlvmonster: u8 = tuple_rng.0;
+        let monster_constitution = rng.gen_range(40, 50);
+        let coef = monster_constitution / 10;
+        let coef_playerlvl: u8 = tuple_rng.1;
+        
+        let monster_armor = (1 + (PLAYER_LEVEL / 100)) as u16 * calculate_armor(ivlvmonster);
+        let tuple_damage = calculate_weapon_damage(ivlvmonster);
+
+        let monster_pv:u32 = ((monster_constitution as u32 + ivlvmonster as u32) + ivlvmonster  as u32) * coef * coef_playerlvl as u32 ;
+
+        let mut monster_resistances = calculate_resistances(ivlvmonster);
+        let monster_ailment: WpnAilment = rand::random();
+
+
+        if monster_ailment == WpnAilment::None {
+            monster_resistances = 0;
+        }
+
+        let monster_enum = MonsterType::from_str(monster_type.as_ref()).unwrap();
+
+        let assets = match  monster_enum {
+            MonsterType::Banshee => {
+                let ret = directory_search("./static/images/monsters/Tex_banshee.png");
+                ret
+            },
+            MonsterType::Barbarian => {
+                let ret = directory_search("./static/images/monsters/Tex_barbarian.png");
+                ret
+            },
+            MonsterType::Daemon => {
+                let ret = directory_search("./static/images/monsters/Tex_deamon.png");
+                ret
+            },
+            MonsterType::Ghost => {
+                let ret = directory_search("./static/images/monsters/Tex_ghost.png");
+                ret
+            },
+            MonsterType::Ghoul => {
+                let ret = directory_search("./static/images/monsters/Tex_ghoul.png");
+                ret
+            },
+            MonsterType::Goblin => {
+                let ret = directory_search("./static/images/monsters/Tex_goblin.png");
+                ret
+            },
+            MonsterType::Gravedigger => {
+                let ret = directory_search("./static/images/monsters/Tex_gravedigger.png");
+                ret
+            },
+            MonsterType::Knight => {
+                let ret = directory_search("./static/images/monsters/Tex_knight.png");
+                ret
+            },
+            MonsterType::Lich => {
+                let ret = directory_search("./static/images/monsters/Tex_lich.png");
+                ret
+            },
+            MonsterType::Necromancer => {
+                let ret = directory_search("./static/images/monsters/Tex_necromancer.png");
+                ret
+            },
+            MonsterType::Rat => {
+                let ret = directory_search("./static/images/monsters/Tex_rat.png");
+                ret
+            },
+            MonsterType::Rogue => {
+                let ret = directory_search("./static/images/monsters/Tex_rogue.png");
+                ret
+            },
+            MonsterType::Skeleton => {
+                let ret = directory_search("./static/images/monsters/Tex_skeleton.png");
+                ret
+            },
+            MonsterType::Spider => {
+                let ret = directory_search("./static/images/monsters/Tex_spider.png");
+                ret
+            },
+            MonsterType::Succubus => {
+                let ret = directory_search("./static/images/monsters/Tex_succubus.png");
+                ret
+            },
+            MonsterType::Toad => {
+                let ret = directory_search("./static/images/monsters/Tex_toad.png");
+                ret
+            },
+            MonsterType::Wasp => {
+                let ret = directory_search("./static/images/monsters/Tex_wasp.png");
+                ret
+            },
+            MonsterType::Werewolf => {
+                let ret = directory_search("./static/images/monsters/Tex_werewolf.png");
+                ret
+            },
+            MonsterType::Witch => {
+                let ret = directory_search("./static/images/monsters/Tex_witch.png");
+                ret
+            },
+            MonsterType::Wizard => {
+                let ret = directory_search("./static/images/monsters/Tex_wizard.png");
+                ret
+            },
+            MonsterType::Zombie => {
+                let ret = directory_search("./static/images/monsters/Tex_zombie.png");
+                ret
+            }
+
+        };
+
+        //TODO: impl skills + hide callback impl a construct for setting it
+        Monster {
+            id: id,
+            pv:monster_pv,
+            asset: assets[0].to_string(),
+            base_armor: monster_armor as i32,
+            min_damage:tuple_damage.0,
+            max_damage:tuple_damage.1,
+            resistances: monster_resistances,
+            ailment: monster_ailment,
+            on_death: DeathCallback::Monster
+        }
+
+    }
+}
+
+pub fn generate_loot() -> Loot {
 
     let item_pool: ItemType = rand::random();
 
@@ -686,4 +949,8 @@ pub fn generate_loot() -> Object {
     };
 
     loot
+}
+
+pub fn generate_monster(monster_type: String) -> Monster {
+    Monster::generate(monster_type)
 }

@@ -2,7 +2,7 @@ use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 use dotenv::dotenv;
 use std::env;
-use crate::repository::models::{Player, NewPlayer, Caracter, NewCaracter};
+use crate::repository::models::{Player, NewPlayer, Caracter, NewCaracter, Inventory, ItemGenerated, InventoryItemsGenerated};
 use crate::route::models::NewUserInput;
 use crate::resources::models::{CaracterStats};
 
@@ -82,12 +82,13 @@ pub fn save_player_stats(playerid :String, caracter_stats: CaracterStats) -> ()
         .take(30)
         .collect();
 
-        let json_caracter_stats = serde_json::to_string(&caracter_stats).unwrap();
+    let json_caracter_stats = serde_json::to_string(&caracter_stats).unwrap();
 
     let new_caracter = NewCaracter{
         id: rand_string,
         player_id: playerid,
-        stats: json_caracter_stats
+        stats: json_caracter_stats,
+        gold: 0
     };
 
     info!("Saving player stats {:?}", &new_caracter);
@@ -96,7 +97,6 @@ pub fn save_player_stats(playerid :String, caracter_stats: CaracterStats) -> ()
         .values(&new_caracter)
         .execute(&connection)
         .expect("Error saving new player");
-
 
 }
 
@@ -113,4 +113,24 @@ pub fn get_player_stats(playerid :String) -> Option<Caracter> {
 
     return results;
 
+}
+
+pub fn get_items_from_inventory(playerid :String) -> Vec<ItemGenerated> {
+    use crate::repository::schema::items_generated;
+    use crate::repository::schema::inventory_items_generated;
+    use crate::repository::schema::inventory::dsl::*;
+
+    let connection = create_connection();
+
+    let results:Inventory = inventory.filter(caracter_id.eq(playerid))
+    .first::<Inventory>(&connection)
+    .unwrap();
+
+    let res: Vec<(InventoryItemsGenerated, ItemGenerated)> = 
+    InventoryItemsGenerated::belonging_to(&results)
+        .inner_join(items_generated::table.on(items_generated::id.eq(inventory_items_generated::items_generated_id)))
+        .load(&connection)
+        .unwrap();
+
+    res.into_iter().map(|(_i, it)| it).collect()
 }

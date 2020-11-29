@@ -5,7 +5,14 @@ use rand::{
 use crate::item_generator::ailment::WpnAilment;
 use crate::item_generator::element::WpnElement;
 use crate::item_generator::spell::Spell;
+use crate::item_generator::item::{Consumable};
 use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Loot{
+    pub object: Option<Object>,
+    pub consumable: Option<Consumable>
+}
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Object {
