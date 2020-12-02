@@ -14,6 +14,12 @@ pub enum WpnAilment {
     Sleep
 }
 
+impl PartialEq for WpnAilment {
+    fn eq(&self, other: &Self) -> bool {
+        self.to_string() == other.to_string()
+    }
+}
+
 impl std::fmt::Display for WpnAilment {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match *self {
