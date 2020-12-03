@@ -29,6 +29,7 @@ extern crate strum_macros; // 0.10.0
 mod repository;
 mod resources;
 mod item_generator;
+mod game_mechanics;
 mod logger;
 mod route;
 
