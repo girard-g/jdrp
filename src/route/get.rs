@@ -12,12 +12,17 @@ use std::path::PathBuf;
 
 #[get("/")]
 pub fn index() -> io::Result<NamedFile> {
-    NamedFile::open("static/chat/login.html")
+    NamedFile::open("static/index.html")
 }
+
+// #[get("/app")]
+// pub fn app() -> io::Result<NamedFile> {
+//     NamedFile::open("static/connected.html")
+// }
 
 #[get("/<files..>", rank = 10)]
 pub fn dummy(files: PathBuf) -> io::Result<NamedFile> {
-    NamedFile::open("static/chat/login.html")
+    NamedFile::open("static/index.html")
 }
 
 // #[get("/create-character/<uid>")]

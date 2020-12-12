@@ -51,6 +51,7 @@ fn rocket() -> rocket::Rocket {
         api::testobjectgenerationlol,
         api::testmonstergeneration,
         get::dummy,
+        // get::app,
         // get::submit_task,
         // get::logout,
         // get::player_dashboard,
