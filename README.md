@@ -11,8 +11,9 @@ This is a basic web d&d game app where backend communication is made through web
 - [ws_rs](https://github.com/housleyjk/ws-rs) web socket communication
 - [rocket](https://rocket.rs/) web framework
 - [diesel](http://diesel.rs/) ORM
-- [frontend](https://fr.reactjs.org/) react
+- [frontend](https://fr.reactjs.org/) react + yarn
 - [logger](https://github.com/Geal/rust-syslog) syslog, proccess name `jdrp`
+- [auth](https://www.keycloak.org/) Keycloak
 
 ## Install
 
@@ -20,6 +21,11 @@ This is a basic web d&d game app where backend communication is made through web
 $ echo 'DATABASE_URL=database/index.db' > .env # Setup database for SQLite
 $ cargo run # set ROCKET_CLI_COLOR=off if you don't want emojis or colors in your syslogs
 ```
+
+You need to have java install for running keycloak server.
+Follow [this](https://www.keycloak.org/docs/latest/getting_started/index.html#installing-the-server) for install and run keycloak 
+
+I will export a realm configuration later.
 
 ## Run
 
@@ -29,4 +35,11 @@ If you are running on wsl don't forget to start syslog
 $ sudo service rsyslog start
 ```
 
-Visit http://localhost:8000
+Visit http://localhost:8000 for api
+
+Run in ./static
+```sh
+$ yarn run start
+```
+
+Visit http://localhost:3000 for site

@@ -6,12 +6,26 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 import Nav from 'react-bootstrap/Nav';
 
+import Keycloak from 'keycloak-js';
 import './App.css';
 import Home from './pages/home';
 import Item from './pages/about';
+import AppJdrp from "./pages/appjdrp";
 
+let initOptions = {
+    url: 'http://127.0.0.1:8080/auth', realm: 'JDRP', clientId: 'JDRPClient', onLoad: 'login-required'
+}
 
-const Login = () => <span>Login</span>;
+let keycloak = Keycloak(initOptions);
+
+keycloak.init({ onLoad: initOptions.onLoad }).then((auth) => {
+  if (!auth) {
+  window.location.reload();
+  } else {
+  console.log("Authenticated");
+  
+  }
+})
 
 const App = () => (
   <MemoryRouter>
@@ -28,7 +42,7 @@ const App = () => (
           <LinkContainer to="/about"><Nav.Link>About</Nav.Link></LinkContainer>
         </Nav.Item>
         <Nav.Item>
-          <LinkContainer to="/login"><Nav.Link>Login</Nav.Link></LinkContainer>
+          <LinkContainer to="/app"><Nav.Link>App</Nav.Link></LinkContainer>
         </Nav.Item>
       </Nav>
       <h2>
@@ -38,11 +52,11 @@ const App = () => (
             <Item />
             <Item />
           </Route>
-          <Route path="/login">
-            <Login />
+          <Route path="/app">
+            <AppJdrp />
           </Route>
           <Route path="/home">
-            <Home />
+            <Home keycloak={keycloak}/>
           </Route>
         </Switch>
       </h2>
@@ -50,4 +64,7 @@ const App = () => (
   </MemoryRouter>
 );
 
+
+
 export default App;
+
