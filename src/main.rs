@@ -50,6 +50,7 @@ fn rocket() -> rocket::Rocket {
         get::index,
         api::testobjectgenerationlol,
         api::testmonstergeneration,
+        api::get_player,
         get::dummy,
         // get::app,
         // get::submit_task,
@@ -67,7 +68,7 @@ fn rocket() -> rocket::Rocket {
     rocket::ignite()
     .mount("/", rocket_routes)
     .attach(AdHoc::on_response("Add Header", |_, resp| {
-        resp.adjoin_header(AccessControlAllowOrigin::Any);
+        resp.adjoin_header(AccessControlAllowOrigin::Value(String::from("http://localhost:3000")));
     }))
     // .mount("/images", StaticFiles::from("/home/guillaume/Projects/Jdrp/static/images"))
 }

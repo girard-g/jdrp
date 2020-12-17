@@ -29,3 +29,5 @@ Cargo.lock
 # Local History for Visual Studio Code
 .history/
 node_modules
+static/.eslintcache
+certs.json
