@@ -14,7 +14,7 @@ const Navigation = () => {
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
                     <NavLink className="nav-link" to="/home">Home </NavLink>
-                    <NavLink className="nav-link" to="/about">About </NavLink>
+                    <NavLink className="nav-link" to="/about">DEBUG </NavLink>
                     <NavLink className="nav-link" to="/app">App </NavLink>
                 </Nav>
                 {keycloak.keycloak && !keycloak.keycloak.authenticated &&

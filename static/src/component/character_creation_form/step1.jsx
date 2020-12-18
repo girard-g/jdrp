@@ -16,6 +16,9 @@ const Step1 = (props) => {
                 value={props.name}
                 onChange={props.handleChange}
             />
+            <small id="nameHelpInline" className="text-muted">
+                Cela représentera le nom de votre personnage dans le jeu
+            </small><br />
 
             <label htmlFor="age">Age</label>
             <input
@@ -27,20 +30,30 @@ const Step1 = (props) => {
                 onChange={props.handleChange}
             />
 
-            <label htmlFor="classs">Class</label>
-            <select className="form-control" aria-label="Default select example" onChange={props.handleChange} value={props.classs}>
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-            </select>
 
             <label htmlFor="race">Race</label>
-            <select className="form-control" aria-label="Default select example" onChange={props.handleChange} value={props.classs}>
+            <select className="form-control" name="race" onChange={props.handleRaceChange} value={props.race}>
                 <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+                <option value="human">Humain</option>
+                <option value="half_orc">Demi Orc</option>
+                <option value="elf">Elf</option>
+                <option value="half_elf">Demi elf</option>
+                <option value="dwarf">Nain</option>
+                <option value="saurial">Saurial</option>
+                <option value="cambion">Cambion</option>
+            </select>
+
+            <label htmlFor="classs">Class</label>
+            <select className="form-control" name="classs" onChange={props.handleClassChange} value={props.classs}>
+                <option selected>Open this select menu</option>
+                <option value="warrior">Guerrier</option>
+                <option value="mage">Mage</option>
+                <option value="roublard">Roublards</option>
+                <option value="rodeur">Rodeur</option>
+                <option value="monk">Moine</option>
+                <option value="drood">Druid</option>
+                <option value="paladin">Paladin</option>
+                <option value="clerc">Clerc</option>
             </select>
 
             <label htmlFor="alignment">Alignement</label>

@@ -19,6 +19,7 @@ const Step2 = (props) => {
                         type="number"
                         value={props.strengh}
                         onChange={props.handleChange}
+                        onFocus={props.handleFocus}
                     />
 
                     <label htmlFor="dexterity">Dexterité</label>
@@ -29,6 +30,7 @@ const Step2 = (props) => {
                         type="number"
                         value={props.dexterity}
                         onChange={props.handleChange}
+                        onFocus={props.handleFocus}
                     />
 
                     <label htmlFor="endurance">Constitution</label>
@@ -39,6 +41,7 @@ const Step2 = (props) => {
                         type="number"
                         value={props.endurance}
                         onChange={props.handleChange}
+                        onFocus={props.handleFocus}
                     />
 
                     <label htmlFor="charism">Charisme</label>
@@ -49,6 +52,7 @@ const Step2 = (props) => {
                         type="number"
                         value={props.charism}
                         onChange={props.handleChange}
+                        onFocus={props.handleFocus}
                     />
                 </div>
 
@@ -61,6 +65,7 @@ const Step2 = (props) => {
                         type="number"
                         value={props.perception}
                         onChange={props.handleChange}
+                        onFocus={props.handleFocus}
                     />
 
                     <label htmlFor="luck">Chance</label>
@@ -71,6 +76,7 @@ const Step2 = (props) => {
                         type="number"
                         value={props.luck}
                         onChange={props.handleChange}
+                        onFocus={props.handleFocus}
                     />
 
                     <label htmlFor="willpower">Volonté</label>
@@ -81,6 +87,7 @@ const Step2 = (props) => {
                         type="number"
                         value={props.willpower}
                         onChange={props.handleChange}
+                        onFocus={props.handleFocus}
                     />
 
                     <label htmlFor="education">Education</label>
@@ -91,6 +98,7 @@ const Step2 = (props) => {
                         type="number"
                         value={props.education}
                         onChange={props.handleChange}
+                        onFocus={props.handleFocus}
                     />
                 </div>
             </div>
