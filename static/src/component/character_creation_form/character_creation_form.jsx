@@ -6,6 +6,7 @@ import Step4 from './step4';
 import classes from '../../data/classes';
 import races from '../../data/races';
 import stats from '../../data/stats';
+import axios from 'axios';
 
 class MasterForm extends React.Component {
     constructor(props) {
@@ -36,8 +37,6 @@ class MasterForm extends React.Component {
 
     handleChange = event => {
         const { name, value } = event.target
-
-        console.log(name,value );
         this.setState({
             [name]: value
         })
@@ -48,6 +47,7 @@ class MasterForm extends React.Component {
         let val = ''
         if (value === "warrior") {
             val = classes.warrior.description;
+            this.setState({strengh: 10})
         } else if (value === "mage") {
             val = classes.mage.description;
         } else if (value === "roublard") {
@@ -102,33 +102,42 @@ class MasterForm extends React.Component {
         let n = ''
         let val = ''
         let m = ''
+
         if (name === "strengh") {
             n = 'Force'
             m = 'Important pour ' + stats.strengh.mandatory
             val = stats.strengh.description;
         } else if (name === "dexterity") {
             n = 'Dextérité'
+            m = 'Important pour ' + stats.dexterity.mandatory
             val = stats.dexterity.description;
         } else if (name === "endurance") {
             n = 'Constitution'
+            m = 'Important pour ' + stats.endurance.mandatory
             val = stats.endurance.description;
         } else if (name === "charism") {
             n = 'Charisme'
+            m = 'Important pour ' + stats.charism.mandatory
             val = stats.charism.description;
         } else if (name === "perception") {
             n = 'Perception'
+            m = 'Important pour ' + stats.perception.mandatory
             val = stats.perception.description;
         } else if (name === "luck") {
             n = 'Chance'
+            m = 'Important pour ' + stats.luck.mandatory
             val = stats.luck.description;
         } else if (name === "willpower") {
             n = 'Volonté'
+            m = 'Important pour ' + stats.willpower.mandatory
             val = stats.willpower.description;
         } else if (name === "education") {
             n = 'Education'
+            m = 'Important pour ' + stats.education.mandatory
             val = stats.education.description;
         } else {
             n = '-'
+            m = '-'
             val = '-'
         }
         this.setState({
@@ -160,28 +169,73 @@ class MasterForm extends React.Component {
             education,
             portrait,
         } = this.state
-        alert(`Your registration detail: \n 
-             name: ${name} \n 
-             age: ${age} \n 
-             classs: ${classs} \n 
-             race: ${race} \n 
-             alignment: ${alignment} \n 
-             particularity: ${particularity} \n 
-             reputation: ${reputation} \n
-             strengh: ${strengh} \n 
-             dexterity: ${dexterity} \n 
-             endurance: ${endurance} \n 
-             charism: ${charism} \n 
-             perception: ${perception} \n 
-             luck: ${luck} \n 
-             willpower: ${willpower} \n 
-             education: ${education} \n 
-             portrait: ${portrait} \n 
-             `
-        )
+
+        let user_input = JSON.stringify({
+            name: name,
+            age: age,
+            class: classs,
+            race: race,
+            alignment: alignment,
+            particularity: particularity,
+            reputation: reputation,
+            strengh: strengh,
+            dexterity: dexterity,
+            endurance: endurance,
+            charism: charism,
+            perception: perception,
+            luck: luck,
+            willpower: willpower,
+            education: education,
+            portrait: portrait,
+        })
+
+        let Aaa ={
+            wtf: 1
+        };
+
+        axios.post("http://localhost:8000/api/check-caracter-creation", {
+
+            Aaa
+        }, {
+            headers:{
+                'Authorization': this.props.k.keycloak.token,
+                // 'content-type': 'application/json'
+            },
+
+        })
+            .then(
+                response => (
+                    // setisLoaded(true),
+                    console.log(response.data)
+                ),
+                (error) => {
+                    // setisLoaded(true)
+                    // setError(error)
+                    console.log(error);
+                }
+            )
+
+
+        // alert(`Your registration detail: \n 
+        //      name: ${name} \n 
+        //      age: ${age} \n 
+        //      classs: ${classs} \n 
+        //      race: ${race} \n 
+        //      alignment: ${alignment} \n 
+        //      particularity: ${particularity} \n 
+        //      reputation: ${reputation} \n
+        //      strengh: ${strengh} \n 
+        //      dexterity: ${dexterity} \n 
+        //      endurance: ${endurance} \n 
+        //      charism: ${charism} \n 
+        //      perception: ${perception} \n 
+        //      luck: ${luck} \n 
+        //      willpower: ${willpower} \n 
+        //      education: ${education} \n 
+        //      portrait: ${portrait} \n 
+        //      `
+        // )
     }
-
-
 
     _next = () => {
         let currentStep = this.state.currentStep
@@ -270,50 +324,74 @@ class MasterForm extends React.Component {
                                 <Step4
                                     currentStep={this.state.currentStep}
                                     handleChange={this.handleChange}
-                                    password={this.state.password}
                                 />
                                 {this.previousButton()}
                                 {this.nextButton()}
 
                             </form>
                         </div>
-                    
-                        <div className="card col-md-4 overflow-auto " style={{ height: 600, maxHeight: 600, color: 'black' }}>
-                            <img src="https://via.placeholder.com/538x107/" className="card-img-top" alt="Class Banner"></img>
-                            {this.state.currentStep === 1 &&
-                                <div className="card-body">
-                                    <h2 className="card-title text-center">Race</h2>
-                                    <p className="card-text">{this.state.race_explanation}</p>
-                                    <h2 className="card-title text-center">Classe</h2>
-                                    <p className="card-text">{this.state.class_explanation}</p>
-                                </div>
-                            }
-                            {this.state.currentStep === 2 &&
-                                <div className="card-body">
-                                    <p className="card-text">{stats.description}</p>
-                                    <h4 className="card-title text-center">{this.state.help.name}</h4>
-                                    <p className="card-text">{this.state.help.description}</p>
-                                    <p className="card-text"><i>{this.state.help.mandatory}</i></p>
-                                </div>
-                            }
-                             {this.state.currentStep === 3 &&
-                                <div className="card-body">
-                                    <p className="card-text">{stats.description}</p>
-                                    <h4 className="card-title text-center">{this.state.help.name}</h4>
-                                    <p className="card-text">{this.state.help.description}</p>
-                                    <p className="card-text"><i>{this.state.help.mandatory}</i></p>
-                                </div>
-                            }
-                        </div>
 
-                        <div className="card col-md-4 overflow-auto " style={{ height: 600, maxHeight: 600, color: 'black' }}>
-                            <img src="https://via.placeholder.com/538x700/" className="card-img-top" alt="portrait"></img>
-                            <div className="card-body">
-                                <h2 className="card-title text-center">Lore</h2>
-                                <p className="card-text">TODO</p>
+                        {this.state.currentStep !== 4 &&
+                            <div className="card col-md-8 overflow-auto " style={{ height: 600, maxHeight: 600, color: 'black' }}>
+                                <img src="https://via.placeholder.com/538x107/" className="card-img-top" alt="Class Banner"></img>
+                                {this.state.currentStep === 1 &&
+                                    <div className="card-body">
+                                        <h2 className="card-title text-center">Race</h2>
+                                        <p className="card-text">{this.state.race_explanation}</p>
+                                        <h2 className="card-title text-center">Classe</h2>
+                                        <p className="card-text">{this.state.class_explanation}</p>
+                                    </div>
+                                }
+                                {this.state.currentStep === 2 &&
+                                    <div className="card-body">
+                                        <p className="card-text">{stats.description}</p>
+                                        <h4 className="card-title text-center">{this.state.help.name}</h4>
+                                        <p className="card-text">{this.state.help.description}</p>
+                                        <p className="card-text"><i>{this.state.help.mandatory}</i></p>
+                                    </div>
+                                }
+                                {/* {this.state.currentStep === 3 &&
+                                    <div className="card-body">
+                                        <p className="card-text">{stats.description}</p>
+                                        <h4 className="card-title text-center">{this.state.help.name}</h4>
+                                        <p className="card-text">{this.state.help.description}</p>
+                                        <p className="card-text"><i>{this.state.help.mandatory}</i></p>
+                                    </div>
+                                } */}
+
+
                             </div>
-                        </div>
-                        
+                        }
+
+
+                        {this.state.currentStep === 4 &&
+                            <div className="card col-md-8 overflow-auto " style={{ height: 600, maxHeight: 600, color: 'black' }}>
+                                <img src="https://via.placeholder.com/150x250/" className="card-img" alt="portrait"></img>
+                                <div className="card-body">
+
+                                    <div className="card-body">
+                                        <h2 className="card-title text-center">Fiche Personnage</h2>
+                                        <p className="card-text text-center">{this.state.name}</p>
+
+                                        <div className="row">
+                                            <div className="card-body col-md-6">
+                                                <p className="card-text text-center">{this.state.race}</p>
+                                                <p className="card-text text-center">{this.state.alignment}</p>
+                                                <p className="card-text text-center">{this.state.particularity}</p>
+                                            </div>
+
+                                            <div className="card-body col-md-6">
+                                                <p className="card-text text-center">{this.state.classs}</p>
+                                                <p className="card-text text-center">{this.state.age}</p>
+                                                <p className="card-text text-center">{this.state.reputation}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        }
                     </div>
 
                 </div>

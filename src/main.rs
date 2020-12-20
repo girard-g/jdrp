@@ -42,6 +42,12 @@ extern crate chrono;
 
 use rocket::fairing::AdHoc;
 use rocket::http::hyper::header::{AccessControlAllowOrigin};
+// use rocket_cors::{AllowedHeaders, AllowedOrigins};
+// use rocket::http::Method;
+
+// use rocket::{Request, Response};
+// use rocket::fairing::{Fairing, Info, Kind};
+// use rocket::http::Header;
 
 fn rocket() -> rocket::Rocket {
     let rocket_routes = routes![
@@ -50,7 +56,9 @@ fn rocket() -> rocket::Rocket {
         get::index,
         api::testobjectgenerationlol,
         api::testmonstergeneration,
+        api::check_caracter_creation,
         api::get_player,
+        api::send_options,
         get::dummy,
         // get::app,
         // get::submit_task,
@@ -65,10 +73,43 @@ fn rocket() -> rocket::Rocket {
         
 
     ];
+
+    // pub struct CORS();
+
+    // impl Fairing for CORS {
+    //     fn info(&self) -> Info {
+    //         Info {
+    //             name: "Add CORS headers to requests",
+    //             kind: Kind::Response
+    //         }
+    //     }
+
+    //     fn on_response(&self, request: &Request, response: &mut Response) {
+    //         response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
+    //         response.set_header(Header::new("Access-Control-Allow-Methods", "POST, GET, PATCH, OPTIONS"));
+    //         response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
+    //         response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
+    //     }
+    // }
+    
+    // let cors = rocket_cors::CorsOptions {
+    //     allowed_origins : AllowedOrigins::all(),
+    //     allowed_methods: vec![Method::Get, Method::Post, Method::Options].into_iter().map(From::from).collect(),
+    //     allowed_headers: AllowedHeaders::some(&["Authorization", "Accept"]),
+    //     allow_credentials: true,
+    //     fairing_route_base: String::from("/api"),
+    //     ..Default::default()
+    // };
+
     rocket::ignite()
     .mount("/", rocket_routes)
+    // .attach(cors.to_cors().unwrap())
+    // .attach(CORS())
     .attach(AdHoc::on_response("Add Header", |_, resp| {
-        resp.adjoin_header(AccessControlAllowOrigin::Value(String::from("http://localhost:3000")));
+        resp.adjoin_header(AccessControlAllowOrigin::Any);
+        resp.adjoin_raw_header("Access-Control-Allow-Credentials", "true");
+
+        // resp.adjoin_header(AccessControlAllowOrigin::Value(String::from("http://localhost:3000")));
     }))
     // .mount("/images", StaticFiles::from("/home/guillaume/Projects/Jdrp/static/images"))
 }

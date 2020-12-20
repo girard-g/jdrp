@@ -6,7 +6,7 @@ const Step4 = (props) => {
     }
     return (
         <React.Fragment>
-            <div className="form-group">
+            {/* <div className="form-group">
                 <label htmlFor="password">Password</label>
                 <input
                     className="form-control"
@@ -17,7 +17,7 @@ const Step4 = (props) => {
                     value={props.password}
                     onChange={props.handleChange}
                 />
-            </div>
+            </div> */}
             <button className="btn btn-success btn-block">Sign up</button>
         </React.Fragment>
     );
