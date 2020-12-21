@@ -92,19 +92,21 @@ pub fn testmonstergeneration(monster: String) -> Json<Monster> {
     Json(loot)
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Aaa{
-    wtf: u8,
-}
-
-#[post("/api/check-caracter-creation", format = "json", data = "<user_input>")]
-pub fn check_caracter_creation(token: Token, user_input: Json<Aaa>) -> Json<String>  {
+#[post("/api/check-caracter-creation", format = "json", data = "<u>")]
+pub fn check_caracter_creation(_token: Token, u: Json<CaracterStats>) -> Json<bool>  {
     // use crate::repository::mainlib::save_player_stats;
-    
-    // let decoded: CaracterStats = serde_json::from_str(&user_input);
-    println!("Player Saved {:#?}", user_input);
-    // save_player_stats(uid, user_input.into_inner());
-    Json(String::from("TRUE"))
 
+    let tmp = vec![u.strengh, u.dexterity, u.endurance, u.charism, u.perception, u.luck, u.willpower, u.education];
+    let w: Vec<&u8> = tmp.iter().filter(|s| s > &&70 || s < &&10).collect();
+    let sum: u16 = tmp.iter().map(|&a| a as u16).sum();
+
+    if w.is_empty() == false || sum > 300 {
+        Json(false)
+    }else {
+        println!("vec: {:#?}", sum);
+        println!("Player Saved {:#?}", u);
+        // save_player_stats(uid, user_input.into_inner());
+        Json(true)
+    }
 
 }

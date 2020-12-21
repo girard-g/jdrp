@@ -7,6 +7,8 @@ import classes from '../../data/classes';
 import races from '../../data/races';
 import stats from '../../data/stats';
 import axios from 'axios';
+import Spinner from 'react-bootstrap/Spinner';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
 class MasterForm extends React.Component {
     constructor(props) {
@@ -170,38 +172,30 @@ class MasterForm extends React.Component {
             portrait,
         } = this.state
 
-        let user_input = JSON.stringify({
+        let user_input = {
             name: name,
-            age: age,
+            age: parseInt(age),
             class: classs,
             race: race,
             alignment: alignment,
             particularity: particularity,
             reputation: reputation,
-            strengh: strengh,
-            dexterity: dexterity,
-            endurance: endurance,
-            charism: charism,
-            perception: perception,
-            luck: luck,
-            willpower: willpower,
-            education: education,
+            strengh: parseInt(strengh),
+            dexterity: parseInt(dexterity),
+            endurance: parseInt(endurance),
+            charism: parseInt(charism),
+            perception: parseInt(perception),
+            luck: parseInt(luck),
+            willpower: parseInt(willpower),
+            education: parseInt(education),
             portrait: portrait,
-        })
+        }
 
-        let Aaa ={
-            wtf: 1
-        };
-
-        axios.post("http://localhost:8000/api/check-caracter-creation", {
-
-            Aaa
-        }, {
+        axios.post("http://localhost:8000/api/check-caracter-creation", user_input, {
             headers:{
                 'Authorization': this.props.k.keycloak.token,
                 // 'content-type': 'application/json'
             },
-
         })
             .then(
                 response => (
@@ -209,32 +203,12 @@ class MasterForm extends React.Component {
                     console.log(response.data)
                 ),
                 (error) => {
-                    // setisLoaded(true)
-                    // setError(error)
-                    console.log(error);
+                    console.log(error)
                 }
             )
 
 
-        // alert(`Your registration detail: \n 
-        //      name: ${name} \n 
-        //      age: ${age} \n 
-        //      classs: ${classs} \n 
-        //      race: ${race} \n 
-        //      alignment: ${alignment} \n 
-        //      particularity: ${particularity} \n 
-        //      reputation: ${reputation} \n
-        //      strengh: ${strengh} \n 
-        //      dexterity: ${dexterity} \n 
-        //      endurance: ${endurance} \n 
-        //      charism: ${charism} \n 
-        //      perception: ${perception} \n 
-        //      luck: ${luck} \n 
-        //      willpower: ${willpower} \n 
-        //      education: ${education} \n 
-        //      portrait: ${portrait} \n 
-        //      `
-        // )
+
     }
 
     _next = () => {
@@ -284,8 +258,8 @@ class MasterForm extends React.Component {
     render() {
         return (
             <React.Fragment>
+                <ProgressBar now={this.state.currentStep*25} />
                 <h1>Create your character 🧙‍♂️</h1>
-                <p>Step {this.state.currentStep}/4 </p>
                 <div className="container">
                     <div className="row">
                         <div className="col-md-4">

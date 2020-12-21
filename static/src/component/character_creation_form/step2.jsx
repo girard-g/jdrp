@@ -17,6 +17,8 @@ const Step2 = (props) => {
                         id="strengh"
                         name="strengh"
                         type="number"
+                        min="10"
+                        max="70"
                         value={props.strengh}
                         onChange={props.handleChange}
                         onFocus={props.handleFocus}
@@ -28,6 +30,8 @@ const Step2 = (props) => {
                         id="dexterity"
                         name="dexterity"
                         type="number"
+                        min="10"
+                        max="70"
                         value={props.dexterity}
                         onChange={props.handleChange}
                         onFocus={props.handleFocus}
@@ -39,6 +43,8 @@ const Step2 = (props) => {
                         id="endurance"
                         name="endurance"
                         type="number"
+                        min="10"
+                        max="70"
                         value={props.endurance}
                         onChange={props.handleChange}
                         onFocus={props.handleFocus}
@@ -50,6 +56,8 @@ const Step2 = (props) => {
                         id="charism"
                         name="charism"
                         type="number"
+                        min="10"
+                        max="70"
                         value={props.charism}
                         onChange={props.handleChange}
                         onFocus={props.handleFocus}
@@ -63,6 +71,8 @@ const Step2 = (props) => {
                         id="perception"
                         name="perception"
                         type="number"
+                        min="10"
+                        max="70"
                         value={props.perception}
                         onChange={props.handleChange}
                         onFocus={props.handleFocus}
@@ -74,6 +84,8 @@ const Step2 = (props) => {
                         id="luck"
                         name="luck"
                         type="number"
+                        min="10"
+                        max="70"
                         value={props.luck}
                         onChange={props.handleChange}
                         onFocus={props.handleFocus}
@@ -85,6 +97,8 @@ const Step2 = (props) => {
                         id="willpower"
                         name="willpower"
                         type="number"
+                        min="10"
+                        max="70"
                         value={props.willpower}
                         onChange={props.handleChange}
                         onFocus={props.handleFocus}
@@ -96,6 +110,8 @@ const Step2 = (props) => {
                         id="education"
                         name="education"
                         type="number"
+                        min="10"
+                        max="70"
                         value={props.education}
                         onChange={props.handleChange}
                         onFocus={props.handleFocus}

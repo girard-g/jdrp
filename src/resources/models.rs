@@ -6,7 +6,7 @@ pub struct CaracterStats<> {
     pub race: String,
     pub class: String,
     // pub level: u8,
-    pub age: u8,
+    pub age: u16,
     pub reputation: String,
     pub particularity: String,
     pub alignment: String,
