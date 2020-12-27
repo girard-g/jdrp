@@ -1,0 +1,161 @@
+{
+    "game_stats": {
+        "max_stat": 320,
+        "max_per_cat": 70,
+        "min_per_cat": 30
+    },
+    "class_stats": {
+        "warrior":{
+            "strengh": 10,
+            "dexterity": 5,
+            "luck": 0,
+            "willpower": -15,
+            "endurance": 10,
+            "charism": 0,
+            "perception": 0,
+            "education":0
+        },
+        "mage": {
+            "strengh": -20,
+            "dexterity": 0,
+            "luck": 0,
+            "willpower": 20,
+            "endurance": 0,
+            "charism": 0,
+            "perception": 0,
+            "education": 10
+        },
+        "roublard":{
+            "strengh": -15,
+            "dexterity": 15,
+            "luck": 5,
+            "willpower": 5,
+            "endurance": -10,
+            "charism": 0,
+            "perception": 10,
+            "education":0
+        },
+        "rodeur":{
+            "strengh": 0,
+            "dexterity": 10,
+            "luck": 5,
+            "willpower": 0,
+            "endurance": -10,
+            "charism": 0,
+            "perception": 5,
+            "education":0
+        },
+        "monk":{
+            "strengh": 5,
+            "dexterity": 5,
+            "luck": 0,
+            "willpower": 0,
+            "endurance": 5,
+            "charism": -10,
+            "perception": 0,
+            "education": 5
+        },
+        "drood":{
+            "strengh": 5,
+            "dexterity": -10,
+            "luck": 0,
+            "willpower": 5,
+            "endurance": 10,
+            "charism": 0,
+            "perception": 0,
+            "education": 0
+        },
+        "paladin":{
+            "strengh": 10,
+            "dexterity": -5,
+            "luck": 0,
+            "willpower": 5,
+            "endurance": 5,
+            "charism": 0,
+            "perception": -5,
+            "education": 0
+        },
+        "clerc":{
+            "strengh": 5,
+            "dexterity": -5,
+            "luck": 0,
+            "willpower": 5,
+            "endurance": 5,
+            "charism": 0,
+            "perception": 0,
+            "education": -5
+        }
+    },
+    "race_stats": {
+        "human":{
+            "strengh": 0,
+            "dexterity": 10,
+            "luck": 5,
+            "willpower": 0,
+            "endurance": -10,
+            "charism": 5,
+            "perception": 0,
+            "education": -5
+        },
+        "half_orc": {
+            "strengh": 15,
+            "dexterity": 0,
+            "luck": 0,
+            "willpower": 0,
+            "endurance": 10,
+            "charism": -10,
+            "perception": 0,
+            "education": -5
+        },
+        "elf":{
+            "strengh": -10,
+            "dexterity": 5,
+            "luck": 0,
+            "willpower": 10,
+            "endurance": 0,
+            "charism": 5,
+            "perception": 0,
+            "education": 0
+        },
+        "half_elf":{
+            "strengh": -5,
+            "dexterity": 5,
+            "luck": 0,
+            "willpower": 5,
+            "endurance": -5,
+            "charism": 5,
+            "perception": 0,
+            "education": 5
+        },
+        "dwarf":{
+            "strengh": 10,
+            "dexterity": -10,
+            "luck": 0,
+            "willpower": 5,
+            "endurance": 5,
+            "charism": -5,
+            "perception": 5,
+            "education": 0
+        },
+        "saurial":{
+            "strengh": 0,
+            "dexterity": 5,
+            "luck": 5,
+            "willpower": 0,
+            "endurance": -5,
+            "charism": -5,
+            "perception": 10,
+            "education": 0
+        },
+        "cambion":{
+            "strengh": 5,
+            "dexterity": 5,
+            "luck": 5,
+            "willpower": 10,
+            "endurance": 0,
+            "charism": -10,
+            "perception": 0,
+            "education": -5
+        }
+    }
+}

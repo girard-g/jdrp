@@ -25,3 +25,4 @@ strum = { version = "0.19", features = ["derive"] }
 strum_macros = "0.19"
 glob = "0.3.0"
 jsonwebtoken = "7"
+config ="0.10"

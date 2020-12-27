@@ -92,21 +92,71 @@ pub fn testmonstergeneration(monster: String) -> Json<Monster> {
     Json(loot)
 }
 
+
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Error {
+    code: usize,
+    message: String
+}
+
+
 #[post("/api/check-caracter-creation", format = "json", data = "<u>")]
-pub fn check_caracter_creation(_token: Token, u: Json<CaracterStats>) -> Json<bool>  {
+pub fn check_caracter_creation(_token: Token, mut u: Json<CaracterStats>) -> Result<Json<bool>, Json<Error>>   {
     // use crate::repository::mainlib::save_player_stats;
+    use crate::configuration::settings::{Settings};
 
-    let tmp = vec![u.strengh, u.dexterity, u.endurance, u.charism, u.perception, u.luck, u.willpower, u.education];
-    let w: Vec<&u8> = tmp.iter().filter(|s| s > &&70 || s < &&10).collect();
-    let sum: u16 = tmp.iter().map(|&a| a as u16).sum();
+    let s = Settings::new();
 
-    if w.is_empty() == false || sum > 300 {
-        Json(false)
-    }else {
-        println!("vec: {:#?}", sum);
-        println!("Player Saved {:#?}", u);
-        // save_player_stats(uid, user_input.into_inner());
-        Json(true)
+    match s {
+        Ok(config) => {
+
+            let tmp = vec![u.strengh, u.dexterity, u.endurance, u.charism, u.perception, u.luck, u.willpower, u.education];
+            let w: Vec<&u8> = tmp.iter().filter(|s| s > &&config.game_stats.max_per_cat || s < &&config.game_stats.min_per_cat).collect();
+        
+            if w.is_empty() == false {
+                Err(Json(Error{code:16873154, message:String::from("Stats have been altered")}))
+            }else {
+
+                let stats_from_race = config.race_stats.get_stats(u.race.as_mut());
+                let stats_from_class = config.class_stats.get_stats(u.class.as_mut());
+
+                let mut check: Vec<i8> = Vec::new();
+
+                println!("u.strengh: {:#?}", u.strengh);
+                println!("stats_from_race.strengh: {:#?}", stats_from_race.strengh);
+                println!("stats_from_class.strengh: {:#?}", stats_from_class.strengh);
+
+                check.push(u.strengh as i8 - (stats_from_race.strengh + stats_from_class.strengh));
+                check.push(u.dexterity as i8 - (stats_from_race.dexterity + stats_from_class.dexterity));
+                check.push(u.luck as i8 - (stats_from_race.luck + stats_from_class.luck));
+                check.push(u.willpower as i8 - (stats_from_race.willpower + stats_from_race.willpower));
+                check.push(u.endurance as i8 - (stats_from_race.endurance + stats_from_class.endurance));
+                check.push(u.charism as i8 - (stats_from_race.charism + stats_from_class.charism));
+                check.push(u.perception as i8 - (stats_from_race.perception + stats_from_class.perception));
+                check.push(u.education as i8 - (stats_from_race.education + stats_from_class.education));
+                
+                let sum: u16 = check.iter().map(|&a| a as u16).sum();
+
+                println!("sum: {:#?}", sum);
+
+                if sum != config.game_stats.max_stat {
+                    Err(Json(Error{code:16873154, message:String::from("Stats have been altered")}))
+                }else{
+                    println!("vec: {:#?}", sum);
+                    println!("Player Saved {:#?}", u);
+                    // save_player_stats(uid, user_input.into_inner());
+                    Ok(Json(true))
+                }
+            }
+        }
+        Err(e) => {
+            println!("{:#?}", e);
+            Err(Json(Error{code:60421676, message:e.to_string()}))
+            // Err(Json(Error{code:60421676, message:String::from("Can parse config file")}))
+
+        }
     }
+
 
 }
