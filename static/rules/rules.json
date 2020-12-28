@@ -2,7 +2,7 @@
     "game_stats": {
         "max_stat": 320,
         "max_per_cat": 70,
-        "min_per_cat": 30
+        "min_per_cat": 10
     },
     "class_stats": {
         "warrior":{

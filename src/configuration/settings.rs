@@ -8,14 +8,14 @@ use serde::{Serialize, Deserialize};
 pub const CONFIG_FILE_PATH: &str = "./static/rules/rules.json";
 
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct GameStats {
     pub max_stat: u16,
     pub max_per_cat: u8,
     pub min_per_cat: u8
 }
 
-#[derive(Debug, Deserialize, Clone, Copy)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
 pub struct Class {
     pub warrior: Stats,
     pub mage: Stats,
@@ -27,7 +27,7 @@ pub struct Class {
     pub clerc: Stats
 }
 
-#[derive(Debug, Deserialize, Clone, Copy)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
 pub struct Race {
     pub half_orc: Stats,
     pub elf: Stats,
@@ -38,7 +38,7 @@ pub struct Race {
     pub cambion: Stats
 }
 
-#[derive(Debug, Deserialize, Clone, Copy)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
 pub struct Stats {
     pub strengh: i8,
     pub dexterity: i8,
@@ -50,7 +50,7 @@ pub struct Stats {
     pub education: i8
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Settings {
     pub game_stats : GameStats,
     pub class_stats: Class,

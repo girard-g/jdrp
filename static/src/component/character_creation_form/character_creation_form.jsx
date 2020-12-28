@@ -7,7 +7,6 @@ import classes from '../../data/classes';
 import races from '../../data/races';
 import stats from '../../data/stats';
 import axios from 'axios';
-import Spinner from 'react-bootstrap/Spinner';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
 class MasterForm extends React.Component {
@@ -25,77 +24,169 @@ class MasterForm extends React.Component {
             alignment: '',
             particularity: '',
             reputation: '',
-            strengh: '',
-            dexterity: '',
-            endurance: '',
-            charism: '',
-            perception: '',
-            luck: '',
-            willpower: '',
-            education: '',
+            strengh: 0,
+            dexterity: 0,
+            endurance: 0,
+            charism: 0,
+            perception: 0,
+            luck: 0,
+            willpower: 0,
+            education: 0,
+            class_strengh: 0,
+            class_dexterity: 0,
+            class_endurance: 0,
+            class_charism: 0,
+            class_perception: 0,
+            class_luck: 0,
+            class_willpower: 0,
+            class_education: 0,
+            race_strengh: 0,
+            race_dexterity: 0,
+            race_endurance: 0,
+            race_charism: 0,
+            race_perception: 0,
+            race_luck: 0,
+            race_willpower: 0,
+            race_education: 0,
             portrait: '',
+            config: '',
+            total_point: 0,
+            max_point: 0,
+            min_point: 0,
+
         }
+
+    }
+
+    componentDidMount() {
+        fetch("http://localhost:8000/api/config")
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({ 
+                        config: result,
+                        total_point: result.game_stats.max_stat,
+                        max_point: result.game_stats.max_per_cat,
+                        min_point: result.game_stats.min_per_cat,
+                    });
+                },
+                (error) => {
+                    console.log(error)
+                }
+            )
     }
 
     handleChange = event => {
         const { name, value } = event.target
+
         this.setState({
             [name]: value
         })
     }
 
+    handleStatsChange = event => {
+        const { name, value } = event.target
+
+        console.log(name, value);
+
+        let point = this.state.total_point - value;
+        if  (point < 0){
+            point = 0;
+        }
+
+        this.setState({
+            [name]: value,
+            total_point: point
+        })
+    }
+
+
     handleClassChange = event => {
         const { name, value } = event.target
         let val = ''
+        let stats = ''
+
         if (value === "warrior") {
             val = classes.warrior.description;
-            this.setState({strengh: 10})
+            stats = this.state.config.class_stats.warrior
         } else if (value === "mage") {
             val = classes.mage.description;
+            stats = this.state.config.class_stats.mage
         } else if (value === "roublard") {
             val = classes.roublards.description;
+            stats = this.state.config.class_stats.roublard
         } else if (value === "rodeur") {
             val = classes.rodeur.description;
+            stats = this.state.config.class_stats.rodeur
         } else if (value === "monk") {
             val = classes.monk.description;
+            stats = this.state.config.class_stats.monk
         } else if (value === "drood") {
             val = classes.drood.description;
+            stats = this.state.config.class_stats.drood
         } else if (value === "paladin") {
             val = classes.paladin.description;
+            stats = this.state.config.class_stats.paladin
         } else if (value === "clerc") {
             val = classes.clerc.description;
+            stats = this.state.config.class_stats.clerc
         } else {
             val = '-'
         }
         this.setState({
             [name]: value,
-            class_explanation: val
+            class_explanation: val,
+            class_strengh: stats.strengh,
+            class_dexterity: stats.dexterity,
+            class_luck: stats.luck,
+            class_willpower: stats.willpower,
+            class_endurance: stats.endurance,
+            class_charism: stats.charism,
+            class_perception: stats.perception,
+            class_education: stats.education,
         })
     }
 
     handleRaceChange = event => {
         const { name, value } = event.target
         let val = ''
+        let stats = ''
+
         if (value === "human") {
             val = races.human.description;
+            stats = this.state.config.race_stats.human
         } else if (value === "half_orc") {
             val = races.half_orc.description;
+            stats = this.state.config.race_stats.half_orc
         } else if (value === "elf") {
             val = races.elf.description;
+            stats = this.state.config.race_stats.elf
         } else if (value === "half_elf") {
             val = races.half_elf.description;
+            stats = this.state.config.race_stats.half_elf
         } else if (value === "dwarf") {
             val = races.dwarf.description;
+            stats = this.state.config.race_stats.dwarf
         } else if (value === "saurial") {
             val = races.saurial.description;
+            stats = this.state.config.race_stats.saurial
         } else if (value === "cambion") {
             val = races.cambion.description;
+            stats = this.state.config.race_stats.cambion
         } else {
             val = '-'
         }
         this.setState({
             [name]: value,
-            race_explanation: val
+            race_explanation: val,
+            race_strengh: stats.strengh,
+            race_dexterity: stats.dexterity,
+            race_luck: stats.luck,
+            race_willpower: stats.willpower,
+            race_endurance: stats.endurance,
+            race_charism: stats.charism,
+            race_perception: stats.perception,
+            race_education: stats.education,
         })
     }
 
@@ -151,6 +242,46 @@ class MasterForm extends React.Component {
         })
     }
 
+    handleOnClick = event => {
+        const { name, value } = event.target
+
+        let t = this.state.total_point - parseInt(value)
+
+        if (t < 0){
+            t = 0;
+            return false
+        }else if(t > this.state.config.game_stats.max_stat){
+            t = this.state.config.game_stats.max_stat;
+            return false
+        }
+
+        if (name === "strengh") {
+            let tmp = this.state.strengh + parseInt(value);
+            console.log(tmp);
+
+            this.setState({
+                strengh: tmp,
+                total_point: t
+            })
+        } else if (name === "dexterity") {
+            this.setState({ dexterity: this.state.dexterity + value})
+        } else if (name === "endurance") {
+            this.setState({ endurance: this.state.endurance + value})
+        } else if (name === "charism") {
+            this.setState({ charism: this.state.charism + value})
+        } else if (name === "perception") {
+            this.setState({ perception: this.state.perception + value})
+        } else if (name === "luck") {
+            this.setState({ luck: this.state.luck + value})
+        } else if (name === "willpower") {
+            this.setState({ willpower: this.state.willpower + value})
+        } else if (name === "education") {
+            this.setState({ education: this.state.education + value})
+        } else {
+
+        }
+    }
+
     handleSubmit = event => {
         event.preventDefault()
         const {
@@ -192,7 +323,7 @@ class MasterForm extends React.Component {
         }
 
         axios.post("http://localhost:8000/api/check-caracter-creation", user_input, {
-            headers:{
+            headers: {
                 'Authorization': this.props.k.keycloak.token,
                 // 'content-type': 'application/json'
             },
@@ -206,9 +337,6 @@ class MasterForm extends React.Component {
                     console.log(error)
                 }
             )
-
-
-
     }
 
     _next = () => {
@@ -217,6 +345,19 @@ class MasterForm extends React.Component {
         this.setState({
             currentStep: currentStep
         })
+
+        if (currentStep === 2){
+            this.setState({
+                strengh : this.state.class_strengh + this.state.race_strengh,
+                dexterity : this.state.class_dexterity + this.state.race_dexterity,
+                luck : this.state.class_luck + this.state.race_luck,
+                willpower : this.state.class_willpower + this.state.race_willpower,
+                endurance : this.state.class_endurance + this.state.race_endurance,
+                charism : this.state.class_charism + this.state.race_charism,
+                perception : this.state.class_perception + this.state.race_perception,
+                education : this.state.class_education + this.state.race_education,
+            })
+        }
     }
 
     _prev = () => {
@@ -225,6 +366,19 @@ class MasterForm extends React.Component {
         this.setState({
             currentStep: currentStep
         })
+
+        if (currentStep === 1){
+            this.setState({
+                strengh : 0,
+                dexterity : 0,
+                luck : 0,
+                willpower : 0,
+                endurance : 0,
+                charism : 0,
+                perception : 0,
+                education : 0,
+            })
+        }
     }
 
     previousButton() {
@@ -258,11 +412,11 @@ class MasterForm extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <ProgressBar now={this.state.currentStep*25} />
+                <ProgressBar now={this.state.currentStep * 25} label={`${this.state.currentStep}/4`}/>
                 <h1>Create your character 🧙‍♂️</h1>
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-4">
+                        <div className="col-md-6">
                             <form onSubmit={this.handleSubmit} className="needs-validation" novalidate>
                                 <Step1
                                     currentStep={this.state.currentStep}
@@ -279,9 +433,11 @@ class MasterForm extends React.Component {
                                 />
                                 <Step2
                                     currentStep={this.state.currentStep}
-                                    handleChange={this.handleChange}
+                                    handleChange={this.handleStatsChange}
                                     handleFocus={this.handleFocus}
+                                    onclickHandler={this.handleOnClick}
                                     strengh={this.state.strengh}
+                                    strenghHelper={stats.strengh.description}
                                     dexterity={this.state.dexterity}
                                     endurance={this.state.endurance}
                                     charism={this.state.charism}
@@ -289,6 +445,8 @@ class MasterForm extends React.Component {
                                     luck={this.state.luck}
                                     willpower={this.state.willpower}
                                     education={this.state.education}
+                                    min_point={this.state.min_point}
+                                    max_point={this.state.max_point}
                                 />
                                 <Step3
                                     currentStep={this.state.currentStep}
@@ -306,19 +464,82 @@ class MasterForm extends React.Component {
                         </div>
 
                         {this.state.currentStep !== 4 &&
-                            <div className="card col-md-8 overflow-auto " style={{ height: 600, maxHeight: 600, color: 'black' }}>
+                            <div className="card col-md-6 overflow-auto " style={{ height: 600, maxHeight: 600, color: 'black' }}>
                                 <img src="https://via.placeholder.com/538x107/" className="card-img-top" alt="Class Banner"></img>
                                 {this.state.currentStep === 1 &&
                                     <div className="card-body">
-                                        <h2 className="card-title text-center">Race</h2>
-                                        <p className="card-text">{this.state.race_explanation}</p>
-                                        <h2 className="card-title text-center">Classe</h2>
-                                        <p className="card-text">{this.state.class_explanation}</p>
+                                        {this.state.race !== "" &&
+                                            <>
+                                                <h2 className="card-title text-center">Race</h2>
+                                                <p className="card-text">{this.state.race_explanation}</p>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Strengh</th>
+                                                            <th scope="col">Dexterity</th>
+                                                            <th scope="col">Luck</th>
+                                                            <th scope="col">Willpower</th>
+                                                            <th scope="col">Endurance</th>
+                                                            <th scope="col">Charism</th>
+                                                            <th scope="col">Perception</th>
+                                                            <th scope="col">Education</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr>
+                                                            <th scope="row">{this.state.race_strengh}</th>
+                                                            <th scope="row">{this.state.race_dexterity}</th>
+                                                            <th scope="row">{this.state.race_luck}</th>
+                                                            <th scope="row">{this.state.race_willpower}</th>
+                                                            <th scope="row">{this.state.race_endurance}</th>
+                                                            <th scope="row">{this.state.race_charism}</th>
+                                                            <th scope="row">{this.state.race_perception}</th>
+                                                            <th scope="row">{this.state.race_education}</th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </>
+                                        }
+                                        {this.state.classs !== "" &&
+                                            <>
+                                                <h2 className="card-title text-center">Classe</h2>
+                                                <p className="card-text">{this.state.class_explanation}</p>
+
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Strengh</th>
+                                                            <th scope="col">Dexterity</th>
+                                                            <th scope="col">Luck</th>
+                                                            <th scope="col">Willpower</th>
+                                                            <th scope="col">Endurance</th>
+                                                            <th scope="col">Charism</th>
+                                                            <th scope="col">Perception</th>
+                                                            <th scope="col">Education</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">{this.state.class_strengh}</th>
+                                                            <th scope="row">{this.state.class_dexterity}</th>
+                                                            <th scope="row">{this.state.class_luck}</th>
+                                                            <th scope="row">{this.state.class_willpower}</th>
+                                                            <th scope="row">{this.state.class_endurance}</th>
+                                                            <th scope="row">{this.state.class_charism}</th>
+                                                            <th scope="row">{this.state.class_perception}</th>
+                                                            <th scope="row">{this.state.class_education}</th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </>
+                                        }
                                     </div>
                                 }
                                 {this.state.currentStep === 2 &&
                                     <div className="card-body">
                                         <p className="card-text">{stats.description}</p>
+                                        <p className="card-text">{this.state.total_point} restant à répartir</p>
                                         <h4 className="card-title text-center">{this.state.help.name}</h4>
                                         <p className="card-text">{this.state.help.description}</p>
                                         <p className="card-text"><i>{this.state.help.mandatory}</i></p>
@@ -339,7 +560,7 @@ class MasterForm extends React.Component {
 
 
                         {this.state.currentStep === 4 &&
-                            <div className="card col-md-8 overflow-auto " style={{ height: 600, maxHeight: 600, color: 'black' }}>
+                            <div className="card col-md-6 overflow-auto " style={{ height: 600, maxHeight: 600, color: 'black' }}>
                                 <img src="https://via.placeholder.com/150x250/" className="card-img" alt="portrait"></img>
                                 <div className="card-body">
 

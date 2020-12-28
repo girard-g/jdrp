@@ -56,6 +56,7 @@ fn rocket() -> rocket::Rocket {
         api::testobjectgenerationlol,
         api::testmonstergeneration,
         api::check_caracter_creation,
+        api::configfile,
         api::get_player, 
         api::send_options,
         get::dummy,

@@ -11,7 +11,6 @@ import AppJdrp from "./pages/private/appjdrp";
 import Navigation from './component/nav';
 import PrivateRoute from './utilities/privatesRoutes';
 
-
 const App = () => (
 
   <ReactKeycloakProvider authClient={keycloak}>

@@ -9,8 +9,7 @@ use rocket::response::Response;
 use rocket::http::Status;
 use crate::resources::models::CaracterStats;
 use std::path::PathBuf;
-
-
+use crate::configuration::settings::{Settings};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Claims {
@@ -22,6 +21,12 @@ struct Claims {
 pub enum ApiTokenError {
     Missing,
     Invalid,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Error {
+    code: usize,
+    message: String
 }
 
 pub struct Token(Claims);
@@ -64,7 +69,7 @@ pub fn send_options<'a>(files: PathBuf) -> Response<'a> {
 
 
 #[post("/api/getcharacter")]
-pub fn get_player (token: Token) -> Json<String> {
+pub fn get_player(token: Token) -> Json<String> {
     use crate::repository::mainlib::get_player_stats; 
 
     let pstats = get_player_stats(token.0.email);
@@ -77,6 +82,7 @@ pub fn get_player (token: Token) -> Json<String> {
     }
 
 }
+
 
 #[get("/api/testobjectgenerationlol")]
 pub fn testobjectgenerationlol() -> Json<Loot> {
@@ -93,18 +99,26 @@ pub fn testmonstergeneration(monster: String) -> Json<Monster> {
 }
 
 
+#[get("/api/config")]
+pub fn configfile() -> Result<Json<Settings>, Json<Error>> {
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Error {
-    code: usize,
-    message: String
+    let s = Settings::new();
+    match s {
+        Ok(config) => {
+            Ok(Json(config))
+        }
+        Err(e) => {
+            println!("{:#?}", e);
+            Err(Json(Error{code:60421676, message:e.to_string()}))
+        }
+
+    }
 }
 
 
 #[post("/api/check-caracter-creation", format = "json", data = "<u>")]
 pub fn check_caracter_creation(_token: Token, mut u: Json<CaracterStats>) -> Result<Json<bool>, Json<Error>>   {
     // use crate::repository::mainlib::save_player_stats;
-    use crate::configuration::settings::{Settings};
 
     let s = Settings::new();
 
