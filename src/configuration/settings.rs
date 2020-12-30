@@ -11,6 +11,7 @@ pub const CONFIG_FILE_PATH: &str = "./static/rules/rules.json";
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct GameStats {
     pub max_stat: u16,
+    pub max_stat_wcl: u16,
     pub max_per_cat: u8,
     pub min_per_cat: u8
 }

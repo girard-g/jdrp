@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useKeycloak } from '@react-keycloak/web';
 import { Spinner } from 'react-bootstrap';
 import axios from 'axios';
+import CTabs from '../../component/board/CTabs';
 import MasterForm from '../../component/character_creation_form/character_creation_form.jsx';
 
 const AppJdrp = () => {
@@ -10,19 +11,21 @@ const AppJdrp = () => {
 
     const [error, setError] = useState(null);
     const [isLoaded, setisLoaded] = useState(false);
-    const [rep, setrep] = useState(null);
+    const [rep, setRep] = useState({});
 
     useEffect(() => {
         axios.post("http://localhost:8000/api/getcharacter", {
             withCredentials: true,
             credentials: 'include',
         }, {
-            headers:{'Authorization': keycloak.keycloak.token}
+            headers: { 'Authorization': keycloak.keycloak.token }
         })
             .then(
                 response => (
                     setisLoaded(true),
-                    setrep(response.data)
+                    setRep(JSON.parse(response.data)),
+                    setTimeout(3000)
+
                 ),
                 (error) => {
                     setisLoaded(true)
@@ -38,9 +41,9 @@ const AppJdrp = () => {
         return <Spinner animation="border" role="status" variant="primary"><span className="sr-only">Loading...</span></Spinner>;
     } else {
         if (rep === 'FALSE') {
-            return <MasterForm k={keycloak}/>
+            return <MasterForm k={keycloak} />
         } else {
-            return <span>toto</span>
+            return <CTabs c={rep} />
         }
     }
 

@@ -117,8 +117,8 @@ pub fn configfile() -> Result<Json<Settings>, Json<Error>> {
 
 
 #[post("/api/check-caracter-creation", format = "json", data = "<u>")]
-pub fn check_caracter_creation(_token: Token, mut u: Json<CaracterStats>) -> Result<Json<bool>, Json<Error>>   {
-    // use crate::repository::mainlib::save_player_stats;
+pub fn check_caracter_creation(token: Token, mut u: Json<CaracterStats>) -> Result<Json<bool>, Json<Error>>   {
+    use crate::repository::mainlib::save_player_stats;
 
     let s = Settings::new();
 
@@ -153,13 +153,14 @@ pub fn check_caracter_creation(_token: Token, mut u: Json<CaracterStats>) -> Res
                 let sum: u16 = check.iter().map(|&a| a as u16).sum();
 
                 println!("sum: {:#?}", sum);
+                println!("max stats: {:#?}", config.game_stats.max_stat);
 
-                if sum != config.game_stats.max_stat {
+                if sum > config.game_stats.max_stat {
                     Err(Json(Error{code:16873154, message:String::from("Stats have been altered")}))
                 }else{
                     println!("vec: {:#?}", sum);
                     println!("Player Saved {:#?}", u);
-                    // save_player_stats(uid, user_input.into_inner());
+                    save_player_stats(token.0.email, u.into_inner());
                     Ok(Json(true))
                 }
             }
