@@ -44,7 +44,7 @@ class Board extends React.Component {
 
 
     render() {
-        console.log(this.props);
+        console.log(this.props.c.name);
         return (
             <React.Fragment>
                 <div className="container-fluid">

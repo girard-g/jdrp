@@ -11,7 +11,7 @@ const AppJdrp = () => {
 
     const [error, setError] = useState(null);
     const [isLoaded, setisLoaded] = useState(false);
-    const [rep, setRep] = useState({});
+    const [rep, setRep] = useState(null);
 
     useEffect(() => {
         axios.post("http://localhost:8000/api/getcharacter", {
@@ -22,31 +22,34 @@ const AppJdrp = () => {
         })
             .then(
                 response => (
-                    setisLoaded(true),
-                    setRep(JSON.parse(response.data)),
-                    setTimeout(3000)
-
+                    setRep(JSON.parse(response.data))
                 ),
                 (error) => {
-                    setisLoaded(true)
                     setError(error)
-                    console.log(error);
                 }
+            )
+            .then(
+                () => setisLoaded(true)
             )
     }, []);
 
-    if (error) {
-        return <div>Erreur : {error.message}</div>;
-    } else if (!isLoaded) {
+    if (!isLoaded) {
         return <Spinner animation="border" role="status" variant="primary"><span className="sr-only">Loading...</span></Spinner>;
-    } else {
-        if (rep === 'FALSE') {
-            return <MasterForm k={keycloak} />
-        } else {
-            return <CTabs c={rep} />
-        }
     }
 
+    if (error) {
+        return <div>Erreur : {error.message}</div>;
+    }
+
+    return (
+        <>
+            {rep === 'FALSE' &&
+                (<MasterForm k={keycloak} />) ||
+                (<CTabs c={rep} />)
+                // (<>{console.log(rep)}</>)
+            }
+        </>
+    )
 };
 
 export default AppJdrp;

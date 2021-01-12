@@ -27,8 +27,6 @@ class CTabs extends React.Component {
             )
     }
 
-
-
     render() {
         return (
             <React.Fragment>
@@ -42,7 +40,7 @@ class CTabs extends React.Component {
                         <div className="col-md-4 border">
                             <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
                                 <Tab eventKey="home" title="Home">
-                                    <Board c={this.props.rep}/>
+                                    <Board c={this.props.c}/>
                                 </Tab>
                                 <Tab eventKey="profile" title="Profile">
                                     toto
