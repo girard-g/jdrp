@@ -1,27 +1,17 @@
 use ws::{
-    listen,
-    CloseCode,
-    Error,
-    Handler,
-    Handshake,
-    Message,
-    Request,
-    Response,
-    Result,
-    Sender,
+    listen, CloseCode, Error, Handler, Handshake, Message, Request, Response, Result, Sender,
 };
 
 use std::cell::Cell;
 use std::rc::Rc;
 // use crate::repository::mainlib::save_post;
-use std::time::SystemTime;
 use crate::chat::models::Messages;
+use std::time::SystemTime;
 
 struct Server {
     out: Sender,
     count: Rc<Cell<u32>>,
 }
-
 
 impl Handler for Server {
     fn on_open(&mut self, handshake: Handshake) -> Result<()> {
@@ -29,18 +19,28 @@ impl Handler for Server {
         let number_of_connection = self.count.get();
 
         if number_of_connection > 5 {
-            self.out.send(format!("Too may connection: {}", &number_of_connection))?;
-            format!("{} entered and the number of open connection is {}", handshake.peer_addr.unwrap(), &number_of_connection);
-            self.out.close_with_reason(CloseCode::Policy, "Too many connections")?
+            self.out
+                .send(format!("Too may connection: {}", &number_of_connection))?;
+            format!(
+                "{} entered and the number of open connection is {}",
+                handshake.peer_addr.unwrap(),
+                &number_of_connection
+            );
+            self.out
+                .close_with_reason(CloseCode::Policy, "Too many connections")?
         } else {
-            let open_message = format!("{} entered and the number of open connection is {}", handshake.peer_addr.unwrap(), &number_of_connection);
+            let open_message = format!(
+                "{} entered and the number of open connection is {}",
+                handshake.peer_addr.unwrap(),
+                &number_of_connection
+            );
             println!("{}", &open_message);
 
-            let response = Messages{
+            let response = Messages {
                 message: open_message,
                 from: "Admin".into(),
                 date: Some(SystemTime::now()),
-                room_date:Some(SystemTime::now())
+                room_date: Some(SystemTime::now()),
             };
 
             let stringify = serde_json::to_string(&response).unwrap();
@@ -63,12 +63,12 @@ impl Handler for Server {
         //     Message::Text(raw_message)
         // };
 
-        let mut msg : Messages = serde_json::from_str(&raw_message).unwrap();
+        let mut msg: Messages = serde_json::from_str(&raw_message).unwrap();
 
         msg.date = Some(SystemTime::now());
         // save_post(&msg);
 
-        let fnreturn =serde_json::to_string(&msg).unwrap();
+        let fnreturn = serde_json::to_string(&msg).unwrap();
 
         self.out.broadcast(fnreturn)
     }
@@ -77,7 +77,9 @@ impl Handler for Server {
         match code {
             CloseCode::Normal => println!("The client is done with the connection."),
             CloseCode::Away => println!("The client is leaving the site."),
-            CloseCode::Abnormal => println!("Closing handshake failed! Unable to obtain closing status from client."),
+            CloseCode::Abnormal => {
+                println!("Closing handshake failed! Unable to obtain closing status from client.")
+            }
             _ => println!("The client encountered an error: {}", reason),
         }
 
@@ -91,12 +93,12 @@ impl Handler for Server {
     fn on_request(&mut self, request: &Request) -> Result<Response> {
         match request.resource() {
             "/ws" => {
-                println!("Browser Request from {:?}", request.origin().unwrap().unwrap());
+                println!(
+                    "Browser Request from {:?}",
+                    request.origin().unwrap().unwrap()
+                );
                 println!("Client found is {:?}", request.client_addr().unwrap());
-
-                let response = Response::from_request(&request);
-
-                response
+                Response::from_request(&request)
             }
 
             _ => Ok(Response::new(404, "Not Found", b"404 - Not Found".to_vec())),
@@ -104,7 +106,7 @@ impl Handler for Server {
     }
 }
 
-pub fn websocket() -> () {
+pub fn websocket() {
     println!("Web Socket Server is ready at ws://127.0.0.1:7777/ws");
     println!("Server is ready at http://127.0.0.1:7777/");
 
@@ -114,5 +116,9 @@ pub fn websocket() -> () {
     // or decrement the count between handlers.
 
     let count = Rc::new(Cell::new(0));
-    listen("127.0.0.1:7777", |out| { Server { out, count: count.clone() } }).unwrap()
+    listen("127.0.0.1:7777", |out| Server {
+        out,
+        count: count.clone(),
+    })
+    .unwrap()
 }

@@ -1,94 +1,76 @@
+use crate::repository::models::{
+    Caracter,
+    NewCaracter, // Inventory, InventoryItemsGenerated, ItemGenerated, NewCaracter, NewPlayer, Player,
+};
+use crate::resources::models::CaracterStats;
+// use crate::route::models::NewUserInput;
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 use dotenv::dotenv;
 use std::env;
-use crate::repository::models::{Player, NewPlayer, Caracter, NewCaracter, Inventory, ItemGenerated, InventoryItemsGenerated};
-use crate::route::models::NewUserInput;
-use crate::resources::models::{CaracterStats};
 
 pub fn create_connection() -> SqliteConnection {
     dotenv().ok();
 
-    let database_url = env::var("DATABASE_URL")
-        .expect("DATABASE_URL must be set");
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
-    info!("Connecting to database using URL : `{}`", database_url.as_str());
+    info!(
+        "Connecting to database using URL : `{}`",
+        database_url.as_str()
+    );
 
     SqliteConnection::establish(&database_url)
-        .expect(&format!("Error connecting to {}", database_url))
+        .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
-pub fn get_user_password(username :String) -> Option<Player> {
-    use crate::repository::schema::players::dsl::*;
+// pub fn save_user(player: &NewUserInput) -> String {
+//     use crate::repository::schema::players;
+//     extern crate bcrypt;
+//     use bcrypt::hash;
+//     use rand::distributions::Alphanumeric;
+//     use rand::{thread_rng, Rng};
 
-    let connection = create_connection();
-    info!("Fetching user (`{}`) password", username.as_str());
+//     let connection = create_connection();
 
-    let results = players.filter(pseudo.eq(username))
-        .first::<Player>(&connection)
-        .optional()
-        .unwrap();
+//     let hashed = hash(player.password.as_str(), 4).unwrap();
 
-        return results;
-}
+//     let rand_string: String = thread_rng().sample_iter(&Alphanumeric).take(30).collect();
 
-pub fn save_user(player :&NewUserInput)-> String {
-    use crate::repository::schema::players;
-    extern crate bcrypt;
-    use rand::{thread_rng, Rng};
-    use rand::distributions::Alphanumeric;
-    use bcrypt::{hash};
+//     let is_mj = 0;
 
-    let connection = create_connection();
+//     let new_player = NewPlayer {
+//         id: rand_string,
+//         pseudo: &player.username,
+//         password: hashed,
+//         is_mj,
+//     };
 
-    let hashed = hash(player.password.as_str(), 4).unwrap();
+//     info!("Saving new user {:?}", &new_player);
 
-    let rand_string: String = thread_rng()
-        .sample_iter(&Alphanumeric)
-        .take(30)
-        .collect();
+//     diesel::insert_into(players::table)
+//         .values(&new_player)
+//         .execute(&connection)
+//         .expect("Error saving new player");
 
-    let is_mj = 0;
+//     new_player.id
+// }
 
-    let new_player = NewPlayer{
-        id: rand_string,
-        pseudo: &player.username,
-        password: hashed,
-        is_mj
-    };
-
-    info!("Saving new user {:?}", &new_player);
-
-    diesel::insert_into(players::table)
-        .values(&new_player)
-        .execute(&connection)
-        .expect("Error saving new player");
-
-        new_player.id
-
-}
-
-pub fn save_player_stats(playerid :String, caracter_stats: CaracterStats) -> () 
-{
+pub fn save_player_stats(playerid: String, caracter_stats: CaracterStats) {
     use crate::repository::schema::caracter;
-    use rand::{thread_rng, Rng};
     use rand::distributions::Alphanumeric;
+    use rand::{thread_rng, Rng};
 
     let connection = create_connection();
 
-
-    let rand_string: String = thread_rng()
-        .sample_iter(&Alphanumeric)
-        .take(30)
-        .collect();
+    let rand_string: String = thread_rng().sample_iter(&Alphanumeric).take(30).collect();
 
     let json_caracter_stats = serde_json::to_string(&caracter_stats).unwrap();
 
-    let new_caracter = NewCaracter{
+    let new_caracter = NewCaracter {
         id: rand_string,
         player_id: playerid,
         stats: json_caracter_stats,
-        gold: 0
+        gold: 0,
     };
 
     info!("Saving player stats {:?}", &new_caracter);
@@ -97,40 +79,44 @@ pub fn save_player_stats(playerid :String, caracter_stats: CaracterStats) -> ()
         .values(&new_caracter)
         .execute(&connection)
         .expect("Error saving new player");
-
 }
 
-pub fn get_player_stats(playerid :String) -> Option<Caracter> {
+pub fn get_player_stats(playerid: String) -> Option<Caracter> {
     use crate::repository::schema::caracter::dsl::*;
 
     let connection = create_connection();
-    info!("Fetching player stats for player id: `{}`", playerid.as_str());
+    info!(
+        "Fetching player stats for player id: `{}`",
+        playerid.as_str()
+    );
 
-    let results = caracter.filter(player_id.eq(playerid))
-    .first::<Caracter>(&connection)
-    .optional()
-    .unwrap();
-
-    return results;
-
+    caracter
+        .filter(player_id.eq(playerid))
+        .first::<Caracter>(&connection)
+        .optional()
+        .unwrap()
 }
 
-pub fn get_items_from_inventory(playerid :String) -> Vec<ItemGenerated> {
-    use crate::repository::schema::items_generated;
-    use crate::repository::schema::inventory_items_generated;
-    use crate::repository::schema::inventory::dsl::*;
+// pub fn get_items_from_inventory(playerid: String) -> Vec<ItemGenerated> {
+//     use crate::repository::schema::inventory::dsl::*;
+//     use crate::repository::schema::inventory_items_generated;
+//     use crate::repository::schema::items_generated;
 
-    let connection = create_connection();
+//     let connection = create_connection();
 
-    let results:Inventory = inventory.filter(caracter_id.eq(playerid))
-    .first::<Inventory>(&connection)
-    .unwrap();
+//     let results: Inventory = inventory
+//         .filter(caracter_id.eq(playerid))
+//         .first::<Inventory>(&connection)
+//         .unwrap();
 
-    let res: Vec<(InventoryItemsGenerated, ItemGenerated)> = 
-    InventoryItemsGenerated::belonging_to(&results)
-        .inner_join(items_generated::table.on(items_generated::id.eq(inventory_items_generated::items_generated_id)))
-        .load(&connection)
-        .unwrap();
+//     let res: Vec<(InventoryItemsGenerated, ItemGenerated)> =
+//         InventoryItemsGenerated::belonging_to(&results)
+//             .inner_join(
+//                 items_generated::table
+//                     .on(items_generated::id.eq(inventory_items_generated::items_generated_id)),
+//             )
+//             .load(&connection)
+//             .unwrap();
 
-    res.into_iter().map(|(_i, it)| it).collect()
-}
+//     res.into_iter().map(|(_i, it)| it).collect()
+// }

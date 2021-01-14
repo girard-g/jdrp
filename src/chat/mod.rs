@@ -1,2 +1,2 @@
-pub mod ws_rs;
 pub mod models;
+pub mod ws_rs;

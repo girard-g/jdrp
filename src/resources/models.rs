@@ -1,7 +1,7 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct CaracterStats<> {
+pub struct CaracterStats {
     pub name: String,
     pub race: String,
     pub class: String,
@@ -22,5 +22,5 @@ pub struct CaracterStats<> {
     pub luck: u8,
     pub willpower: u8,
     pub education: u8,
-    pub portrait: String
+    pub portrait: String,
 }

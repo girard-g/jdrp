@@ -1,31 +1,28 @@
-#[macro_use]
-
-use config::{Config, ConfigError, Environment, File};
-use serde::{Serialize, Deserialize};
+use config::{Config, ConfigError, File};
+use serde::{Deserialize, Serialize};
 // use serde_json::value::Value;
 // use serde::de::DeserializeOwned;
 // extern crate serde_value;
 pub const CONFIG_FILE_PATH: &str = "./static/rules/rules.json";
-
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct GameStats {
     pub max_stat: u16,
     pub max_stat_wcl: u16,
     pub max_per_cat: u8,
-    pub min_per_cat: u8
+    pub min_per_cat: u8,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy)]
 pub struct Class {
     pub warrior: Stats,
     pub mage: Stats,
-    pub roublard : Stats,
+    pub roublard: Stats,
     pub rodeur: Stats,
     pub monk: Stats,
     pub drood: Stats,
     pub paladin: Stats,
-    pub clerc: Stats
+    pub clerc: Stats,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy)]
@@ -36,7 +33,7 @@ pub struct Race {
     pub half_elf: Stats,
     pub dwarf: Stats,
     pub saurial: Stats,
-    pub cambion: Stats
+    pub cambion: Stats,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy)]
@@ -48,16 +45,15 @@ pub struct Stats {
     pub endurance: i8,
     pub charism: i8,
     pub perception: i8,
-    pub education: i8
+    pub education: i8,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Settings {
-    pub game_stats : GameStats,
+    pub game_stats: GameStats,
     pub class_stats: Class,
-    pub race_stats: Race
+    pub race_stats: Race,
 }
-
 
 impl Settings {
     pub fn new() -> Result<Self, ConfigError> {
@@ -85,13 +81,13 @@ impl Settings {
 //             Ok(Value::Object(map)) => map,
 //             _ => panic!("expected a struct"),
 //         };
-    
+
 //         let key = Value::String(field.to_owned());
 //         let value = match map.remove(&key) {
 //             Some(value) => value,
 //             None => panic!("no such field"),
 //         };
-    
+
 //         match R::deserialize(value) {
 //             Ok(r) => r,
 //             Err(_) => panic!("wrong type?"),
@@ -101,7 +97,7 @@ impl Settings {
 
 //TODO: Render a error here
 impl Race {
-    pub fn get_stats(&self, field: &str) -> Stats{
+    pub fn get_stats(&self, field: &str) -> Stats {
         match field {
             "human" => self.human,
             "half_orc" => self.half_orc,
@@ -110,13 +106,13 @@ impl Race {
             "dwarf" => self.dwarf,
             "saurial" => self.saurial,
             "cambion" => self.cambion,
-            _ => panic!("a")
+            _ => panic!("a"),
         }
     }
 }
 
 impl Class {
-    pub fn get_stats(&self, field: &str) -> Stats{
+    pub fn get_stats(&self, field: &str) -> Stats {
         match field {
             "warrior" => self.warrior,
             "mage" => self.mage,
@@ -126,7 +122,7 @@ impl Class {
             "drood" => self.drood,
             "paladin" => self.paladin,
             "clerc" => self.clerc,
-            _ => panic!("a")
+            _ => panic!("a"),
         }
     }
 }

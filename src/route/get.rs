@@ -1,5 +1,5 @@
-use std::io;
 use rocket::response::NamedFile;
+use std::io;
 // use rocket_contrib::json::Json;
 // use rocket::request::Form;
 // use crate::route::models::{NewUserInput, UserInput};
@@ -8,7 +8,6 @@ use std::path::PathBuf;
 // use rocket::http::{Cookies, Cookie};
 // use crate::resources::models::CaracterStats;
 // use crate::item_generator::resources::Object;
-
 
 #[get("/")]
 pub fn index() -> io::Result<NamedFile> {
@@ -49,19 +48,19 @@ pub fn dummy(files: PathBuf) -> io::Result<NamedFile> {
 //             let decoded = verify(&user_input.password, &player.password.to_string());
 
 //             match decoded {
-//                 Ok(true) => { 
+//                 Ok(true) => {
 //                     return loginng(player.id.to_string(), cookies);
 //                 },
 //                 Ok(false) => Redirect::to(uri!(index)),
 //                 _ => Redirect::to(uri!(index))
-        
+
 //             }
 //         },
 //         None => {
 //             Redirect::to(uri!(index))
 
 //         }
-        
+
 //     }
 
 // }
@@ -86,7 +85,6 @@ pub fn dummy(files: PathBuf) -> io::Result<NamedFile> {
 
 // }
 
-
 // #[post("/check-caracter-creation/<uid>", format = "application/json", data = "<user_input>")]
 // pub fn check_caracter_creation(uid: String, user_input: Json<CaracterStats>, mut cookies: Cookies) -> Json<String>  {
 //     use crate::repository::mainlib::save_player_stats;
@@ -100,7 +98,7 @@ pub fn dummy(files: PathBuf) -> io::Result<NamedFile> {
 //             println!("{:#?}", logged_in_uid);
 //             println!("{:#?}", uid);
 //             if logged_in_uid == uid {
-               
+
 //                 // let decoded: CaracterStats = serde_json::from_str(&user_input);
 //                 println!("Player Saved {:#?}", user_input);
 //                 save_player_stats(uid, user_input.into_inner());
@@ -108,13 +106,12 @@ pub fn dummy(files: PathBuf) -> io::Result<NamedFile> {
 
 //             } else {
 //                 Json(String::from("FALSE"))
-//             } 
+//             }
 //         },
 //         None =>  Json(String::from("FALSE"))
 //     }
 
 // }
-
 
 // fn loginng(id: String, mut cookies: Cookies) -> Redirect
 // {
@@ -122,7 +119,6 @@ pub fn dummy(files: PathBuf) -> io::Result<NamedFile> {
 //     cookies.add_private(Cookie::new("user_id", id));
 //     Redirect::to(uri!(player_dashboard: s2))
 // }
-
 
 // //TODO: Redirect instead of serving a file. Only if the user is none authenticated
 // #[get("/player/<uid>")]
@@ -144,7 +140,6 @@ pub fn dummy(files: PathBuf) -> io::Result<NamedFile> {
 //     }
 // }
 
-
 // #[get("/users/player-stats/<uid>")]
 // pub fn player_stats(uid: String, mut cookies: Cookies) -> String  {
 //     use crate::repository::mainlib::get_player_stats;
@@ -159,7 +154,7 @@ pub fn dummy(files: PathBuf) -> io::Result<NamedFile> {
 //                 let player_stats = get_player_stats(uid);
 //                 match player_stats {
 //                     Some(e) => {
-//                         //FIXME: double json encoded value 
+//                         //FIXME: double json encoded value
 //                         // println!("e.stats is {}", e.stats);
 //                         // let toto:String = serde_json::from_str(&e.stats).unwrap();
 //                         // Json(toto)
@@ -182,8 +177,6 @@ pub fn dummy(files: PathBuf) -> io::Result<NamedFile> {
 // pub fn logout(mut cookies: Cookies) -> () {
 //     cookies.remove_private(Cookie::named("user_id"));
 // }
-
-
 
 // #[get("/testobjectgeneration")]
 // pub fn testobjectgeneration() -> io::Result<NamedFile> {

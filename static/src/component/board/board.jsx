@@ -53,7 +53,7 @@ class Board extends React.Component {
                         {/* <div className="col-md-8" style={{backgroungImage:`url(${this.state.map})`}}> */}
                         {/* <img className="img-fluid" src={this.state.map} alt="map" /> */}
 
-                        <div className="col-md-4 border">
+                        <div >
                             <h4 className="card-title text-center">Fiche Personnage</h4>
                             <p className="card-text text-center">{this.props.c.name}</p>
 

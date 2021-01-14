@@ -1,17 +1,17 @@
-use rand::{
-    Rng,
-    distributions::{Distribution, Standard},
-};
 use crate::item_generator::ailment::WpnAilment;
 use crate::item_generator::element::WpnElement;
+use crate::item_generator::item::Consumable;
 use crate::item_generator::spell::Spell;
-use crate::item_generator::item::{Consumable};
+use rand::{
+    distributions::{Distribution, Standard},
+    Rng,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Loot{
+pub struct Loot {
     pub object: Option<Object>,
-    pub consumable: Option<Consumable>
+    pub consumable: Option<Consumable>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -20,7 +20,7 @@ pub struct Object {
     pub name: String,
     pub ilevel: u8,
     pub item_type: ItemType,
-    pub asset:  String,
+    pub asset: String,
     pub rarity: String,
     pub equipement: Option<Equipment>,
     pub caracteristics_augmentation: Option<(String, u8)>,
@@ -39,15 +39,15 @@ pub enum Slot {
     Necklace,
     Ring,
     Shield,
-    Wrist
+    Wrist,
 }
 
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
-pub enum ItemType{
+pub enum ItemType {
     Weapon,
     Armor,
     Jewel,
-    Consumable
+    Consumable,
 }
 
 impl Distribution<ItemType> for Standard {
@@ -55,19 +55,19 @@ impl Distribution<ItemType> for Standard {
         match rng.gen_range(0, 5) {
             0 => ItemType::Weapon,
             1 => ItemType::Armor,
-            2 => ItemType::Consumable,  
-            3 => ItemType::Jewel,    
-            _ => ItemType::Consumable,     
+            2 => ItemType::Consumable,
+            3 => ItemType::Jewel,
+            _ => ItemType::Consumable,
         }
     }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Deserialize, Serialize)]
-pub enum ArmorClass{
+pub enum ArmorClass {
     Light,
     Medium,
     Heavy,
-    Shield
+    Shield,
 }
 
 impl Distribution<ArmorClass> for Standard {
@@ -76,7 +76,7 @@ impl Distribution<ArmorClass> for Standard {
             0 => ArmorClass::Light,
             1 => ArmorClass::Medium,
             2 => ArmorClass::Heavy,
-            _ => ArmorClass::Shield,      
+            _ => ArmorClass::Shield,
         }
     }
 }
@@ -87,7 +87,7 @@ impl std::fmt::Display for ArmorClass {
             ArmorClass::Light => write!(f, " light "),
             ArmorClass::Medium => write!(f, " medium "),
             ArmorClass::Heavy => write!(f, " heavy "),
-            ArmorClass::Shield => write!(f, " shield ")
+            ArmorClass::Shield => write!(f, " shield "),
         }
     }
 }
@@ -98,7 +98,7 @@ impl std::fmt::Display for ItemType {
             ItemType::Weapon => write!(f, " weapon "),
             ItemType::Armor => write!(f, " armor "),
             ItemType::Jewel => write!(f, " jewel "),
-            ItemType::Consumable => write!(f, " consumable ")
+            ItemType::Consumable => write!(f, " consumable "),
         }
     }
 }
@@ -124,15 +124,14 @@ pub enum ArmorType {
     Glove,
     Helmet,
     Shield,
-    Wrist
+    Wrist,
 }
 
 #[derive(Debug, AsStaticStr, Clone, Copy, Deserialize, Serialize)]
 pub enum JewelType {
     Necklace,
-    Ring
+    Ring,
 }
-
 
 impl Distribution<WeaponType> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> WeaponType {
@@ -146,11 +145,9 @@ impl Distribution<WeaponType> for Standard {
             6 => WeaponType::TwoHandSword,
             7 => WeaponType::Spear,
             _ => WeaponType::Staff,
-            
         }
     }
 }
-
 
 impl Distribution<ArmorType> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> ArmorType {
@@ -191,7 +188,6 @@ impl std::fmt::Display for WeaponType {
         }
     }
 }
-
 
 impl std::fmt::Display for ArmorType {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -242,7 +238,6 @@ pub struct Armor {
     pub resistances: u8,
     pub ailment: Option<WpnAilment>,
 }
-
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Jewel {

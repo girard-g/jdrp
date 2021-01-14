@@ -12,7 +12,6 @@
 
 // extern crate serde_derive;
 
-
 extern crate dotenv;
 #[macro_use]
 extern crate rocket;
@@ -29,14 +28,14 @@ extern crate strum_macros; // 0.10.0
 
 // use std::thread;
 
-mod repository;
-mod resources;
+mod configuration;
 mod item_generator;
 mod logger;
+mod repository;
+mod resources;
 mod route;
-mod configuration;
 
-use crate::route::{get, api, static_files};
+use crate::route::{api, get, static_files};
 
 mod chat;
 
@@ -44,9 +43,7 @@ mod chat;
 extern crate chrono;
 
 use rocket::fairing::AdHoc;
-use rocket::http::hyper::header::{AccessControlAllowOrigin};
-
-
+use rocket::http::hyper::header::AccessControlAllowOrigin;
 
 fn rocket() -> rocket::Rocket {
     let rocket_routes = routes![
@@ -57,23 +54,19 @@ fn rocket() -> rocket::Rocket {
         api::testmonstergeneration,
         api::check_caracter_creation,
         api::configfile,
-        api::get_player, 
+        api::get_player,
         api::send_options,
         get::dummy,
     ];
 
     rocket::ignite()
-    .mount("/", rocket_routes)
-
-    .attach(AdHoc::on_response("Add Header", |_, resp| {
-        resp.adjoin_header(AccessControlAllowOrigin::Any); 
-        resp.adjoin_raw_header("Access-Control-Allow-Credentials", "true");
-    }))
+        .mount("/", rocket_routes)
+        .attach(AdHoc::on_response("Add Header", |_, resp| {
+            resp.adjoin_header(AccessControlAllowOrigin::Any);
+            resp.adjoin_raw_header("Access-Control-Allow-Credentials", "true");
+        }))
     // .mount("/images", StaticFiles::from("/home/guillaume/Projects/Jdrp/static/images"))
 }
-
-
-
 
 fn main() {
     // thread::Builder::new()
@@ -83,7 +76,8 @@ fn main() {
     //     })
     //     .unwrap();
 
-    logger::syslog::init().expect("Could not init logger. Ensure that your syslog process is running.");
+    logger::syslog::init()
+        .expect("Could not init logger. Ensure that your syslog process is running.");
 
     info!("Logger streaming through syslog");
 

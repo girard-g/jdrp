@@ -1,23 +1,23 @@
-use serde::{Deserialize, Serialize};
 use rand::{
-    Rng,
     distributions::{Distribution, Standard},
+    Rng,
 };
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Spell {
     pub name: LowLevelSpells,
     pub incante: Incante,
     pub damage: String,
-    pub description: String
+    pub description: String,
 }
 
 #[derive(Debug, Deserialize, Serialize, Copy, Clone)]
-pub enum Incante{
+pub enum Incante {
     Rituel,
     Concentration,
     Action,
-    Reaction
+    Reaction,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -39,7 +39,6 @@ pub enum LowLevelSpells {
     Deblocage,
     Bagou,
 }
-
 
 impl Distribution<LowLevelSpells> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> LowLevelSpells {
@@ -88,7 +87,6 @@ impl std::fmt::Display for LowLevelSpells {
     }
 }
 
-
 //TODO
 #[derive(Debug, Deserialize, Serialize)]
 pub enum HighLevelSpells {
@@ -101,15 +99,14 @@ pub enum HighLevelSpells {
     ChangementDeForme,
 }
 
-
-#[derive(Debug, Deserialize, Serialize,  Copy, Clone)]
-pub enum SpellDamage{
+#[derive(Debug, Deserialize, Serialize, Copy, Clone)]
+pub enum SpellDamage {
     None,
     D1d8,
     D1d6,
     D2d10,
     D3d6,
-    D14d6
+    D14d6,
 }
 
 impl std::fmt::Display for SpellDamage {
@@ -120,7 +117,7 @@ impl std::fmt::Display for SpellDamage {
             SpellDamage::D2d10 => write!(f, "2d10"),
             SpellDamage::D3d6 => write!(f, "3d6"),
             SpellDamage::D14d6 => write!(f, "14d6"),
-            _ => write!(f, " empty ")
+            _ => write!(f, " empty "),
         }
     }
 }

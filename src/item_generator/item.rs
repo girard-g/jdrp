@@ -1,9 +1,8 @@
-use serde::{Deserialize, Serialize};
-use strum_macros::EnumString;
 use rand::{
-    Rng,
     distributions::{Distribution, Standard},
+    Rng,
 };
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Consumable {
@@ -11,7 +10,7 @@ pub struct Consumable {
     pub name: String,
     pub ilevel: u8,
     pub item_type: ConsumableType,
-    pub asset:  String,
+    pub asset: String,
     pub rarity: String,
     pub description: String,
     pub on_use: UseCallback,
@@ -21,13 +20,17 @@ pub struct Consumable {
 pub enum ConsumableType {
     HealthPotion = 25,
     Bandages,
-    Antidot
+    Antidot,
 }
 
 impl std::fmt::Display for ConsumableType {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match *self {
-            ConsumableType::HealthPotion => write!(f, "{}", format!("Rends {} points de vie", ConsumableType::HealthPotion as u8)),
+            ConsumableType::HealthPotion => write!(
+                f,
+                "{}",
+                format!("Rends {} points de vie", ConsumableType::HealthPotion as u8)
+            ),
             ConsumableType::Bandages => write!(f, "Soigne les saignements"),
             ConsumableType::Antidot => write!(f, "Soigne le poison"),
         }
@@ -38,7 +41,7 @@ impl std::fmt::Display for ConsumableType {
 pub enum UseCallback {
     HealthPotion,
     Bandages,
-    Antidot
+    Antidot,
 }
 
 impl UseCallback {
@@ -60,7 +63,7 @@ impl Distribution<ConsumableType> for Standard {
             0 => ConsumableType::HealthPotion,
             1 => ConsumableType::Bandages,
             2 => ConsumableType::Antidot,
-            _ =>      ConsumableType::HealthPotion
+            _ => ConsumableType::HealthPotion,
         }
     }
 }

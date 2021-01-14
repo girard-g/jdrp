@@ -1,6 +1,6 @@
 use rand::{
-    Rng,
     distributions::{Distribution, Standard},
+    Rng,
 };
 use serde::{Deserialize, Serialize};
 
@@ -8,10 +8,10 @@ use serde::{Deserialize, Serialize};
 pub enum WpnAilment {
     None,
     Poison,
-    Stun,               //A weapon can come with a status effect. Weapons can only have one status effect enabled.
-    Freeze,             //The success rate of landing an effect is determined by the suffix in the item name.
+    Stun, //A weapon can come with a status effect. Weapons can only have one status effect enabled.
+    Freeze, //The success rate of landing an effect is determined by the suffix in the item name.
     Death,
-    Sleep
+    Sleep,
 }
 
 impl PartialEq for WpnAilment {
@@ -33,7 +33,6 @@ impl std::fmt::Display for WpnAilment {
     }
 }
 
-
 impl Distribution<WpnAilment> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> WpnAilment {
         match rng.gen_range(0, 6) {
@@ -53,15 +52,14 @@ pub enum PoisonAliment {
     Bacteria = 10,
     Contaminated = 20,
     Tainted = 30,
-    Toxic =  40,
+    Toxic = 40,
     Infected = 50,
     Viral = 60,
     Venomous = 70,
     Virulent = 80,
-    Noxious = 90, 
-    Biohazardous = 100
+    Noxious = 90,
+    Biohazardous = 100,
 }
-
 
 impl Distribution<PoisonAliment> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> PoisonAliment {
@@ -81,20 +79,18 @@ impl Distribution<PoisonAliment> for Standard {
     }
 }
 
-
-
 #[derive(Debug, AsStaticStr)]
 pub enum StunAliment {
     Tingling = 10,
     Numbing = 20,
     Stiffening = 30,
-    Immobilizing =  40,
+    Immobilizing = 40,
     Disabling = 50,
     Debilitating = 60,
     Paralyzing = 70,
     Disarming = 80,
-    Arresting = 90, 
-    Enfeebling = 100
+    Arresting = 90,
+    Enfeebling = 100,
 }
 
 impl Distribution<StunAliment> for Standard {

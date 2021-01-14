@@ -1,10 +1,6 @@
+use crate::item_generator::ailment::WpnAilment;
 use serde::{Deserialize, Serialize};
-use crate::item_generator::ailment::{WpnAilment};
 use strum_macros::EnumString;
-
-use rand::{
-    Rng
-};
 
 #[derive(Debug, PartialEq, EnumString)]
 pub enum MonsterType {
@@ -49,7 +45,7 @@ pub enum MonsterType {
     #[strum(serialize = "Wizard", serialize = "wizard")]
     Wizard,
     #[strum(serialize = "Zombie", serialize = "zombie")]
-    Zombie
+    Zombie,
 }
 
 impl std::fmt::Display for MonsterType {
@@ -91,19 +87,19 @@ pub struct Monster {
     pub max_damage: u16,
     pub resistances: u8,
     pub ailment: WpnAilment,
-    pub on_death: DeathCallback
+    pub on_death: DeathCallback,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
 pub enum BaseTypeMonster {
     Strengh,
     Dexterity,
-    Willpower
+    Willpower,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
 pub enum DeathCallback {
-    Monster
+    Monster,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
@@ -112,7 +108,7 @@ pub struct MonsterStats {
     pub dexterity: u8,
     pub willpower: u8,
     pub endurance: u8,
-    pub initiative: u8
+    pub initiative: u8,
 }
 
 impl DeathCallback {
@@ -131,4 +127,4 @@ pub fn monster_death() {
     generator::generate_loot();
     //TODO: set up xp
     //TODO send this through ws
-} 
+}

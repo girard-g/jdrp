@@ -1,6 +1,6 @@
 use rand::{
-    Rng,
     distributions::{Distribution, Standard},
+    Rng,
 };
 use serde::{Deserialize, Serialize};
 
@@ -8,10 +8,10 @@ use serde::{Deserialize, Serialize};
 pub enum WpnElement {
     None,
     Fire,
-    Water,               //A weapon can come with a status effect. Weapons can only have one status effect enabled.
-    Earth,             //The success rate of landing an effect is determined by the suffix in the item name.
+    Water, //A weapon can come with a status effect. Weapons can only have one status effect enabled.
+    Earth, //The success rate of landing an effect is determined by the suffix in the item name.
     Light,
-    Dark
+    Dark,
 }
 
 impl Distribution<WpnElement> for Standard {

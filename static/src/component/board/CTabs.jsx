@@ -38,14 +38,14 @@ class CTabs extends React.Component {
 
                         </div>
                         <div className="col-md-4 border">
-                            <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
-                                <Tab eventKey="home" title="Home">
+                            <Tabs defaultActiveKey="home" id="uncontrolled-tab-example">
+                                <Tab eventKey="home" title="Personnage">
                                     <Board c={this.props.c}/>
                                 </Tab>
-                                <Tab eventKey="profile" title="Profile">
+                                <Tab eventKey="profile" title="Inventaire">
                                     toto
                                 </Tab>
-                                <Tab eventKey="contact" title="Contact" disabled>
+                                <Tab eventKey="contact" title="Soon" disabled>
                                    toto
                                 </Tab>
                             </Tabs>
