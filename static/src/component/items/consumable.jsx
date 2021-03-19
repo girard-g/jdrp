@@ -8,10 +8,10 @@ class Consumable extends React.Component {
 
         const popover = (
             <Popover id="popover-basic">
-                <Card style={{ width: '18rem', color:"black"}}>
+                <Card style={{ width: '18rem', color: "black" }}>
                     <Card.Body>
                         <Card.Title>{this.props.item.consumable.name}</Card.Title>
-                        <hr/>
+                        <hr />
                         <Card.Subtitle className="mb-2 text-muted"><b>Type:</b> {this.props.item.consumable.item_type}</Card.Subtitle>
                         <Card.Subtitle className="mb-2 text-muted"><b>Rarity:</b> {this.props.item.consumable.rarity}</Card.Subtitle>
                         <Card.Text>
@@ -24,13 +24,14 @@ class Consumable extends React.Component {
 
         const asset = 'http://localhost:8000/' + this.props.item.consumable.asset;
         return (
-            <div class="item_render_div_common">
-                <div class="item_render_div">
-                    <OverlayTrigger trigger="hover" placement="auto" overlay={popover}>
-                        <img width="50" src={asset} />
-                    </OverlayTrigger>
+            <OverlayTrigger trigger="hover" placement="auto" overlay={popover}>
+                <div className="item_render_div">
+                    <div className="item_render_div_common">
+                        <img className="img" src={asset} />
+                    </div>
                 </div>
-            </div>
+            </OverlayTrigger>
+
         );
     }
 }

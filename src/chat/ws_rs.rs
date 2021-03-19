@@ -34,7 +34,7 @@ impl Handler for Server {
                 handshake.peer_addr.unwrap(),
                 &number_of_connection
             );
-            println!("{}", &open_message);
+            println!("{}", &open_message); 
 
             let response = Messages {
                 message: open_message,

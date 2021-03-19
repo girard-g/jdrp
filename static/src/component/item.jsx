@@ -13,6 +13,7 @@ class Item extends React.Component {
       isLoaded: false,
       item: null
     };
+
   }
   componentDidMount() {
     fetch("http://localhost:8000/api/testobjectgenerationlol")
@@ -31,6 +32,11 @@ class Item extends React.Component {
           });
         }
       )
+  }
+
+
+  test(){
+    return 'toto'
   }
 
   render() {

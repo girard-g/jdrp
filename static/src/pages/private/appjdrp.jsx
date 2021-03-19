@@ -22,7 +22,7 @@ const AppJdrp = () => {
         })
             .then(
                 response => (
-                    setRep(JSON.parse(response.data))
+                    setRep(response.data)
                 ),
                 (error) => {
                     setError(error)
@@ -45,7 +45,7 @@ const AppJdrp = () => {
         <>
             {rep === 'FALSE' &&
                 (<MasterForm k={keycloak} />) ||
-                (<CTabs c={rep} />)
+                (<CTabs c={JSON.parse(rep)} />)
                 // (<>{console.log(rep)}</>)
             }
         </>

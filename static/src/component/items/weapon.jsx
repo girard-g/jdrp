@@ -28,10 +28,10 @@ class Weapon extends React.Component {
 
         const popover = (
             <Popover id="popover-basic">
-                <Card style={{ width: '18rem', color:"black"}}>
+                <Card style={{ width: '18rem', color: "black" }}>
                     <Card.Body>
                         <Card.Title>{this.props.item.object.name}</Card.Title>
-                        <hr/>
+                        <hr />
                         <Card.Subtitle className="mb-2 text-muted"><b>Type:</b> {this.props.item.object.item_type}</Card.Subtitle>
                         <Card.Subtitle className="mb-2 text-muted"><b>Rarity:</b> {this.props.item.object.rarity}</Card.Subtitle>
                         <Card.Subtitle className="mb-2 text-muted"><b>Emplacement:</b> {this.props.item.object.equipement.slot}</Card.Subtitle>
@@ -44,13 +44,14 @@ class Weapon extends React.Component {
 
         const asset = 'http://localhost:8000/' + this.props.item.object.asset;
         return (
-            <div class={border}>
-                <div class="item_render_div">
-                    <OverlayTrigger trigger="hover" placement="auto" overlay={popover}>
-                        <img width="50" src={asset} />
-                    </OverlayTrigger>
+            <OverlayTrigger trigger="hover" placement="auto" overlay={popover}>
+                <div className="item_render_div">
+                    <div className={border}>
+                        <img className="img" src={asset} />
+                    </div>
                 </div>
-            </div>
+            </OverlayTrigger>
+
         );
     }
 }

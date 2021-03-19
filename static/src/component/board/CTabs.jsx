@@ -1,6 +1,7 @@
 import React from 'react';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tabs';
+import DragToReorderList from '../DragADropInventory';
 import Board from './board';
 
 class CTabs extends React.Component {
@@ -43,7 +44,7 @@ class CTabs extends React.Component {
                                     <Board c={this.props.c}/>
                                 </Tab>
                                 <Tab eventKey="profile" title="Inventaire">
-                                    toto
+                                    <DragToReorderList />
                                 </Tab>
                                 <Tab eventKey="contact" title="Soon" disabled>
                                    toto
