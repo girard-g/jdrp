@@ -1,31 +1,75 @@
-import React, { useState } from "react";
-import Item from './item';
+import React, { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import Armor from './items/armor';
+import Weapon from './items/weapon';
+import Jewel from './items/jewel';
+import Consumable from './items/consumable';
+import Spinner from 'react-bootstrap/Spinner';
 
 const DragToReorderList = () => {
 
-    const toto = <Item />;
+    const [error, setError] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [columns, setColumns] = useState(null);
 
-    const itemsFromBackend = [
-        { id: 'qwe', content: toto},
-        { id: 'asd', content: <Item /> },
-        { id: 'zxc', content: <Item /> },
-    ];
-
-    const columnsFromBackend = {
-        ['Inventory']: {
-            name: "Inventory",
-            items: itemsFromBackend
-        },
-        ['Equipped']: {
-            name: "Equipped",
-            items: []
-        },
-    };
     const inventorySize = {
-        width:10,
-        height:6,
+        width: 10,
+        height: 6,
     }
+
+    useEffect(() => {
+        fetch("http://localhost:8000/api/testobjectgenerationlol")
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    setColumns(formatResultItem(result));
+                    setIsLoaded(true);
+                },
+                (error) => {
+                    setError(error);
+                    setIsLoaded(true);
+                }
+            )
+    }, [])
+
+    const formatResultItem = (item) => {
+
+        let object;
+
+        if (item.object !== null) {
+            if (item.object.equipement.armor !== null) {
+                object = <Armor item={item} />
+            } else if (item.object.equipement.weapon !== null) {
+                object = <Weapon item={item} />
+            } else {
+                object = <Jewel item={item} />
+            }
+        } else {
+            object = <Consumable item={item} />
+        }
+
+        const itemsFromBackend = [
+            { id: 'qwe', content: object },
+        ];
+
+        const columnsFromBackend = {
+            ['Inventory']: {
+                name: "Inventory",
+                items: itemsFromBackend
+            },
+            ['Equipped']: {
+                name: "Equipped",
+                items: []
+            },
+        };
+
+        return columnsFromBackend
+    }
+
+
+    if (!isLoaded) return <Spinner animation="border" role="status" variant="primary"><span className="sr-only">Loading...</span></Spinner>
+    if (error) return <div>Erreur : {error.message}</div>
+    if (columns === null) return <Spinner animation="border" role="status" variant="primary"><span className="sr-only">Loading...</span></Spinner>
 
     const onDragEnd = (result, columns, setColumns) => {
         if (!result.destination) return;
@@ -65,7 +109,7 @@ const DragToReorderList = () => {
     };
 
 
-    const [columns, setColumns] = useState(columnsFromBackend);
+
     // const [inventorySize] = useState(inventorySize);
     return (
         <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
@@ -143,6 +187,5 @@ const DragToReorderList = () => {
             </DragDropContext>
         </div>
     );
-
 }
 export default DragToReorderList;
