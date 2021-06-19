@@ -5,12 +5,18 @@ import Weapon from './items/weapon';
 import Jewel from './items/jewel';
 import Consumable from './items/consumable';
 import Spinner from 'react-bootstrap/Spinner';
+import { v4 as uuidv4 } from 'uuid';
 
 const DragToReorderList = () => {
 
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [columns, setColumns] = useState(null);
+    const [caracter, setCaracter] = useState(null);
+
+    const [damage, setDamage] = useState({ min: 0, max: 0 });
+    const [armor, setArmor] = useState(0);
+    const [resistances, setResistances] = useState({ type: '', value: 0 });
 
     const inventorySize = {
         width: 10,
@@ -18,11 +24,23 @@ const DragToReorderList = () => {
     }
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/testobjectgenerationlol")
+        fetch("http://localhost:8000/api/testobjectgenerationlol/5")
             .then(res => res.json())
             .then(
                 (result) => {
                     setColumns(formatResultItem(result));
+                },
+                (error) => {
+                    setError(error);
+                }
+            )
+    }, [])
+
+    useEffect(() => {
+        fetch("http://localhost:8000/static/images/homme2.jpg")
+            .then(
+                (result) => {
+                    setCaracter(result.url)
                     setIsLoaded(true);
                 },
                 (error) => {
@@ -30,36 +48,66 @@ const DragToReorderList = () => {
                     setIsLoaded(true);
                 }
             )
-    }, [])
+    }, []);
 
-    const formatResultItem = (item) => {
+    const formatResultItem = (items) => {
 
-        let object;
+        const itemsFromBackend = [];
 
-        if (item.object !== null) {
-            if (item.object.equipement.armor !== null) {
-                object = <Armor item={item} />
-            } else if (item.object.equipement.weapon !== null) {
-                object = <Weapon item={item} />
+        for (const item of items) {
+            let object;
+            console.log(item);
+
+            if (item.object !== null) {
+                if (item.object.equipement.armor !== null) {
+                    object = <Armor item={item} />
+                } else if (item.object.equipement.weapon !== null) {
+                    object = <Weapon item={item} />
+                } else {
+                    object = <Jewel item={item} />
+                }
             } else {
-                object = <Jewel item={item} />
+                object = <Consumable item={item} />
             }
-        } else {
-            object = <Consumable item={item} />
+    
+            itemsFromBackend.push({ id: uuidv4(), content: object })
         }
-
-        const itemsFromBackend = [
-            { id: 'qwe', content: object },
-        ];
 
         const columnsFromBackend = {
             ['Inventory']: {
                 name: "Inventory",
-                items: itemsFromBackend
+                items: itemsFromBackend,
+                style: { margin: 8, display: 'box' }
             },
-            ['Equipped']: {
-                name: "Equipped",
-                items: []
+            ['Shield']: {
+                name: "Shield",
+                items: [],
+                style: { margin: 8 }
+            },
+            ['RightHand']: {
+                name: "Right hand",
+                items: [],
+                style: { margin: 8 }
+            },
+            ['TwoHand']: {
+                name: "Two hands",
+                items: [],
+                style: { margin: 8 }
+            },
+            ['Chest']: {
+                name: "Chest",
+                items: [],
+                style: { position: "absolute", marginTop: -65 + '%', marginRight:  124 + '%' }
+            },
+            ['Boot']: {
+                name: "Boots",
+                items: [],
+                style: { position: "absolute", marginTop: -36 + '%', marginRight:  124 + '%' }
+            },
+            ['Gloves']: {
+                name: "Gloves",
+                items: [],
+                style: { margin: 8 }
             },
         };
 
@@ -82,17 +130,64 @@ const DragToReorderList = () => {
             const destItems = [...destColumn.items];
             const [removed] = sourceItems.splice(source.index, 1);
             destItems.splice(destination.index, 0, removed);
-            setColumns({
-                ...columns,
-                [source.droppableId]: {
-                    ...sourceColumn,
-                    items: sourceItems
-                },
-                [destination.droppableId]: {
-                    ...destColumn,
-                    items: destItems
+
+            // if (destItems[0].content.type.name === destination.droppableId || destination.droppableId === 'Inventory'
+            if (destItems[0].content.props.item.object.equipement.slot === destination.droppableId || destination.droppableId === 'Inventory'
+            ) {
+                if (destination.droppableId === 'Inventory') {
+                    if (['Chest', 'Shield'].includes(destItems[0].content.props.item.object.equipement.slot)) {
+                        //TODO: buggy
+                        let value = armor - destItems[0].content.props.item.object.equipement.armor.armor
+                        if(value < 0){
+                            value = 0;
+                        }
+                        setArmor(value)
+                    }
+
+                    if (['RightHand', 'LeftHand', 'TwoHand'].includes(destItems[0].content.props.item.object.equipement.slot)) {
+                        setDamage({
+                            min: 0,
+                            max: 0
+                        })
+                    }
+                } else {
+                    if (['RightHand', 'LeftHand', 'TwoHand'].includes(destItems[0].content.props.item.object.equipement.slot)) {
+                        setDamage({
+                            min: destItems[0].content.props.item.object.equipement.weapon.min_damage,
+                            max: destItems[0].content.props.item.object.equipement.weapon.max_damage
+                        })
+                    } else if (['Chest'].includes(destItems[0].content.props.item.object.equipement.slot)) {
+                        setArmor(destItems[0].content.props.item.object.equipement.armor.armor + armor)
+                    } else if (['Shield'].includes(destItems[0].content.props.item.object.equipement.slot)) {
+                        setArmor(destItems[0].content.props.item.object.equipement.armor.armor + armor)
+                    }
+
                 }
-            });
+                setColumns({
+                    ...columns,
+                    [source.droppableId]: {
+                        ...sourceColumn,
+                        items: sourceItems
+                    },
+                    [destination.droppableId]: {
+                        ...destColumn,
+                        items: destItems
+                    }
+                });
+
+            } else {
+                const column = columns[source.droppableId];
+                const copiedItems = [...column.items];
+                const [removed] = copiedItems.splice(source.index, 1);
+                copiedItems.splice(destination.index, 0, removed);
+                setColumns({
+                    ...columns,
+                    [source.droppableId]: {
+                        ...column,
+                        items: copiedItems
+                    }
+                });
+            }
         } else {
             const column = columns[source.droppableId];
             const copiedItems = [...column.items];
@@ -106,86 +201,96 @@ const DragToReorderList = () => {
                 }
             });
         }
+
+        console.log("dragged: " + source.droppableId + " into: " + destination.droppableId)
     };
 
-
-
-    // const [inventorySize] = useState(inventorySize);
     return (
-        <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
-            <DragDropContext
-                onDragEnd={result => onDragEnd(result, columns, setColumns)}
-            >
-                {Object.entries(columns).map(([columnId, column], index) => {
-                    return (
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center"
-                            }}
-                            key={columnId}
-                        >
-                            <h2>{column.name}</h2>
-                            <div style={{ margin: 8 }}>
-                                <Droppable droppableId={columnId} key={columnId}>
-                                    {(provided, snapshot) => {
-                                        return (
-                                            <div
-                                                {...provided.droppableProps}
-                                                ref={provided.innerRef}
-                                                style={{
-                                                    background: snapshot.isDraggingOver
-                                                        ? "lightblue"
-                                                        : "lightgrey",
-                                                    padding: 2,
-                                                    width: 150,
-                                                    minHeight: 500
-                                                }}
-                                            >
-                                                {column.items.map((item, index) => {
-                                                    return (
-                                                        <Draggable
-                                                            key={item.id}
-                                                            draggableId={item.id}
-                                                            index={index}
-                                                        >
-                                                            {(provided, snapshot) => {
-                                                                return (
-                                                                    <div
-                                                                        ref={provided.innerRef}
-                                                                        {...provided.draggableProps}
-                                                                        {...provided.dragHandleProps}
-                                                                        style={{
-                                                                            userSelect: "none",
-                                                                            padding: 0,
-                                                                            margin: "0 0 8px 0",
-                                                                            minHeight: "50px",
-                                                                            backgroundColor: snapshot.isDragging
-                                                                                ? "#263B4A"
-                                                                                : "#456C86",
-                                                                            color: "white",
-                                                                            ...provided.draggableProps.style
-                                                                        }}
-                                                                    >
-                                                                        {item.content}
-                                                                    </div>
-                                                                );
-                                                            }}
-                                                        </Draggable>
-                                                    );
-                                                })}
-                                                {provided.placeholder}
-                                            </div>
-                                        );
-                                    }}
-                                </Droppable>
+        <>
+            {caracter && <img src={caracter} alt="" />}
+            <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+                <DragDropContext
+                    onDragEnd={result => onDragEnd(result, columns, setColumns)}
+                >
+                    {Object.entries(columns).map(([columnId, column, style], index) => {
+                        return (
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center"
+                                }}
+                                key={columnId}
+                            >
+
+                                <div style={column.style}>
+                                    <h2>{column.name}</h2>
+                                    <Droppable droppableId={columnId} key={columnId} >
+                                        {(provided, snapshot, columnId) => {
+                                            return (
+
+                                                <div
+
+                                                    {...provided.droppableProps}
+                                                    ref={provided.innerRef}
+                                                    style={{
+                                                        background: snapshot.isDraggingOver
+                                                            ? "lightblue"
+                                                            : "lightgrey",
+                                                        padding: 2,
+                                                        width: 100,
+                                                        minHeight: 100
+                                                    }}
+                                                >
+                                                    {column.items.map((item, index) => {
+                                                        return (
+                                                            <Draggable
+                                                                key={item.id}
+                                                                draggableId={item.id}
+                                                                index={index}
+                                                            >
+                                                                {(provided, snapshot) => {
+                                                                    return (
+                                                                        <div
+                                                                            ref={provided.innerRef}
+                                                                            {...provided.draggableProps}
+                                                                            {...provided.dragHandleProps}
+                                                                            style={{
+                                                                                userSelect: "none",
+                                                                                padding: 0,
+                                                                                margin: "0 0 8px 0",
+                                                                                minHeight: "50px",
+                                                                                backgroundColor: snapshot.isDragging
+                                                                                    ? "#263B4A"
+                                                                                    : "#456C86",
+                                                                                color: "white",
+                                                                                ...provided.draggableProps.style
+                                                                            }}
+                                                                        >
+                                                                            {item.content}
+                                                                        </div>
+                                                                    );
+                                                                }}
+                                                            </Draggable>
+                                                        );
+                                                    })}
+                                                    {provided.placeholder}
+                                                </div>
+                                            );
+                                        }}
+                                    </Droppable>
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
-            </DragDropContext>
-        </div>
+                        );
+                    })}
+                </DragDropContext>
+            </div>
+            <div>
+                <p>Damage: min: {damage.min} max: {damage.max}</p>
+                <p>Armor: {armor}</p>
+                <p>Resistances: type: {resistances.type} value: {resistances.value}</p>
+            </div>
+        </>
     );
 }
 export default DragToReorderList;

@@ -85,11 +85,20 @@ pub fn get_player(token: Token) -> Json<String> {
     }
 }
 
-#[get("/api/testobjectgenerationlol")]
-pub fn testobjectgenerationlol() -> Json<Loot> {
+#[get("/api/testobjectgenerationlol/<time>")]
+pub fn testobjectgenerationlol(time :u8) -> Json<Vec<Loot>> {
     use crate::item_generator::generator::generate_loot;
-    let loot = generate_loot();
-    Json(loot)
+    let mut count = 0u8;
+    let mut vector = Vec::new();
+    loop {
+        count += 1;
+
+        if count == time {
+            break;
+        }
+        vector.push(generate_loot())
+    } 
+    Json(vector)
 }
 
 #[get("/api/testmonstergeneration/<monster>")]

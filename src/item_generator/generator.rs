@@ -1051,6 +1051,7 @@ pub fn generate_loot() -> Loot {
         ItemType::Consumable => Object::generate(),
         ItemType::Jewel => Jewel::generate(String::from("common")),
     }
+    // Armor::generate()
 }
 
 pub fn generate_monster(monster_type: String) -> Monster {

@@ -42,6 +42,10 @@ class Weapon extends React.Component {
             </Popover>
         );
 
+        const getstats = () =>{
+            return this.props.item.object.equipement.weapon;
+        }
+
         const asset = 'http://localhost:8000/' + this.props.item.object.asset;
         return (
             <OverlayTrigger trigger="hover" placement="auto" overlay={popover}>

@@ -12,7 +12,7 @@ const Item = (props) => {
   const [item, setItem] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/testobjectgenerationlol")
+    fetch("http://localhost:8000/api/testobjectgenerationlol/2")
       .then(res => res.json())
       .then(
         (result) => {
@@ -29,16 +29,16 @@ const Item = (props) => {
   if (error) return <div>Erreur : {error.message}</div>
   if (!isLoaded) return <Spinner animation="border" role="status" variant="primary"><span className="sr-only">Loading...</span></Spinner>
 
-  if (item.object !== null) {
-    if (item.object.equipement.armor !== null) {
-      return <Armor item={item} />
-    } else if (item.object.equipement.weapon !== null) {
-      return <Weapon item={item} />
+  if (item[0].object !== null) {
+    if (item[0].object.equipement.armor !== null) {
+      return <Armor item={item.[0]} />
+    } else if (item.[0].object.equipement.weapon !== null) {
+      return <Weapon item={item.[0]} />
     } else {
-      return <Jewel item={item} />
+      return <Jewel item={item.[0]} />
     }
   } else {
-    return <Consumable item={item} />
+    return <Consumable item={item.[0]} />
   }
 
 }

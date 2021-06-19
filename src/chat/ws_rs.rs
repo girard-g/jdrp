@@ -99,7 +99,7 @@ impl Handler for Server {
                 );
                 println!("Client found is {:?}", request.client_addr().unwrap());
                 Response::from_request(&request)
-            }
+             }
 
             _ => Ok(Response::new(404, "Not Found", b"404 - Not Found".to_vec())),
         }
