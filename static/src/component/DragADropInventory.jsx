@@ -37,7 +37,7 @@ const DragToReorderList = () => {
     }, [])
 
     useEffect(() => {
-        fetch("http://localhost:8000/static/images/homme2.jpg")
+        fetch("http://localhost:8000/static/images/homme2.png")
             .then(
                 (result) => {
                     setCaracter(result.url)
@@ -73,41 +73,58 @@ const DragToReorderList = () => {
             itemsFromBackend.push({ id: uuidv4(), content: object })
         }
 
+        const i = 3;
+
         const columnsFromBackend = {
             ['Inventory']: {
                 name: "Inventory",
                 items: itemsFromBackend,
-                style: { margin: 8, display: 'box' }
+                style: {}
             },
-            ['Shield']: {
-                name: "Shield",
-                items: [],
-                style: { margin: 8 }
-            },
-            ['RightHand']: {
-                name: "Right hand",
-                items: [],
-                style: { margin: 8 }
-            },
-            ['TwoHand']: {
-                name: "Two hands",
-                items: [],
-                style: { margin: 8 }
-            },
+            // ['Shield']: {
+            //     name: "Shield",
+            //     items: [],
+            //     style: { margin: 8 }
+            // },
+            // ['RightHand']: {
+            //     name: "Right hand",
+            //     items: [],
+            //     style: { margin: 8 }
+            // },
+            // ['TwoHand']: {
+            //     name: "Two hands",
+            //     items: [],
+            //     style: { margin: 8 }
+            // },
             ['Chest']: {
                 name: "Chest",
                 items: [],
-                style: { position: "absolute", marginTop: -65 + '%', marginRight:  124 + '%' }
+                style: { position: "absolute", top: i + '%', marginRight: 10 + '%' }
+            },
+            ['Helmet']: {
+                name: "Helmet",
+                items: [],
+                style: {position: "absolute", top: i + '%', marginRight: 70 + '%' }
             },
             ['Boot']: {
                 name: "Boots",
                 items: [],
-                style: { position: "absolute", marginTop: -36 + '%', marginRight:  124 + '%' }
+                style: { position: "absolute", top: i + 12 + '%', marginRight: 10 + '%' }
             },
             ['Gloves']: {
                 name: "Gloves",
                 items: [],
-                style: { margin: 8 }
+                style: {position: "absolute", top: i + 12 + '%', marginRight: 70 + '%' }
+            },
+            ['Wrist']: {
+                name: "Wrist",
+                items: [],
+                style: {position: "absolute", top: i + 24+ '%', marginRight: 10 + '%' }
+            },
+            ['Belt']: {
+                name: "Belt",
+                items: [],
+                style: {position: "absolute", top: i + 24 + '%', marginRight: 70 + '%' }
             },
         };
 
@@ -207,8 +224,12 @@ const DragToReorderList = () => {
 
     return (
         <>
-            {caracter && <img src={caracter} alt="" />}
-            <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+            {caracter && <img src={caracter} className="caracter-img" alt="" />}
+            <div style={{
+                 display: "flex",
+                  justifyContent: "center",
+                   height: "100%"
+                    }}>
                 <DragDropContext
                     onDragEnd={result => onDragEnd(result, columns, setColumns)}
                 >
@@ -218,14 +239,14 @@ const DragToReorderList = () => {
                                 style={{
                                     display: "flex",
                                     flexDirection: "column",
-                                    alignItems: "center"
+                                    alignItems: "center" 
                                 }}
                                 key={columnId}
                             >
 
                                 <div style={column.style}>
                                     <h2>{column.name}</h2>
-                                    <Droppable droppableId={columnId} key={columnId} >
+                                    <Droppable droppableId={columnId} key={columnId} direction="horizontal" >
                                         {(provided, snapshot, columnId) => {
                                             return (
 
@@ -238,8 +259,10 @@ const DragToReorderList = () => {
                                                             ? "lightblue"
                                                             : "lightgrey",
                                                         padding: 2,
-                                                        width: 100,
-                                                        minHeight: 100
+                                                        minWidth: 100,
+                                                        minHeight: 100,
+                                                        // flexGrow:1,
+                                                        display:"flex"
                                                     }}
                                                 >
                                                     {column.items.map((item, index) => {

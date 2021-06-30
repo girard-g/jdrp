@@ -44,28 +44,24 @@ class Board extends React.Component {
 
 
     render() {
-        console.log(this.props.c.name);
         return (
             <React.Fragment>
-                <div className="container-fluid">
-                    <div className="row">
+                <div className="container-fluid font-cursive">
                         {/* <div className="col-md-8" >
                         {/* <div className="col-md-8" style={{backgroungImage:`url(${this.state.map})`}}> */}
                         {/* <img className="img-fluid" src={this.state.map} alt="map" /> */}
 
-                        <div >
-                            <h4 className="card-title text-center">Fiche Personnage</h4>
-                            <p className="card-text text-center">{this.props.c.name}</p>
+                        <div class="justify-content-md-center">
+                            <h1 className="text-center">Fiche Personnage</h1>
+                            <p className="text-center">{this.props.c.name}, {this.state.trad[this.props.c.race]} {this.state.trad[this.props.c.class]}</p>
 
                             <div className="row">
                                 <div className="card-body col-md-6">
-                                    <p className="card-text text-center"><b>Race:</b> {this.state.trad[this.props.c.race]}</p>
                                     <p className="card-text text-center"><b>Alignement:</b> {this.props.c.alignment}</p>
                                     <p className="card-text text-center"><b>Particularité:</b> {this.props.c.particularity}</p>
                                 </div>
 
                                 <div className="card-body col-md-6">
-                                    <p className="card-text text-center"><b>Classe:</b> {this.state.trad[this.props.c.class]}</p>
                                     <p className="card-text text-center"><b>Age:</b> {this.props.c.age}</p>
                                     <p className="card-text text-center"><b>Réputation:</b> {this.props.c.reputation}</p>
                                 </div>
@@ -89,7 +85,6 @@ class Board extends React.Component {
 
 
                         </div>
-                    </div>
 
                 </div>
 

@@ -108,3 +108,23 @@ img {
 .nav-tabs > a {
   color: #ebdbb2;
 }
+
+.font-cursive {
+  font-family: 'Niconne', cursive;
+  font-size: xx-large;
+  color: #282c34;
+}
+
+.table{
+  background-image: url('images/table.jpg');
+}
+
+.map{
+  opacity: 0.8;
+  width: 100%;
+  margin-top: 4%;
+}
+
+.caracter-img{
+  width: 40%;
+}
