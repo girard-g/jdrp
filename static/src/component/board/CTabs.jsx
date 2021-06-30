@@ -3,6 +3,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tabs';
 import DragToReorderList from '../DragADropInventory';
 import Board from './board';
+import background from "../../images/old-paper.jpg";
 
 class CTabs extends React.Component {
     constructor(props) {
@@ -31,7 +32,7 @@ class CTabs extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <div className="container-fluid">
+                <div className="container-fluid" style={{backgroundImage: `url(${background})`}}>
                     <div className="row">
                         <div className="col-md-8" >
                             {/* <div className="col-md-8" style={{backgroungImage:`url(${this.state.map})`}}> */}
@@ -39,7 +40,7 @@ class CTabs extends React.Component {
 
                         </div>
                         <div className="col-md-4 border">
-                            <Tabs defaultActiveKey="home" id="uncontrolled-tab-example">
+                            <Tabs defaultActiveKey="home" id="uncontrolled-tab-example" className="tabs-custom" >
                                 <Tab eventKey="home" title="Personnage">
                                     <Board c={this.props.c}/>
                                 </Tab>
